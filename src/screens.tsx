@@ -238,6 +238,7 @@ export function DialogueScreen({
   const profile = data.profiles.find((p) => p.id === chat.profileId)!;
   const messages = messagesFor(data, chat.id);
   const [text, setText] = useState('');
+  const [inputHeight, setInputHeight] = useState(21);
   const list = useRef<FlatList<Message>>(null);
   const [atBottom, setAtBottom] = useState(true);
   const previousLastId = useRef<string | undefined>(undefined);
@@ -351,7 +352,14 @@ export function DialogueScreen({
             placeholderTextColor={C.muted}
             value={text}
             onChangeText={setText}
-            style={st.composerInput}
+            onContentSizeChange={(event) =>
+              setInputHeight(Math.max(21, Math.min(130, event.nativeEvent.contentSize.height)))
+            }
+            scrollEnabled={inputHeight >= 130}
+            style={[
+              st.composerInput,
+              { height: inputHeight, overflow: inputHeight >= 130 ? 'scroll' : 'hidden' },
+            ]}
           />
         </View>
         <Pressable
