@@ -1,6 +1,6 @@
 # Chat Studio — локальный симулятор переписок
 
-React Native + Expo + TypeScript, Android / iOS. Публичные экраны ориентированы на Telegram для iPhone. Настоящие Telegram-аккаунты и сеть не используются.
+React Native + Expo SDK 57 + Expo Router + TypeScript, Android / iOS. Публичные экраны ориентированы на Telegram для iPhone. Настоящие Telegram-аккаунты и сеть не используются.
 
 ## Запуск
 
@@ -31,6 +31,7 @@ npm start
 
 ```sh
 npm run typecheck
+npm run lint
 npm test
 npm run export:web
 npx expo-doctor

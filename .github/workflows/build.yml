@@ -1,0 +1,57 @@
+name: Build mobile apps
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform
+        required: true
+        default: all
+        type: choice
+        options: [all, android, ios]
+jobs:
+  android:
+    if: inputs.platform == 'all' || inputs.platform == 'android'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm ci
+      - run: npx expo prebuild --platform android --no-install
+      - name: Build test-signed release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ChatStudio-android-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+  ios:
+    if: inputs.platform == 'all' || inputs.platform == 'ios'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx expo prebuild --platform ios
+      - name: Build unsigned app for device
+        run: xcodebuild -workspace ios/ChatStudio.xcworkspace -scheme ChatStudio -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - name: Package IPA for signing on the owner's computer
+        run: |
+          mkdir -p artifacts/Payload
+          cp -R build/Build/Products/Release-iphoneos/ChatStudio.app artifacts/Payload/
+          cd artifacts
+          zip -r ChatStudio-unsigned.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ChatStudio-ios-unsigned-ipa
+          path: artifacts/ChatStudio-unsigned.ipa
+          if-no-files-found: error
