@@ -1,5 +1,9 @@
 This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
+## Git history — user requirement
+
+Keep a development history in this repository. Commit coherent changes with descriptive messages and push completed, verified steps to the configured remote. Preserve previous commits; do not squash or rewrite the history unless the user asks. Record verification and remaining work in `docs/STATUS.md`.
+
 ## Expo has changed — do not trust your training data
 
 Expo ships breaking changes every SDK release. APIs you remember are likely renamed, moved, or removed. Before writing any code that touches an Expo, EAS, or React Native API:
