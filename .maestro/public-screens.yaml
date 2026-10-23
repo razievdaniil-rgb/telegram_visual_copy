@@ -1,0 +1,31 @@
+appId: com.daniil.chatstudio
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: 'Чат Анна Миронова'
+    timeout: 30000
+- takeScreenshot: chats
+- tapOn: 'Чат Анна Миронова'
+- assertVisible: 'Сообщение'
+- takeScreenshot: dialogue
+- tapOn: 'Сообщение'
+- inputText: "First line\nSecond line"
+- takeScreenshot: keyboard
+- eraseText
+- hideKeyboard
+- tapOn: 'Открыть профиль'
+- assertVisible: 'звонок'
+- takeScreenshot: profile
+- tapOn: 'Назад'
+- assertVisible: 'Сообщение'
+- tapOn: 'Назад к чатам'
+- tapOn: 'Контакты'
+- assertVisible: 'Пригласить друзей'
+- takeScreenshot: contacts
+- tapOn: 'Настройки'
+- assertVisible: 'Установить фотографию'
+- takeScreenshot: settings
+- tapOn: 'Звонки'
+- assertVisible: 'Позвонить'
+- takeScreenshot: calls

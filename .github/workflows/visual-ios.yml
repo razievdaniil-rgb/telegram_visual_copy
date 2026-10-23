@@ -1,20 +1,46 @@
 name: iOS Simulator visual verification
 on:
   workflow_dispatch:
+    inputs:
+      app_run_id:
+        description: Optional run containing ChatStudio-ios-simulator-app (UI-test-only retry)
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
 jobs:
   screenshots:
     runs-on: macos-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
     env:
       EXPO_PUBLIC_VISUAL_TEST: '1'
+      MAESTRO_CLI_NO_ANALYTICS: 'true'
+      MAESTRO_DISABLE_UPDATE_CHECK: 'true'
+      MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: 'true'
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: '120000'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: mkdir -p artifacts/ios-simulator
       - run: npm ci
+        if: inputs.app_run_id == ''
       - run: npx expo prebuild --platform ios
+        if: inputs.app_run_id == ''
+      - name: Install pinned Maestro CLI
+        run: |
+          curl -fLsS https://github.com/mobile-dev-inc/Maestro/releases/download/cli-2.11.0/maestro.zip -o "$RUNNER_TEMP/maestro.zip"
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP/maestro-cli"
+          MAESTRO_BIN=$(find "$RUNNER_TEMP/maestro-cli" -type f -path '*/bin/maestro' -print -quit)
+          chmod +x "$MAESTRO_BIN"
+          dirname "$MAESTRO_BIN" >> "$GITHUB_PATH"
       - name: Select and boot an iPhone simulator
         run: |
           xcrun simctl list devices available -j > /tmp/devices.json
@@ -24,23 +50,35 @@ jobs:
           xcrun simctl bootstatus "$DEVICE" -b
           xcrun simctl status_bar "$DEVICE" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Build for Simulator
-        run: xcodebuild -workspace ios/ChatStudio.xcworkspace -scheme ChatStudio -configuration Release -sdk iphonesimulator -destination "id=$DEVICE" -derivedDataPath build CODE_SIGNING_ALLOWED=NO build > /tmp/simulator-build.log 2>&1 || { tail -n 150 /tmp/simulator-build.log; exit 1; }
-      - name: Install and capture public screens
+        if: inputs.app_run_id == ''
         run: |
-          mkdir -p artifacts/ios-simulator
-          xcrun simctl install "$DEVICE" build/Build/Products/Release-iphonesimulator/ChatStudio.app
-          xcrun simctl launch "$DEVICE" com.daniil.chatstudio
-          sleep 5
-          xcrun simctl io "$DEVICE" screenshot artifacts/ios-simulator/chats.png
-          for ENTRY in 'chat/example-chat-anna:dialogue' 'profile/example-anna?chatId=example-chat-anna:profile' 'contacts:contacts' 'settings:settings' 'calls:calls'; do
-            ROUTE=${ENTRY%:*}
-            NAME=${ENTRY##*:}
-            xcrun simctl openurl "$DEVICE" "chatstudio:///$ROUTE"
-            sleep 3
-            xcrun simctl io "$DEVICE" screenshot "artifacts/ios-simulator/$NAME.png"
-          done
-          xcrun simctl list devices available -j > artifacts/ios-simulator/devices.json
-          cp /tmp/simulator-build.log artifacts/ios-simulator/build.log
+          xcodebuild -workspace ios/ChatStudio.xcworkspace -scheme ChatStudio -configuration Release -sdk iphonesimulator -destination "id=$DEVICE" -derivedDataPath build ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build > artifacts/ios-simulator/build.log 2>&1 || { tail -n 150 artifacts/ios-simulator/build.log; exit 1; }
+          cd build/Build/Products/Release-iphonesimulator
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > app-source-sha.txt
+          zip -qr "$GITHUB_WORKSPACE/artifacts/ios-simulator-app.zip" ChatStudio.app app-source-sha.txt
+      - uses: actions/upload-artifact@v4
+        if: inputs.app_run_id == '' && success()
+        with:
+          name: ChatStudio-ios-simulator-app
+          path: artifacts/ios-simulator-app.zip
+          if-no-files-found: error
+      - uses: actions/download-artifact@v4
+        if: inputs.app_run_id != ''
+        with:
+          name: ChatStudio-ios-simulator-app
+          run-id: ${{ inputs.app_run_id }}
+          github-token: ${{ github.token }}
+          path: artifacts
+      - name: Install and test public screens
+        run: |
+          unzip -q artifacts/ios-simulator-app.zip -d artifacts/simulator-app
+          cp artifacts/simulator-app/app-source-sha.txt artifacts/ios-simulator/
+          xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
+          maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
+          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard"}]'
+      - name: Save simulator metadata
+        if: always()
+        run: xcrun simctl list devices available -j > artifacts/ios-simulator/devices.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
