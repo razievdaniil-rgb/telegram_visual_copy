@@ -1,31 +1,44 @@
 import { Platform } from 'react-native';
 
-// Telegram iOS UI Kit: 6916:25064, 6973:36421, 6801:13696, 6802:4522, 6802:22938.
+// Telegram-iOS 13.1.1: DefaultDayPresentationTheme + ChatMessageItemCommon.
 export const colors = {
-  blue: '#008BFF',
+  blue: '#0088FF',
   text: '#000000',
-  muted: 'rgba(60, 60, 67, 0.6)',
-  line: '#E6E6E6',
+  muted: '#8E8E93',
+  line: '#C8C7CC',
   surface: '#F6F6F8',
   white: '#FFFFFF',
-  group: '#F2F2F7',
+  group: '#EFEFF4',
   incoming: '#FFFFFF',
-  outgoing: '#EFFEDD',
-  wallpaper: '#F7AD6A',
+  outgoing: '#E1FFC7',
+  wallpaper: '#DBDDBB',
   red: '#FF3B30',
-  control: '#1A1A1A',
+  control: '#000000',
   glass: 'rgba(255,255,255,0.65)',
   selection: '#EDEDED',
-  profile: '#4890BF',
-  outgoingMeta: '#4B9B3E',
-  incomingMeta: '#999999',
+  profile: '#EFEFF4',
+  outgoingMeta: 'rgba(0,140,9,0.8)',
+  incomingMeta: '#8E8E93',
+  outgoingCheck: '#19C700',
+  listCheck: '#21C004',
 };
 export const type = {
-  body: { fontSize: 17, lineHeight: 22, letterSpacing: -0.43 },
-  preview: { fontSize: 15, lineHeight: 20, letterSpacing: -0.23 },
-  footnote: { fontSize: 13, lineHeight: 18, letterSpacing: -0.08 },
-  title: { fontSize: 28, lineHeight: 34, letterSpacing: 0.38, fontWeight: '700' as const },
+  body: { fontSize: 17, lineHeight: 21, letterSpacing: 0 },
+  preview: { fontSize: 15, lineHeight: 20, letterSpacing: 0 },
+  footnote: { fontSize: 13, lineHeight: 16, letterSpacing: 0 },
+  chatTitle: { fontSize: 16, lineHeight: 19, fontWeight: '600' as const },
+  title: { fontSize: 28, lineHeight: 34, letterSpacing: 0, fontWeight: '500' as const },
 };
-export const layout = { row: 78, avatar: 62, toolbar: 54, tabBar: 62, card: 26, bubble: 18 };
+export const layout = {
+  row: 68,
+  avatar: 60,
+  toolbar: 64,
+  tabBar: 64,
+  card: 26,
+  bubble: 16,
+  mergedBubble: 8,
+};
 export const systemFont =
-  Platform.OS === 'web' ? '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' : undefined;
+  Platform.OS === 'web'
+    ? '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif'
+    : undefined;

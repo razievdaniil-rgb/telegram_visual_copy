@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="40" height="40" viewBox="0 0 40 40">
+<defs>
+<clipPath id="clip_1">
+<path transform="matrix(1,0,0,-1,0,40)" d="M20 29C24.97056 29 29 24.97056 29 20 29 15.02944 24.97056 11 20 11 18.52491 11 17.13271 11.35487 15.9041 11.98389 14.92687 11.32823 13.29167 11 11 11 12.90244 12.08711 13.53173 13.23883 12.88786 14.45516L12.82517 14.56579C11.67971 16.07579 11 17.95852 11 20 11 24.97056 15.02944 29 20 29Z" clip-rule="evenodd"/>
+</clipPath>
+</defs>
+<g clip-path="url(#clip_1)">
+<path transform="matrix(1,0,0,-1,0,40)" d="M6 34H34V6H6Z"/>
+</g>
+</svg>

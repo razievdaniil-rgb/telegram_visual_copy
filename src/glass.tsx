@@ -19,6 +19,7 @@ import { colors as C, systemFont, type } from './theme';
 import { kitAssets } from './kit-assets';
 import { Icon } from './ui';
 import { KitSymbol, SystemSymbol, type KitSymbolName } from './kit-symbol';
+import { TelegramIcon, type TelegramIconName } from './telegram-assets';
 
 const TargetContext = createContext<{
   targetRef?: React.RefObject<View | null>;
@@ -170,6 +171,7 @@ export function KitIcon({
 export function GlassButton({
   icon,
   symbol,
+  telegramIcon,
   fallbackIcon,
   title,
   label,
@@ -178,8 +180,9 @@ export function GlassButton({
   size = 44,
   dark = false,
 }: {
-  icon?: keyof typeof kitAssets;
+  icon?: keyof typeof kitAssets | 'close';
   symbol?: KitSymbolName;
+  telegramIcon?: TelegramIconName;
   fallbackIcon?: React.ComponentProps<typeof Icon>['name'];
   title?: string;
   label: string;
@@ -198,9 +201,11 @@ export function GlassButton({
         delayLongPress={900}
         style={({ pressed }) => [g.button, { minWidth: size, height: size }, pressed && g.pressed]}
       >
-        {symbol ? (
+        {telegramIcon ? (
+          <TelegramIcon name={telegramIcon} color={dark ? 'white' : C.control} />
+        ) : symbol ? (
           <KitSymbol name={symbol} size={30} color={dark ? 'white' : C.control} />
-        ) : icon === 'back' || icon === 'search' ? (
+        ) : icon === 'back' || icon === 'search' || icon === 'close' ? (
           <SystemSymbol name={icon} color={dark ? 'white' : C.control} />
         ) : fallbackIcon ? (
           <Icon name={fallbackIcon} size={28} color={dark ? 'white' : C.control} />
@@ -260,9 +265,7 @@ export const g = StyleSheet.create({
   glass: {
     borderRadius: 100,
     overflow: 'hidden',
-    boxShadow: '0px 8px 40px #0000001F',
-    borderWidth: 0.5,
-    borderColor: '#FFFFFF70',
+    boxShadow: '0px 1px 30px rgba(0,0,0,0.045)',
   },
   button: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
   pressed: { backgroundColor: '#0000000C' },

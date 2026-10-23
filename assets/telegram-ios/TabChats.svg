@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" version="1.1" id="Chats_1" sodipodi:docname="Chats 1" inkscape:export-xdpi="96" inkscape:export-ydpi="96" style="fill: none; stroke: none">
+   <defs/>
+   <sodipodi:namedview inkscape:pagecheckerboard="true" borderlayer="true" bordercolor="#666666" pagecolor="#ffffff"/>
+   <g inkscape:groupmode="layer" id="Null_2" inkscape:label="Null 2" transform="matrix(1.0, 0.0, 0.0, 1.0, 256.0, 256.0)" opacity="1">
+      <g inkscape:groupmode="layer" id="Bubble_R_Piece" inkscape:label="Bubble R Piece" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" style="">
+         <g id="Group_1" inkscape:label="Group 1" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero">
+            <path d="M 70.9,-90.4 C 114.30000000000001,-77.0 145.5,-39.7 145.5,4.3 C 145.5,35.8 130.8,61.60000000000001 105.8,79.9 C 102.6,82.2 99.6,95.3 106.8,106.2 C 113.89999999999999,117.10000000000001 122.80000000000001,122.1 118.4,124 C 115.60000000000001,125.2 99.4,125.69999999999999 87.7,119.1 C 70.9,109.69999999999999 66.2,100.3 62.6,101.2 C 54.0,103.2 44.900000000000006,104.2 35.6,104.2 C 15.0,104.2 -4.199999999999999,99.1 -20.7,90.1 C -19.665,89.997 -18.634,89.882 -17.607,89.756 C 44.114,82.186 92.2,33.611000000000004 92.2,-25.8 C 92.11200000000001,-46.900999999999996 86.02199999999999,-66.755 75.374,-83.779 C 73.96199999999999,-86.03699999999999 72.46900000000001,-88.245 70.9,-90.4 Z" id="Path_1" inkscape:label="Path 1" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero"/>
+         </g>
+      </g>
+      <g inkscape:groupmode="layer" id="Bubble_L" inkscape:label="Bubble L" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" style="">
+         <g id="g_1" inkscape:label="Group 1" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero">
+            <path d="M -34.5,-125.7 C 26.299999999999997,-125.7 75.5,-80.9 75.5,-25.7 C 75.5,29.500000000000004 26.299999999999997,74.3 -34.5,74.3 C -43.8,74.3 -52.9,73.2 -61.5,71.3 C -65.1,70.5 -69.8,79.8 -86.6,89.2 C -98.3,95.8 -114.6,95.19999999999999 -117.3,94.1 C -121.8,92.19999999999999 -112.9,87.2 -105.7,76.3 C -98.5,65.39999999999999 -101.5,52.3 -104.7,50 C -129.7,31.7 -144.4,5.899999999999999 -144.4,-25.6 C -144.5,-80.9 -95.3,-125.7 -34.5,-125.7 Z" id="path_2" inkscape:label="Path 1" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero"/>
+         </g>
+      </g>
+   </g>
+</svg>

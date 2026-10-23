@@ -1,10 +1,8 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Image } from 'expo-image';
-import { kitAssets } from './kit-assets';
+import { View } from 'react-native';
+import Svg, { Path, G } from 'react-native-svg';
 import { colors as C } from './theme';
 import type { Message } from './model';
-import { KitSymbol } from './kit-symbol';
 
 export const timeLabel = (iso: string) =>
   new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
@@ -17,7 +15,6 @@ export function listTime(iso: string) {
 export function MessageChecks({
   receipt,
   color = C.outgoingMeta,
-  compact = false,
 }: {
   receipt: Message['receipt'];
   color?: string;
@@ -25,20 +22,19 @@ export function MessageChecks({
 }) {
   return (
     <View accessibilityLabel={receipt === 'read' ? 'Прочитано' : 'Отправлено'}>
-      {receipt === 'read' && compact ? (
-        <View style={{ width: 12, height: 12 }}>
-          <KitSymbol name="read" size={16} color={color} />
-        </View>
-      ) : receipt === 'read' ? (
-        <Image
-          source={kitAssets.read}
-          tintColor={color}
-          contentFit="contain"
-          style={{ width: 17.4991, height: 10.0485 }}
-        />
-      ) : (
-        <Text style={{ color, fontSize: 13, lineHeight: 13 }}>✓</Text>
-      )}
+      <Svg width={receipt === 'read' ? 17 : 11} height={9}>
+        <G
+          transform="translate(1 1)"
+          stroke={color}
+          strokeWidth={0.99}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        >
+          <Path d="M0 4 L2.95157047 6.95157047 C2.97734507 6.97734507 3.01913396 6.97734507 3.04490857 6.95157047 L9.5 0" />
+          {receipt === 'read' && <Path transform="translate(6 0)" d="M0.5 7 L7 0" />}
+        </G>
+      </Svg>
     </View>
   );
 }

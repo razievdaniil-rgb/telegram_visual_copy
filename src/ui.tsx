@@ -12,8 +12,9 @@ import {
   type ColorValue,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { initials, type Profile } from './model';
-import { colors } from './theme';
+import { colors, systemFont } from './theme';
 
 export const C = colors;
 export function Icon({
@@ -51,6 +52,14 @@ export function IconButton({
   );
 }
 export function Avatar({ profile, size = 54 }: { profile: Profile; size?: number }) {
+  const top = `#${[1, 3, 5]
+    .map((offset) => {
+      const channel = parseInt(profile.color.slice(offset, offset + 2), 16);
+      return Math.round(channel + (255 - channel) * 0.25)
+        .toString(16)
+        .padStart(2, '0');
+    })
+    .join('')}`;
   return (
     <View
       style={{
@@ -70,9 +79,21 @@ export function Avatar({ profile, size = 54 }: { profile: Profile; size?: number
           style={{ width: size, height: size }}
         />
       ) : (
-        <Text style={{ color: 'white', fontSize: size * 0.36, fontWeight: '500' }}>
-          {initials(profile)}
-        </Text>
+        <>
+          <LinearGradient colors={[top, profile.color]} style={StyleSheet.absoluteFill} />
+          <Text
+            allowFontScaling={false}
+            style={{
+              color: 'white',
+              fontSize: (size * 26) / 60,
+              fontWeight: '700',
+              fontFamily: systemFont,
+              letterSpacing: -0.3,
+            }}
+          >
+            {initials(profile)}
+          </Text>
+        </>
       )}
     </View>
   );

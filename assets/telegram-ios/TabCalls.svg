@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" version="1.1" id="Calls_1" sodipodi:docname="Calls 1" inkscape:export-xdpi="96" inkscape:export-ydpi="96" style="fill: none; stroke: none">
+   <defs/>
+   <sodipodi:namedview inkscape:pagecheckerboard="true" borderlayer="true" bordercolor="#666666" pagecolor="#ffffff"/>
+   <g inkscape:groupmode="layer" id="Phone" inkscape:label="Phone" transform="matrix(1.0, 0.0, 0.0, 1.0, 256.0, 256.0)" style="">
+      <g id="Group_1" inkscape:label="Group 1" transform="matrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero">
+         <path d="M -53.3,53 C -88.69999999999999,17.6 -116.1,-26.1 -116.1,-62.4 C -116.1,-78.5 -110.8,-93.10000000000001 -98.6,-104.9 C -91.19999999999999,-112.10000000000001 -82.6,-116.1 -74.6,-116.1 C -67.69999999999999,-116.1 -61.5,-113.3 -57.1,-107.1 C -57.1,-107.1 -35.6,-72.3 -35.6,-72.3 C -29.1,-61.8 -29.700000000000003,-48.3 -37.2,-38.4 C -37.2,-38.4 -52.4,-18.3 -52.4,-18.3 C -53.8,-16.900000000000002 -54.3,-15.399999999999999 -54.3,-13.7 C -54.3,-12.2 -53.7,-10.5 -53,-9.1 C -49.5,-1.7999999999999998 -39.5,10.5 -27.6,22.8 C -27.6,22.8 -25.3,25.1 -25.3,25.1 C -12.5,38.0 1.1999999999999993,48.8 8.7,52.8 C 10.1,53.4 11.7,54.1 13.5,54.1 C 15.3,54.1 16.900000000000002,53.6 18.3,52.2 C 18.3,52.2 38,37 38,37 C 47.9,29.4 61.49999999999999,28.699999999999996 72.1,35.3 C 72.1,35.3 107.7,57.4 107.7,57.4 C 113.9,61.699999999999996 116.2,67.60000000000001 116.2,73.7 C 116.2,82.2 111.4,91.10000000000001 104.9,97.9 C 93.2,110.5 79.0,116.2 62.4,116.2 C 26.0,116.10000000000001 -18.0,88.3 -53.3,53 Z" id="Path_1" inkscape:label="Path 1" style="fill-opacity:1.0;fill:rgb(0, 0, 0);fill-rule:nonzero"/>
+      </g>
+   </g>
+   <g inkscape:groupmode="layer" id="Null_1" inkscape:label="Null 1" transform="matrix(0.8, 0.0, 0.0, 0.8, 266.0, 248.0)" opacity="1"/>
+</svg>
