@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "8d646440404be77ba4d83923dcae4c6efc274a4f",
+  "workflowRun": 39979728910,
+  "physicalDeviceTested": false,
+  "note": "Later source adds 16pt profile section spacing and vector-derived HD wallpaper; these packages precede those visual corrections.",
+  "android": {
+    "file": "ChatStudio.apk",
+    "bytes": 112149774,
+    "sha256": "bc9d947cb1a16a325f55fd21f44d22427546213642d5adec51120183135b21c4",
+    "archiveCRCValid": true,
+    "jsBundlePresent": true,
+    "ABIs": ["arm64-v8a", "armeabi-v7a", "x86", "x86_64"],
+    "manifestAndDexPresent": true,
+    "verifiedOriginalAssets": {
+      "wallpaper-pattern.png": "res/DF.png",
+      "TabContacts.svg": "res/EJ.svg",
+      "calls-placeholder.svg": "res/PG.svg",
+      "microphone.png": "res/S2.png"
+    }
+  },
+  "ios": {
+    "file": "ChatStudio-unsigned.ipa",
+    "bytes": 15146555,
+    "sha256": "4fd9062fd73a9f82c4078dd15295673fa114b7917d52f13edc19bcdfd348726e",
+    "archiveCRCValid": true,
+    "jsBundlePresent": true,
+    "bundleIdentifier": "com.daniil.chatstudio",
+    "minimumOS": "16.4",
+    "platforms": ["iPhoneOS"],
+    "codeSignaturePresent": false,
+    "verifiedOriginalAssets": {
+      "TabContacts.svg": "Payload/ChatStudio.app/assets/assets/telegram-ios/TabContacts.svg",
+      "calls-placeholder.svg": "Payload/ChatStudio.app/assets/assets/telegram-ios/calls-placeholder.svg",
+      "microphone.png": "Payload/ChatStudio.app/assets/assets/telegram-ios/microphone.png",
+      "wallpaper-pattern.png": "Payload/ChatStudio.app/assets/assets/telegram-ios/wallpaper-pattern.png"
+    }
+  }
+}

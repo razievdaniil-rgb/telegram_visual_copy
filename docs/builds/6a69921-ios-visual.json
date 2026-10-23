@@ -1,0 +1,25 @@
+{
+  "run": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39987228410",
+  "workflowSha": "04f20c4d1eea9f384d20918b56378443f2bdb553",
+  "appSourceSha": "6a69921e0ac352271b83a2e60a78aa65d8832241",
+  "reusedAppRun": 39982900317,
+  "artifactId": 12517365737,
+  "zipSha256": "9c359ce7cefa2440dc6c1690ba11b1e6f445aa342661f931578eb5ca501e42c8",
+  "result": "All navigation assertions passed; seven screenshots inspected; no OS deeplink prompt.",
+  "device": "iPhone 17 Pro / iOS 26.4",
+  "pixels": [1206, 2622],
+  "limitations": [
+    "Simulator app precedes HD wallpaper asset replacement.",
+    "Keyboard snapshot contains First line; native multiline growth is not proven by this flow. Multiline input verified in web.",
+    "No pixel comparison against actual Telegram 13.1.1 device golden."
+  ],
+  "screenshots": {
+    "chats": "f2a1b0cadabb8ec4bfbc602cd42bad38ff3d1b24fcdf7e1252b6d877bbde74ad",
+    "dialogue": "28bc62a7a4601f57342df7f8dd171b010243f8809a7261f3a1e2bd49a721488a",
+    "profile": "8fd28d2f2eb2bc2906fd37859b0fc6c7d77ff0a0c76342a8ab68cbbc13715ff0",
+    "contacts": "92c1a29555f55688cb05add21e38f8a41aa85a68b99a4f62170e399b9c36809c",
+    "settings": "42d2f4ad4ee539a89f27fce42a141b41287b8bb3c161e722efa9085fcf5db0a3",
+    "calls": "6a68f669fb83ffdb6e618f9d8cc9ac95cad9b597a09b9c3b3d01908e1471e04a",
+    "keyboard": "1e496d168964014cc45087d35fdebdc0bf6ecccdb604cbc8185603e8e51b9fed"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "8d64644",
+  "screen": "chats",
+  "imageLocation": "artifacts/ios-simulator/8d64644/chats.png (original proof, not the later tracked screenshot)",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.4",
+  "imagePixels": [1206, 2622],
+  "pixelsPerPoint": 3.0,
+  "avatarVisiblePixelY": {
+    "first": [390, 569],
+    "second": [594, 773]
+  },
+  "measuredRowPitchPoints": 68.0,
+  "sha256": "301baacd72e99f9fc8535ee75f1f688478015195cc50924943fb293208cc3835",
+  "note": "Color-threshold bounds omit antialiased edge pixels. This measures row pitch; it is not a comparison with a Telegram golden screenshot."
+}
