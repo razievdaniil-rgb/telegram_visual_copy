@@ -17,8 +17,10 @@
 - Воспроизводимость lockfile проверена через `npm ci --ignore-scripts --dry-run`; чистый Linux CI для предыдущего этапа также успешен.
 - В браузере проверены навигация, скрытый вход, демонстрационные данные, поиск, ввод многострочного текста с emoji, профиль, уведомления и сохранение после reload. Строка чата измерена: 78 pt; отсутствие аватара показывает инициалы.
 - Production-export финальной версии для iOS, Android и web прошёл: 117 ресурсов, автономные Hermes-бандлы и локальный шрифт включены.
-- [Checks для 92a89fa](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39954427131) прошёл на чистом runner.
-- [Первая нативная сборка 92a89fa](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39954479725): Android и iOS успешно собраны; получены тестово подписанный APK и неподписанная IPA. Финальное подключение шрифта и Expo Symbols требует новой сборки.
+- [Checks для финального кода f6c286a](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39960378964) прошёл на чистом runner: npm ci, TypeScript, lint, 15 тестов и web-export. Prettier локально также проходит.
+- [Первая нативная сборка 92a89fa](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39954479725): Android и iOS успешно собраны.
+- [Сборка финального кода f6c286a](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39960383603): **Android и iOS успешно собраны, скачаны и проверены как архивы**. Контрольные суммы ZIP совпали с GitHub; в обоих пакетах есть основной JavaScript-бандл и шрифт UI Kit, совпадающий с локальным файлом по SHA-256. В APK также проверены manifest, DEX и нативные библиотеки четырёх ABI. В IPA проверены Bundle ID, целевая платформа iPhoneOS и отсутствие подписи; минимальная iOS — 16.4.
+- Выданы `ChatStudio.apk` (тестовая подпись) и `ChatStudio-unsigned.ipa` (для подписи владельцем). Локально: `artifacts/builds/f6c286a/`. [Контрольные суммы и отчёт упаковки](builds/f6c286a.json) сохранены в Git; бинарники остаются в Actions и локальной игнорируемой папке.
 
 ## Осталось проверить на устройствах
 

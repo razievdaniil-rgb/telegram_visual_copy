@@ -4,6 +4,8 @@
 
 В Actions есть workflow **Build mobile apps** с выбором `android`, `ios` или `all`. Запуск вручную: Actions → Build mobile apps → Run workflow. Android job выдаёт тестово подписанный release APK, iOS job — неподписанную IPA для последующей подписи владельцем устройства. Обе нативные сборки успешно выполнены 23 октября 2026: [первый запуск](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39954479725). Установка и работа на физических устройствах ещё не проверены. Автоматическая проверка `Checks` проверяет TypeScript, lint, тесты и web-export.
 
+Финальная версия оформления: [успешная сборка кода f6c286a](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39960383603). В разделе Artifacts доступны `ChatStudio-android-apk` и `ChatStudio-ios-unsigned-ipa`. Локальные копии находятся в `artifacts/builds/f6c286a/`; [размеры и SHA-256 пакетов](builds/f6c286a.json) зафиксированы для сверки. APK включает arm64-v8a, armeabi-v7a, x86 и x86_64.
+
 ## Разработка на iPhone
 
 `npm start`, затем открыть QR-код в Expo Go. Компьютер и телефон должны быть в одной сети. Это режим разработки, а не передача автономного приложения заказчику.
@@ -28,6 +30,8 @@ npx eas-cli@latest build --platform android --profile preview
 ## iOS
 
 Bundle ID: `com.daniil.chatstudio`. При необходимости измените его до первой выдачи сборки.
+
+Финальная сборка UI Kit от 23 октября (`f6c286a`) содержит `MinimumOSVersion: 16.4`. IPA проверена как ZIP-архив: основной JavaScript-бандл и локальный шрифт иконок присутствуют, контрольная сумма загруженного артефакта совпадает с GitHub Actions. Это проверка упаковки, а не установки или работы на iPhone.
 
 На macOS: `npx expo prebuild --platform ios`, открыть `ios/ChatStudio.xcworkspace` в Xcode, настроить Team и подпись. Для EAS: `npx eas-cli@latest build --platform ios --profile preview`; этот путь требует Apple Developer и регистрации устройства для Ad Hoc.
 

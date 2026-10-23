@@ -8,6 +8,8 @@ The kit's Getting Started page links to [iostgico.ttf](https://drive.google.com/
 
 Its COLR table hard-codes blue, overriding the Text foreground color. Runtime uses `iostgico-monochrome.ttf`: all 1053 COLR layer palette indexes are set to OpenType's foreground-color index 0xFFFF. Outlines, metrics and character mappings are preserved. Reproduce with `python scripts/prepare-kit-font.py` after installing `fonttools==4.67.0`. The source font is never overwritten.
 
+All 36 used glyphs originally use only opaque palette entry 0; their layer opacity is therefore preserved. The preparation script checks this assumption, outline bytes, metrics and character mappings. Unused translucent glyphs must not be added to the runtime mapping without preserving their per-layer alpha.
+
 `src/kit-symbol.tsx` records the exact codepoints from the five full Figma contexts. All 36 distinct mapped glyphs were verified present. The font is bundled and loaded before public UI mounts. Native SF Symbols cover system chevrons, search and close; exported SVGs cover their cross-platform fallbacks. Avatars remain user data.
 
 ## SVG source map

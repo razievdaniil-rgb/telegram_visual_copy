@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "f6c286abdf34c21fc378ad975193befdc22f5f96",
+  "workflowRun": 39960383603,
+  "ios": {
+    "file": "ChatStudio-unsigned.ipa",
+    "size": 15032332,
+    "sha256": "6c1e66c74e6ee5f02e6c7e78b613e7f90410824d1f3a4503e9dc2f30c6de70b0",
+    "bundleIdentifier": "com.daniil.chatstudio",
+    "minimumOS": "16.4",
+    "kitFontIncluded": true,
+    "signed": false,
+    "deviceTested": false
+  },
+  "android": {
+    "file": "ChatStudio.apk",
+    "size": 112038002,
+    "sha256": "0b84ec83ac0ba1ceea345e276c545be913a693db4539536ffe9395df5a9292cf",
+    "kitFontIncluded": true,
+    "abis": ["arm64-v8a", "armeabi-v7a", "x86", "x86_64"],
+    "testSigned": true,
+    "deviceTested": false
+  }
+}
