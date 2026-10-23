@@ -24,3 +24,6 @@ Geometric ports in src/message-bubble.tsx and src/message-ui.tsx derive from Cha
 - invite: Images.xcassets/Contact List/InviteActionIcon.imageset/ic_heart.pdf.
 
 Contacts SVG compounds nested subpaths into one nonzero-fill path after export, preserving the original silhouette cutout.
+
+- calls-placeholder.svg: frame 20 of Resources/Animations/CallsPlaceholder.tgs; original loop retained in original/.
+- new-call: Images.xcassets/Call List/CallIcon.imageset/phoneplus_24.pdf.

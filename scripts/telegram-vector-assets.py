@@ -9,6 +9,7 @@ for name in ['TabChats','TabCalls','TabContacts','TabSettings']:
     export_svg(anim,str(assets/f'{name}.svg'),frame=anim.out_point-1)
 source=root/'artifacts/telegram-ios-source/submodules/TelegramUI/Images.xcassets'
 files={
+ 'new-call':'Call List/CallIcon.imageset/phoneplus_24.pdf',
  'disclosure':'Item List/DisclosureArrow.imageset/ic_open.pdf',
  'add':'Chat List/AddIcon.imageset/ic_add.pdf',
  'invite':'Contact List/InviteActionIcon.imageset/ic_heart.pdf',
@@ -62,3 +63,7 @@ walk(group)
 for n in list(group):group.remove(n)
 ET.SubElement(group,ns+'path',{'d':' '.join(parts),'fill-rule':'nonzero'})
 ET.register_namespace('',ns[1:-1]);tree.write(p,encoding='utf-8',xml_declaration=True)
+
+# Static snapshot of the original CallsPlaceholder loop.
+anim=parse_tgs(str(assets/'original/CallsPlaceholder.tgs'))
+export_svg(anim,str(assets/'calls-placeholder.svg'),frame=20)

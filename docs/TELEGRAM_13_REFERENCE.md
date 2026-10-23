@@ -42,7 +42,7 @@ Reference checkout expected at `artifacts/telegram-ios-source`. Scripts do not r
 - The wallpaper currently uses the **bundled 155×320 pattern thumbnail** from upstream resource 5789658100176783156-m.resource, not the full-resolution remotely fetched pattern. This must be replaced before claiming full wallpaper fidelity. Static gradient phase is used; animated phase transitions are not implemented.
 - Tab icons show the exact exported end frame, without original Lottie transitions. Selected lens is static between tabs.
 - Avatar initials use system bold rather than a custom native rounded font; user-selected avatar colors remain intact.
-- Calls remains a simulator empty screen. No actual Telegram network integration or calling.
+- Calls uses CallListControllerNode geometry (148pt illustration, 13pt image-to-text gap, 16pt caption, 23pt button gap), original CallsPlaceholder frame 20 and CallIcon. The loop is static; Russian placeholder copy is not checked against a 13.1.1 device screenshot. No actual calling.
 - Device keyboard, accessibility text enlargement, glass and profile geometry need native visual review. `.github/workflows/visual-ios.yml` builds a fixture-enabled Simulator app and captures six screens. Fixture seeding only runs with EXPO_PUBLIC_VISUAL_TEST=1 and empty storage.
 
 The old f6c286a APK/IPA do not include this 13.1.1 pass.

@@ -90,31 +90,55 @@ export function ContactsScreen({ data }: { data: Document }) {
   );
 }
 export function CallsScreen() {
+  const [missed, setMissed] = useState(false);
   const unavailable = useUnavailable();
   const insets = useSafeAreaInsets();
   return (
     <View style={s.screen}>
       <GlassContent>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingTop: 110,
-            paddingBottom: 103 + insets.bottom,
-          }}
-        >
-          <Empty
-            title="Нет недавних звонков"
-            description="Ваши звонки появятся здесь"
-            icon="call-outline"
+        <View style={[s.callsContent, { paddingBottom: 88 + insets.bottom }]}>
+          <Image
+            source={require('../assets/telegram-ios/calls-placeholder.svg')}
+            style={{ width: 148, height: 148 }}
           />
-        </ScrollView>
+          <Text style={s.callsDescription}>
+            {missed
+              ? 'Нет пропущенных звонков'
+              : 'Здесь будет история ваших аудио- и видеозвонков.'}
+          </Text>
+          <Pressable accessibilityRole="button" onPress={unavailable} style={s.startCall}>
+            <TelegramIcon name="newCall" color={C.blue} />
+            <Text style={s.startCallText}>Позвонить</Text>
+          </Pressable>
+        </View>
       </GlassContent>
-      <PublicHeader
-        title="Звонки"
-        onSecret={() => openEditor()}
-        leading={<GlassButton title="Изм." label="Изменить звонки" onPress={unavailable} />}
-        trailing={<GlassButton telegramIcon="add" label="Новый звонок" onPress={unavailable} />}
-      />
+      <View pointerEvents="box-none" style={s.callHeader}>
+        <Pressable
+          onLongPress={() => openEditor()}
+          delayLongPress={900}
+          accessibilityRole="header"
+          style={s.callTabsWrap}
+        >
+          <Glass style={s.callTabs}>
+            {[
+              { label: 'Все', value: false },
+              { label: 'Пропущенные', value: true },
+            ].map((item) => (
+              <Pressable
+                key={item.label}
+                accessibilityRole="tab"
+                accessibilityLabel={item.label}
+                accessibilityState={{ selected: item.value === missed }}
+                onPress={() => setMissed(item.value)}
+                style={[s.callTab, item.value === missed && { backgroundColor: C.selection }]}
+              >
+                <Text style={s.callTabText}>{item.label}</Text>
+              </Pressable>
+            ))}
+          </Glass>
+        </Pressable>
+        <GlassButton telegramIcon="newCall" label="Новый звонок" onPress={unavailable} />
+      </View>
     </View>
   );
 }
@@ -245,6 +269,48 @@ export function SettingsScreen({ data }: { data: Document }) {
 }
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: 'white' },
+  callsContent: {
+    flex: 1,
+    paddingTop: 64,
+    paddingHorizontal: 64,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  callsDescription: {
+    fontFamily: systemFont,
+    fontSize: 16,
+    lineHeight: 21,
+    color: '#6D6D72',
+    textAlign: 'center',
+    marginTop: 13,
+  },
+  startCall: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 14,
+    marginTop: 23,
+    minHeight: 44,
+  },
+  startCallText: { ...type.body, fontFamily: systemFont, color: C.blue, paddingTop: 4 },
+  callHeader: {
+    position: 'absolute',
+    top: 10,
+    left: 16,
+    right: 16,
+    height: 44,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  callTabsWrap: { position: 'absolute', left: 44, right: 44, alignItems: 'center' },
+  callTabs: { height: 44, flexDirection: 'row' },
+  callTab: { height: 44, paddingHorizontal: 16, justifyContent: 'center', borderRadius: 100 },
+  callTabText: {
+    fontFamily: systemFont,
+    fontSize: 15,
+    lineHeight: 18,
+    fontWeight: '500',
+    color: C.control,
+  },
   topFade: { position: 'absolute', top: 0, left: 0, right: 0, height: 58 },
   contactRow: {
     minHeight: 52,
