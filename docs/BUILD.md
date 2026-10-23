@@ -2,7 +2,7 @@
 
 ## Ручная сборка из GitHub
 
-В Actions есть workflow **Build mobile apps** с выбором `android`, `ios` или `all`. Запуск вручную: Actions → Build mobile apps → Run workflow. Android job выдаёт тестово подписанный release APK, iOS job — неподписанную IPA для последующей подписи владельцем устройства. Workflow подготовлен, но нативная сборка и установка ещё не проверены. Автоматическая проверка `Checks` проверяет TypeScript, lint, тесты и web-export.
+В Actions есть workflow **Build mobile apps** с выбором `android`, `ios` или `all`. Запуск вручную: Actions → Build mobile apps → Run workflow. Android job выдаёт тестово подписанный release APK, iOS job — неподписанную IPA для последующей подписи владельцем устройства. Обе нативные сборки успешно выполнены 23 октября 2026: [первый запуск](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/39954479725). Установка и работа на физических устройствах ещё не проверены. Автоматическая проверка `Checks` проверяет TypeScript, lint, тесты и web-export.
 
 ## Разработка на iPhone
 

@@ -12,8 +12,9 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Avatar, Icon } from './ui';
-import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
+import { Avatar } from './ui';
+import { KitSymbol } from './kit-symbol';
+import { Glass, GlassButton, GlassContent, KitIcon, useUnavailable } from './glass';
 import { Wallpaper } from './wallpaper';
 import { colors as C, layout, systemFont, type } from './theme';
 import { messagesFor, nameOf, type Chat, type Document, type Message } from './model';
@@ -160,7 +161,7 @@ export function DialogueScreen({
                   </Text>
                   <View style={s.metadata} pointerEvents="none">
                     <Text style={[s.metaText, { color: metaColor }]}>{meta}</Text>
-                    {outgoing && <MessageChecks receipt={m.receipt} color={metaColor} />}
+                    {outgoing && <MessageChecks receipt={m.receipt} color={metaColor} compact />}
                   </View>
                 </View>
               </View>
@@ -202,7 +203,7 @@ export function DialogueScreen({
             onPress={unavailable}
             style={s.roundPress}
           >
-            <Icon name="attach" size={28} color={C.control} />
+            <KitSymbol name="attach" size={30} />
           </Pressable>
         </Glass>
         <Glass style={s.field}>
@@ -225,7 +226,7 @@ export function DialogueScreen({
             onPress={unavailable}
             style={s.emoji}
           >
-            <Icon name="happy-outline" size={23} color="#727272" />
+            <KitSymbol name="emoji" size={23} color="#727272" />
           </Pressable>
         </Glass>
         {text.trim() ? (
@@ -235,15 +236,10 @@ export function DialogueScreen({
             onPress={submit}
             style={s.send}
           >
-            <Icon name="arrow-up" size={28} color="white" />
+            <KitIcon name="send" color="white" />
           </Pressable>
         ) : (
-          <GlassButton
-            fallbackIcon="mic-outline"
-            label="Голосовое сообщение"
-            onPress={unavailable}
-            size={42}
-          />
+          <GlassButton symbol="mic" label="Голосовое сообщение" onPress={unavailable} size={42} />
         )}
       </View>
     </KeyboardAvoidingView>

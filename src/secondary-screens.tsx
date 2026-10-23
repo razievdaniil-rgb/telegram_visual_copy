@@ -3,8 +3,9 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Avatar, Empty, Icon } from './ui';
-import { Glass, GlassButton, GlassContent, KitIcon, useNotice, useUnavailable } from './glass';
+import { Avatar, Empty } from './ui';
+import { Glass, GlassButton, GlassContent, useNotice, useUnavailable } from './glass';
+import { KitSymbol, SystemSymbol, type KitSymbolName } from './kit-symbol';
 import { PublicHeader } from './public-ui';
 import { colors as C, systemFont, type } from './theme';
 import { nameOf, type Document } from './model';
@@ -24,7 +25,7 @@ export function ContactsScreen({ data }: { data: Document }) {
         <ScrollView contentContainerStyle={{ paddingTop: 54, paddingBottom: 103 + insets.bottom }}>
           <Pressable accessibilityRole="button" onPress={unavailable} style={s.contactRow}>
             <View style={s.inviteIcon}>
-              <KitIcon name="contacts" color={C.blue} />
+              <KitSymbol name="invite" size={30} color={C.blue} />
             </View>
             <Text style={s.inviteText}>Пригласить друзей</Text>
           </Pressable>
@@ -81,7 +82,7 @@ export function ContactsScreen({ data }: { data: Document }) {
             onPress={() => setReverse(!reverse)}
           />
         }
-        trailing={<GlassButton icon="plus" label="Добавить контакт" onPress={unavailable} />}
+        trailing={<GlassButton symbol="plus" label="Добавить контакт" onPress={unavailable} />}
       />
     </View>
   );
@@ -110,35 +111,47 @@ export function CallsScreen() {
         title="Звонки"
         onSecret={() => openEditor()}
         leading={<GlassButton title="Изм." label="Изменить звонки" onPress={unavailable} />}
-        trailing={<GlassButton icon="plus" label="Новый звонок" onPress={unavailable} />}
+        trailing={<GlassButton symbol="plus" label="Новый звонок" onPress={unavailable} />}
       />
     </View>
   );
 }
 const groups = [
   [
-    { title: 'Установить эмодзи-статус', icon: 'happy-outline', color: C.blue, plain: true },
-    { title: 'Изменить фотографию', icon: 'camera-outline', color: C.blue, plain: true },
+    { title: 'Установить эмодзи-статус', icon: 'emojiStatus', color: C.blue, plain: true },
+    { title: 'Изменить фотографию', icon: 'photo', color: C.blue, plain: true },
   ],
-  [{ title: 'Добавить аккаунт', icon: 'add', color: C.blue, plain: true }],
-  [{ title: 'Мой профиль', icon: 'person-circle', color: '#FF2D55', action: 'profile' }],
+  [{ title: 'Добавить аккаунт', icon: 'plus', color: C.blue, plain: true }],
+  [{ title: 'Мой профиль', icon: 'profile', color: '#FF2D55', action: 'profile' }],
   [{ title: 'Кошелёк', icon: 'wallet', color: '#0088FF' }],
   [
-    { title: 'Избранное', icon: 'bookmark', color: '#0088FF' },
-    { title: 'Недавние звонки', icon: 'call', color: '#34C759', action: 'calls' },
-    { title: 'Устройства', icon: 'copy-outline', color: '#FF8D28' },
-    { title: 'Папки с чатами', icon: 'folder', color: '#00C0E8' },
+    { title: 'Избранное', icon: 'saved', color: '#0088FF' },
+    { title: 'Недавние звонки', icon: 'recentCalls', color: '#34C759', action: 'calls' },
+    { title: 'Устройства', icon: 'devices', color: '#FF8D28' },
+    { title: 'Папки с чатами', icon: 'folders', color: '#00C0E8' },
   ],
   [
     { title: 'Уведомления и звуки', icon: 'notifications', color: '#FF383C' },
-    { title: 'Конфиденциальность', icon: 'lock-closed', color: '#8E8E93' },
-    { title: 'Данные и память', icon: 'pie-chart', color: '#34C759' },
-    { title: 'Оформление', icon: 'color-palette', color: '#00C0E8' },
+    { title: 'Конфиденциальность', icon: 'privacy', color: '#8E8E93' },
+    { title: 'Данные и память', icon: 'data', color: '#34C759' },
+    { title: 'Оформление', icon: 'appearance', color: '#00C0E8' },
+    { title: 'Энергосбережение', icon: 'power', color: '#FF8D28' },
+    { title: 'Язык', icon: 'language', color: '#CB30E0' },
   ],
-  [{ title: 'О приложении', icon: 'information-circle', color: '#8E8E93', action: 'about' }],
+  [
+    { title: 'Telegram Premium', icon: 'premium', color: '#8B5CE6' },
+    { title: 'Мои звёзды', icon: 'stars', color: '#FFB000' },
+    { title: 'Отправить подарок', icon: 'gift', color: '#FF8D28' },
+  ],
+  [
+    { title: 'Задать вопрос', icon: 'question', color: '#FF8D28' },
+    { title: 'Вопросы о Telegram', icon: 'faq', color: '#00C0E8' },
+    { title: 'Возможности Telegram', icon: 'features', color: '#FFCC00' },
+  ],
+  [{ title: 'О приложении', icon: 'question', color: '#8E8E93', action: 'about' }],
 ] satisfies {
   title: string;
-  icon: React.ComponentProps<typeof Icon>['name'];
+  icon: KitSymbolName;
   color: string;
   plain?: boolean;
   action?: string;
@@ -192,16 +205,22 @@ export function SettingsScreen({ data }: { data: Document }) {
                         },
                       ]}
                     >
-                      <Icon
+                      {!('plain' in row && row.plain) && (
+                        <LinearGradient
+                          colors={['#FFFFFF1A', '#00000033']}
+                          style={StyleSheet.absoluteFill}
+                        />
+                      )}
+                      <KitSymbol
                         name={row.icon}
-                        size={24}
-                        color={'plain' in row && row.plain ? row.color : 'white'}
+                        size={'plain' in row && row.plain ? 30 : 23}
+                        color={'plain' in row && row.plain ? row.color : '#F5F5F5'}
                       />
                     </View>
                     <View style={[s.settingBody, ri > 0 && s.separator]}>
                       <Text style={s.settingTitle}>{row.title}</Text>
                       {!('plain' in row && row.plain) && (
-                        <Icon name="chevron-forward" color="#C7C7CC" size={18} />
+                        <SystemSymbol name="forward" color="#C7C7CC" size={17} />
                       )}
                     </View>
                   </Pressable>
@@ -219,7 +238,7 @@ export function SettingsScreen({ data }: { data: Document }) {
             onPress={unavailable}
             style={s.qr}
           >
-            <Icon name="qr-code-outline" color={C.control} size={24} />
+            <KitSymbol name="qr" size={30} />
           </Pressable>
         </Glass>
         <GlassButton title="Изм." label="Изменить аккаунт" onPress={unavailable} />
@@ -289,6 +308,7 @@ const s = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 8,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -18,6 +18,7 @@ import { Image } from 'expo-image';
 import { colors as C, systemFont, type } from './theme';
 import { kitAssets } from './kit-assets';
 import { Icon } from './ui';
+import { KitSymbol, SystemSymbol, type KitSymbolName } from './kit-symbol';
 
 const TargetContext = createContext<{
   targetRef?: React.RefObject<View | null>;
@@ -168,6 +169,7 @@ export function KitIcon({
 }
 export function GlassButton({
   icon,
+  symbol,
   fallbackIcon,
   title,
   label,
@@ -177,6 +179,7 @@ export function GlassButton({
   dark = false,
 }: {
   icon?: keyof typeof kitAssets;
+  symbol?: KitSymbolName;
   fallbackIcon?: React.ComponentProps<typeof Icon>['name'];
   title?: string;
   label: string;
@@ -195,7 +198,11 @@ export function GlassButton({
         delayLongPress={900}
         style={({ pressed }) => [g.button, { minWidth: size, height: size }, pressed && g.pressed]}
       >
-        {fallbackIcon ? (
+        {symbol ? (
+          <KitSymbol name={symbol} size={30} color={dark ? 'white' : C.control} />
+        ) : icon === 'back' || icon === 'search' ? (
+          <SystemSymbol name={icon} color={dark ? 'white' : C.control} />
+        ) : fallbackIcon ? (
           <Icon name={fallbackIcon} size={28} color={dark ? 'white' : C.control} />
         ) : icon ? (
           <KitIcon name={icon} color={dark ? 'white' : C.control} />

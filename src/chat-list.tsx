@@ -3,8 +3,9 @@ import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-na
 import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Avatar, Empty, Icon } from './ui';
-import { Glass, GlassButton, GlassContent, KitIcon, useUnavailable } from './glass';
+import { Avatar, Empty } from './ui';
+import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
+import { KitSymbol, SystemSymbol } from './kit-symbol';
 import { PublicHeader } from './public-ui';
 import { colors as C, layout, systemFont, type } from './theme';
 import { messagesFor, nameOf, sortedChats, type Document } from './model';
@@ -110,7 +111,7 @@ export function ChatsScreen({
               onPress={unavailable}
               style={s.headerButton}
             >
-              <KitIcon name="story" />
+              <KitSymbol name="story" size={30} />
             </Pressable>
             <Pressable
               accessibilityRole="button"
@@ -118,7 +119,7 @@ export function ChatsScreen({
               onPress={unavailable}
               style={s.headerButton}
             >
-              <Icon name="create-outline" size={28} color={C.control} />
+              <KitSymbol name="compose" size={30} />
             </Pressable>
           </Glass>
         }
@@ -126,7 +127,7 @@ export function ChatsScreen({
       <View style={s.foldersWrap}>
         {searching ? (
           <Glass style={s.search}>
-            <KitIcon name="search" color={C.muted} />
+            <SystemSymbol name="search" color={C.muted} />
             <TextInput
               autoFocus
               accessibilityLabel="Поиск чатов"
@@ -145,7 +146,7 @@ export function ChatsScreen({
                 router.setParams({ search: undefined });
               }}
             >
-              <Icon name="close" color={C.muted} size={22} />
+              <SystemSymbol name="close" color={C.muted} size={17} />
             </Pressable>
           </Glass>
         ) : (

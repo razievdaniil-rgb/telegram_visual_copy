@@ -3,9 +3,9 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Glass, GlassButton, KitIcon } from './glass';
+import { Glass, GlassButton } from './glass';
+import { KitSymbol } from './kit-symbol';
 import { colors as C, systemFont, type } from './theme';
-import { Icon } from './ui';
 
 export function PublicHeader({
   title,
@@ -61,15 +61,18 @@ export function FloatingTabs({ state, descriptors, navigation }: BottomTabBarPro
               }}
               style={[p.tab, selected && p.selected]}
             >
-              {route.name === 'contacts' || route.name === 'calls' ? (
-                <KitIcon name={route.name} color={color} />
-              ) : (
-                <Icon
-                  name={route.name === 'index' ? 'chatbubbles' : 'settings-outline'}
-                  size={28}
-                  color={color}
-                />
-              )}
+              <KitSymbol
+                name={
+                  route.name === 'index'
+                    ? 'chats'
+                    : route.name === 'contacts'
+                      ? 'contacts'
+                      : route.name === 'calls'
+                        ? 'calls'
+                        : 'settings'
+                }
+                color={color}
+              />
               <Text
                 numberOfLines={1}
                 style={[p.tabLabel, { color, fontWeight: selected ? '700' : '500' }]}

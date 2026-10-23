@@ -1,11 +1,12 @@
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Avatar, Icon } from './ui';
-import { Glass, GlassButton, GlassContent, KitIcon, useUnavailable } from './glass';
+import { Avatar } from './ui';
+import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
 import { nameOf, type Chat, type Profile } from './model';
 import { colors as C, systemFont, type } from './theme';
 import { ProfilePattern } from './profile-pattern';
+import { KitSymbol } from './kit-symbol';
 
 export function ProfileScreen({
   profile,
@@ -46,7 +47,7 @@ export function ProfileScreen({
                 [
                   { icon: 'calls', label: 'звонок' },
                   { icon: 'video', label: 'видео' },
-                  { icon: null, label: 'звук' },
+                  { icon: 'mute', label: 'звук' },
                   { icon: 'search', label: 'поиск' },
                   { icon: 'more', label: 'ещё' },
                 ] as const
@@ -58,11 +59,10 @@ export function ProfileScreen({
                     onPress={unavailable}
                     style={s.action}
                   >
-                    {action.icon ? (
-                      <KitIcon name={action.icon} color="white" />
-                    ) : (
-                      <Icon name="notifications" size={28} color="white" />
-                    )}
+                    <KitSymbol
+                      name={action.icon === 'calls' ? 'calls' : action.icon}
+                      color="white"
+                    />
                     <Text style={s.actionLabel}>{action.label}</Text>
                   </Pressable>
                 </Glass>
