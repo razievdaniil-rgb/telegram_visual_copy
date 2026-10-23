@@ -14,6 +14,7 @@ Source: https://github.com/TelegramMessenger/Telegram-iOS/tree/fb0e62ba8a147f082
 | Tabs                | `TelegramUI/Components/TabBarComponent` and `TabBarLayout`                                                                        | bar 64, item 56, padding 4, icons 48 with -4 offset, label 10 semibold, search 64, gap 8        |
 | Search              | `TabBarComponent/NavigationSearchView`                                                                                            | bottom field 48; close 48; gap 8                                                                |
 | Bubble              | `TelegramPresentationData/Sources/ChatMessageBubbleImages.swift`, `TelegramUIPreferences/Sources/PresentationThemeSettings.swift` | main corners 16, joined corners 8, original tail mask mirrored for incoming                     |
+| Grouping            | `ChatMessageMergeFingerprint.swift`                                                                                               | same side and date, timestamp difference below 10 minutes                                       |
 | Text bubble padding | `TelegramUI/Components/Chat/ChatMessageItemCommon`                                                                                | 11 horizontal + 6 tail allowance, 6±pixel vertical, max width screen minus 36                   |
 | Input               | `TelegramUI/Components/Chat/ChatTextInputPanelNode`                                                                               | attachment 40, field minimum 40, text 17, sticker 24, microphone/send inside capsule            |
 | Title               | `TelegramUI/Components/Chat/ChatTitleView`                                                                                        | name 17 semibold, status 13 regular                                                             |
@@ -24,7 +25,7 @@ Chat row height 68 is derived from upstream TextNode layout with the default 16p
 
 ## Local resources and reproducibility
 
-`assets/telegram-ios/original/` preserves upstream PDF and Lottie inputs. Exported icons retain source paths; tint is applied by the app. Tabs currently use the last frame of the upstream Lottie animation. Original input icons are PNGs from the same asset catalog. Settings icons are rendered using source colors, Gradient/Backdrop layers and white icon masks.
+`assets/telegram-ios/original/` preserves upstream PDF and Lottie inputs. Exported icons retain source paths; tint is applied by the app. Tabs currently use the last frame of the upstream Lottie animation. Original input icons are PNGs from the same asset catalog. Canonical filenames omit the @3x suffix; pixels remain at 3x and the component sets the original point size explicitly. Settings icons are rendered using source colors, Gradient/Backdrop layers and white icon masks.
 
 Scripts:
 

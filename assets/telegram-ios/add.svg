@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" width="30" height="30" viewBox="0 0 30 30">
+<defs>
+<clipPath id="clip_1">
+<path transform="matrix(1,0,0,-1,0,30)" d="M15 23.83C15.4584 23.83 15.83 23.4584 15.83 23V15.83H23C23.42314 15.83 23.77232 15.51337 23.82353 15.10411L23.83 15C23.83 14.5416 23.4584 14.17 23 14.17H15.83V7C15.83 6.576865 15.51337 6.227683 15.10411 6.176467L15 6.17C14.5416 6.17 14.17 6.541604 14.17 7V14.17H7C6.576865 14.17 6.227683 14.48663 6.176467 14.89589L6.17 15C6.17 15.4584 6.541604 15.83 7 15.83H14.17V23C14.17 23.42314 14.48663 23.77232 14.89589 23.82353L15 23.83Z"/>
+</clipPath>
+</defs>
+<g clip-path="url(#clip_1)">
+<path transform="matrix(1,0,0,-1,0,30)" d="M1.17 28.83H28.83V1.17H1.17Z"/>
+</g>
+</svg>

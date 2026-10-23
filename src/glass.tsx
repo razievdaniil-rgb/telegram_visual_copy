@@ -144,7 +144,19 @@ export function Glass({
         )}
         {!native && !reduced && (
           <View
-            style={[StyleSheet.absoluteFill, { backgroundColor: dark ? '#FFFFFF12' : '#FFFFFF70' }]}
+            style={[StyleSheet.absoluteFill, { backgroundColor: dark ? '#FFFFFF12' : '#FFFFFFB3' }]}
+          />
+        )}
+        {!native && (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                borderRadius: 100,
+                borderWidth: 0.5,
+                borderColor: dark ? '#FFFFFF26' : '#0000000A',
+              },
+            ]}
           />
         )}
       </View>

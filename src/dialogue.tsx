@@ -112,13 +112,13 @@ export function DialogueScreen({
               next &&
               next.direction === m.direction &&
               dayKey(next.sentAt) === dayKey(m.sentAt) &&
-              new Date(next.sentAt).getTime() - new Date(m.sentAt).getTime() < 300_000;
+              new Date(next.sentAt).getTime() - new Date(m.sentAt).getTime() < 600_000;
             const outgoing = m.direction === 'outgoing';
             const samePrevious =
               previous &&
               previous.direction === m.direction &&
               dayKey(previous.sentAt) === dayKey(m.sentAt) &&
-              new Date(m.sentAt).getTime() - new Date(previous.sentAt).getTime() < 300_000;
+              new Date(m.sentAt).getTime() - new Date(previous.sentAt).getTime() < 600_000;
             const metaColor = outgoing ? C.outgoingMeta : C.incomingMeta;
             const meta = `${m.edited ? 'изменено ' : ''}${timeLabel(m.sentAt)}`;
             return (
@@ -358,6 +358,10 @@ const s = StyleSheet.create({
     paddingVertical: 9.5,
   },
   input: {
+    position: 'relative',
+    zIndex: 1,
+    outlineWidth: 0,
+    outlineStyle: 'solid',
     ...type.body,
     fontFamily: systemFont,
     color: C.text,

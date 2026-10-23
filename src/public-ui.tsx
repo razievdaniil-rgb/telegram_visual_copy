@@ -32,7 +32,7 @@ export function PublicHeader({
           {title}
         </Text>
       </Pressable>
-      <View style={[p.side, { alignItems: 'flex-end' }]}>{trailing}</View>
+      <View style={[p.side, { justifyContent: 'flex-end' }]}>{trailing}</View>
     </View>
   );
 }
@@ -215,6 +215,10 @@ export const p = StyleSheet.create({
     paddingRight: 8,
   },
   searchInput: {
+    position: 'relative',
+    zIndex: 1,
+    outlineWidth: 0,
+    outlineStyle: 'solid',
     ...type.body,
     fontFamily: systemFont,
     flex: 1,

@@ -7,6 +7,9 @@ import { colors } from './theme';
 // Vector frames and PDFs retain their original geometry; the app applies tint,
 // just as UIImage.alwaysTemplate and LottieComponent do upstream.
 const icons = {
+  disclosure: { source: require('../assets/telegram-ios/disclosure.svg'), size: 24 },
+  add: { source: require('../assets/telegram-ios/add.svg'), size: 30 },
+  invite: { source: require('../assets/telegram-ios/invite.svg'), size: 30 },
   chats: { source: require('../assets/telegram-ios/TabChats.svg'), size: 48 },
   calls: { source: require('../assets/telegram-ios/TabCalls.svg'), size: 48 },
   contacts: { source: require('../assets/telegram-ios/TabContacts.svg'), size: 48 },

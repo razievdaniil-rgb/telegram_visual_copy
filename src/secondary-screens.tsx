@@ -7,7 +7,8 @@ import { SettingsIcon, type SettingsIconName } from './settings-icon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Avatar, Empty } from './ui';
 import { Glass, GlassButton, GlassContent, useNotice, useUnavailable } from './glass';
-import { KitSymbol, SystemSymbol, type KitSymbolName } from './kit-symbol';
+import { type KitSymbolName } from './kit-symbol';
+import { TelegramIcon } from './telegram-assets';
 import { PublicHeader } from './public-ui';
 import { colors as C, systemFont, type } from './theme';
 import { nameOf, type Document } from './model';
@@ -26,7 +27,7 @@ export function ContactsScreen({ data }: { data: Document }) {
         <ScrollView contentContainerStyle={{ paddingTop: 64, paddingBottom: 88 + insets.bottom }}>
           <Pressable accessibilityRole="button" onPress={unavailable} style={s.contactRow}>
             <View style={s.inviteIcon}>
-              <KitSymbol name="invite" size={30} color={C.blue} />
+              <TelegramIcon name="invite" color={C.blue} />
             </View>
             <Text style={s.inviteText}>Пригласить друзей</Text>
           </Pressable>
@@ -83,7 +84,7 @@ export function ContactsScreen({ data }: { data: Document }) {
             onPress={() => setReverse(!reverse)}
           />
         }
-        trailing={<GlassButton symbol="plus" label="Добавить контакт" onPress={unavailable} />}
+        trailing={<GlassButton telegramIcon="add" label="Добавить контакт" onPress={unavailable} />}
       />
     </View>
   );
@@ -112,7 +113,7 @@ export function CallsScreen() {
         title="Звонки"
         onSecret={() => openEditor()}
         leading={<GlassButton title="Изм." label="Изменить звонки" onPress={unavailable} />}
-        trailing={<GlassButton symbol="plus" label="Новый звонок" onPress={unavailable} />}
+        trailing={<GlassButton telegramIcon="add" label="Новый звонок" onPress={unavailable} />}
       />
     </View>
   );
@@ -212,7 +213,7 @@ export function SettingsScreen({ data }: { data: Document }) {
                     <View style={[s.settingBody, ri > 0 && s.separator]}>
                       <Text style={s.settingTitle}>{row.title}</Text>
                       {!('plain' in row && row.plain) && (
-                        <SystemSymbol name="forward" color="#C7C7CC" size={17} />
+                        <TelegramIcon name="disclosure" color="#C7C7CC" />
                       )}
                     </View>
                   </Pressable>

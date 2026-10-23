@@ -18,3 +18,9 @@ Original files retain their upstream names/content in original/. They are not au
 - wallpaper-gradient.png: port of SoftwareGradientBackground.swift phase 0, default Classic colors.
 
 Geometric ports in src/message-bubble.tsx and src/message-ui.tsx derive from ChatMessageBubbleImages.swift and PresentationThemeEssentialGraphics.swift respectively. Changes and limitations: docs/TELEGRAM_13_REFERENCE.md. Telegram's upstream README asks derivative applications to publish their source and identify themselves as unofficial; ChatStudio retains its own application identity, an About disclosure, and its public source repository.
+
+- disclosure: Images.xcassets/Item List/DisclosureArrow.imageset/ic_open.pdf.
+- add: Images.xcassets/Chat List/AddIcon.imageset/ic_add.pdf.
+- invite: Images.xcassets/Contact List/InviteActionIcon.imageset/ic_heart.pdf.
+
+Contacts SVG compounds nested subpaths into one nonzero-fill path after export, preserving the original silhouette cutout.

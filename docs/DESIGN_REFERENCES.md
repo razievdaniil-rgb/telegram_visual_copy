@@ -1,3 +1,5 @@
+> Исторический отчёт по UI Kit 12.6.1. С 23 октября 2026 актуальный эталон — **Telegram iOS 13.1.1**: [текущая спецификация](TELEGRAM_13_REFERENCE.md). Приведённые ниже размеры и сравнения не подтверждают совпадение с 13.1.1.
+
 # Источники оформления
 
 Основной эталон — присланный пользователем Telegram iOS UI Kit, импортированный с его разрешения в [Figma](https://www.figma.com/design/hYJ3EmdVKaiQyuZ2k7z01J). На странице Getting Started указаны Telegram 12.6.1 и Apple Design Resources 26.3.1.
