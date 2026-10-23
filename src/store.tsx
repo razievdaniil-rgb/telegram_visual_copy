@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import { emptyDocument, reducer, type Action, type Document } from './model';
 import { loadDocument, saveDocument } from './storage';
 import { Button, Empty, Loading } from './ui';
+import { exampleDocument } from './example';
 
 type StoreAction = Action | { type: 'document/load'; document: Document };
 const Store = createContext<null | { data: Document; dispatch: React.Dispatch<StoreAction> }>(null);
@@ -20,6 +21,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       .then((document) => {
         if (!active) return;
         if (document) dispatch({ type: 'document/load', document });
+        else if (process.env.EXPO_PUBLIC_VISUAL_TEST === '1')
+          dispatch({ type: 'document/load', document: exampleDocument() });
         setLoadError(false);
         setReady(true);
       })

@@ -10,18 +10,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar } from './ui';
-import { KitSymbol } from './kit-symbol';
-import { Glass, GlassButton, GlassContent, KitIcon, useUnavailable } from './glass';
+import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
 import { Wallpaper } from './wallpaper';
-import { colors as C, layout, systemFont, type } from './theme';
+import { colors as C, systemFont, type } from './theme';
 import { messagesFor, nameOf, type Chat, type Document, type Message } from './model';
 import { dayKey, MessageChecks, timeLabel } from './message-ui';
-import { kitAssets } from './kit-assets';
 import { PresenceLabel } from './presence';
+import { MessageBubble } from './message-bubble';
+import { TelegramIcon } from './telegram-assets';
 
 export function DialogueScreen({
   data,
@@ -41,7 +40,7 @@ export function DialogueScreen({
   const profile = data.profiles.find((p) => p.id === chat.profileId)!;
   const messages = messagesFor(data, chat.id);
   const [text, setText] = useState('');
-  const [inputHeight, setInputHeight] = useState(22);
+  const [inputHeight, setInputHeight] = useState(21);
   const [keyboard, setKeyboard] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const [width, setWidth] = useState(402);
@@ -67,7 +66,7 @@ export function DialogueScreen({
     if (!text.trim()) return;
     send(text);
     setText('');
-    setInputHeight(22);
+    setInputHeight(21);
     setAtBottom(true);
   };
   return (
@@ -85,7 +84,10 @@ export function DialogueScreen({
           keyExtractor={(message) => message.id}
           contentContainerStyle={[
             s.messages,
-            { paddingBottom: Math.min(130, inputHeight) + 60 + (keyboard ? 0 : insets.bottom) },
+            {
+              paddingBottom:
+                Math.max(40, inputHeight + 19) + (keyboard ? 0 : Math.max(8, insets.bottom)) + 8,
+            },
           ]}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive"
@@ -112,6 +114,11 @@ export function DialogueScreen({
               dayKey(next.sentAt) === dayKey(m.sentAt) &&
               new Date(next.sentAt).getTime() - new Date(m.sentAt).getTime() < 300_000;
             const outgoing = m.direction === 'outgoing';
+            const samePrevious =
+              previous &&
+              previous.direction === m.direction &&
+              dayKey(previous.sentAt) === dayKey(m.sentAt) &&
+              new Date(m.sentAt).getTime() - new Date(previous.sentAt).getTime() < 300_000;
             const metaColor = outgoing ? C.outgoingMeta : C.incomingMeta;
             const meta = `${m.edited ? 'изменено ' : ''}${timeLabel(m.sentAt)}`;
             return (
@@ -140,23 +147,12 @@ export function DialogueScreen({
                     </View>
                   </View>
                 )}
-                <View
-                  style={[
-                    s.bubble,
-                    { maxWidth: Math.min(288, width - 48) },
-                    outgoing ? s.outgoing : s.incoming,
-                    sameNext &&
-                      (outgoing ? { borderBottomRightRadius: 6 } : { borderBottomLeftRadius: 6 }),
-                    { marginBottom: sameNext ? 2 : 6 },
-                  ]}
+                <MessageBubble
+                  outgoing={outgoing}
+                  previous={!!samePrevious}
+                  next={!!sameNext}
+                  maxWidth={width - 36}
                 >
-                  {!sameNext && (
-                    <Image
-                      source={outgoing ? kitAssets.outgoingTail : kitAssets.incomingTail}
-                      contentFit="contain"
-                      style={[s.tail, outgoing ? s.outgoingTail : s.incomingTail]}
-                    />
-                  )}
                   <Text selectable style={s.messageText}>
                     {m.text}
                     <Text
@@ -168,11 +164,13 @@ export function DialogueScreen({
                       {`  ${meta}${outgoing ? '     ' : ''}`}
                     </Text>
                   </Text>
-                  <View style={s.metadata} pointerEvents="none">
+                  <View style={[s.metadata, { right: outgoing ? 17 : 11 }]} pointerEvents="none">
                     <Text style={[s.metaText, { color: metaColor }]}>{meta}</Text>
-                    {outgoing && <MessageChecks receipt={m.receipt} color={metaColor} compact />}
+                    {outgoing && (
+                      <MessageChecks receipt={m.receipt} color={C.outgoingCheck} compact />
+                    )}
                   </View>
-                </View>
+                </MessageBubble>
               </View>
             );
           }}
@@ -200,11 +198,19 @@ export function DialogueScreen({
             accessibilityLabel="Аватар собеседника"
             onPress={openProfile}
           >
-            <Avatar profile={profile} size={38} />
+            <Avatar profile={profile} size={40} />
           </Pressable>
         </Glass>
       </View>
-      <View style={[s.composer, { paddingBottom: keyboard ? 6 : Math.max(10, insets.bottom - 6) }]}>
+      <View
+        style={[
+          s.composer,
+          {
+            paddingBottom: keyboard ? 0 : Math.max(8, insets.bottom),
+            paddingHorizontal: keyboard || insets.bottom <= 32 ? 26 : 8,
+          },
+        ]}
+      >
         <Glass style={s.round}>
           <Pressable
             accessibilityRole="button"
@@ -212,7 +218,7 @@ export function DialogueScreen({
             onPress={unavailable}
             style={s.roundPress}
           >
-            <KitSymbol name="attach" size={30} />
+            <TelegramIcon name="attachment" />
           </Pressable>
         </Glass>
         <Glass style={s.field}>
@@ -224,7 +230,7 @@ export function DialogueScreen({
             value={text}
             onChangeText={setText}
             onContentSizeChange={(event) =>
-              setInputHeight(Math.max(22, Math.min(130, event.nativeEvent.contentSize.height)))
+              setInputHeight(Math.max(21, Math.min(130, event.nativeEvent.contentSize.height)))
             }
             scrollEnabled={inputHeight >= 130}
             style={[s.input, { height: inputHeight }]}
@@ -235,21 +241,28 @@ export function DialogueScreen({
             onPress={unavailable}
             style={s.emoji}
           >
-            <KitSymbol name="emoji" size={23} color="#727272" />
+            <TelegramIcon name="sticker" color="#8E8E93" />
           </Pressable>
+          {text.trim() ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Отправить сообщение"
+              onPress={submit}
+              style={s.send}
+            >
+              <TelegramIcon name="send" color="white" />
+            </Pressable>
+          ) : (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Голосовое сообщение"
+              onPress={unavailable}
+              style={s.microphone}
+            >
+              <TelegramIcon name="microphone" />
+            </Pressable>
+          )}
         </Glass>
-        {text.trim() ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Отправить сообщение"
-            onPress={submit}
-            style={s.send}
-          >
-            <KitIcon name="send" color="white" />
-          </Pressable>
-        ) : (
-          <GlassButton symbol="mic" label="Голосовое сообщение" onPress={unavailable} size={42} />
-        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -258,7 +271,7 @@ const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: C.wallpaper },
   header: {
     position: 'absolute',
-    top: 0,
+    top: 10,
     left: 16,
     right: 16,
     height: 54,
@@ -267,47 +280,34 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 12,
   },
-  peerGlass: { maxWidth: '68%', minWidth: 90 },
+  peerGlass: { maxWidth: '68%', minWidth: 90, flexShrink: 1 },
   peer: { height: 44, paddingHorizontal: 16, justifyContent: 'center', alignItems: 'center' },
   peerName: {
-    ...type.preview,
+    ...type.body,
     fontFamily: systemFont,
     fontWeight: '600',
-    color: '#333333',
-    lineHeight: 18,
+    color: C.text,
+    lineHeight: 20,
   },
   avatarGlass: {
     width: 44,
     height: 44,
-    padding: 2.5,
+    padding: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  messages: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 8, paddingTop: 62 },
-  bubble: {
-    maxWidth: 288,
-    minWidth: 64,
-    borderRadius: layout.bubble,
-    paddingHorizontal: 9,
-    paddingVertical: 5,
-  },
-  outgoing: { alignSelf: 'flex-end', backgroundColor: C.outgoing, marginLeft: 24 },
-  incoming: { alignSelf: 'flex-start', backgroundColor: C.incoming, marginRight: 24 },
-  tail: { position: 'absolute', width: 13.6211, height: 32, bottom: 0.07 },
-  incomingTail: { left: -5.6211 },
-  outgoingTail: { right: -5.6211, transform: [{ scaleX: -1 }] },
+  messages: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 3, paddingTop: 72 },
   messageText: { ...type.body, fontFamily: systemFont, color: C.text },
   reservedTime: { fontSize: 11, letterSpacing: 0, color: 'transparent' },
   metadata: {
     position: 'absolute',
     bottom: 4,
-    right: 9,
     flexDirection: 'row',
     gap: 3,
     alignItems: 'center',
   },
   metaText: { fontFamily: systemFont, fontSize: 11, lineHeight: 12 },
-  dateWrap: { alignItems: 'center', marginVertical: 10 },
+  dateWrap: { alignItems: 'center', height: 34, justifyContent: 'center' },
   dateGlass: { borderRadius: 100, overflow: 'hidden' },
   dateTint: {
     position: 'absolute',
@@ -315,14 +315,13 @@ const s = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#0000004D',
-    mixBlendMode: 'overlay',
+    backgroundColor: '#00000033',
   },
   date: {
     ...type.footnote,
     fontFamily: systemFont,
     fontWeight: '600',
-    paddingHorizontal: 6,
+    paddingHorizontal: 7,
     paddingVertical: 3,
     color: 'white',
   },
@@ -345,17 +344,18 @@ const s = StyleSheet.create({
     paddingTop: 4,
     gap: 6,
   },
-  round: { width: 42, height: 42 },
-  roundPress: { width: 42, height: 42, justifyContent: 'center', alignItems: 'center' },
+  round: { width: 40, height: 40 },
+  roundPress: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   field: {
     flex: 1,
     minWidth: 0,
-    minHeight: 42,
-    borderRadius: 21,
+    minHeight: 40,
+    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingLeft: 9,
-    paddingVertical: 9,
+    paddingLeft: 12,
+    paddingRight: 3,
+    paddingVertical: 9.5,
   },
   input: {
     ...type.body,
@@ -364,22 +364,30 @@ const s = StyleSheet.create({
     padding: 0,
     flex: 1,
     minWidth: 0,
-    minHeight: 22,
+    minHeight: 21,
     maxHeight: 130,
   },
   emoji: {
-    width: 36,
-    height: 36,
-    marginVertical: -7,
+    width: 30,
+    height: 40,
+    marginVertical: -9.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   send: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 34,
+    height: 34,
+    marginVertical: -6.5,
+    borderRadius: 17,
     backgroundColor: C.blue,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  microphone: {
+    width: 34,
+    height: 40,
+    marginVertical: -9.5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

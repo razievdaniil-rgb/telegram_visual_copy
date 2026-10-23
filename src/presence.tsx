@@ -52,6 +52,6 @@ export function PresenceLabel({ presence }: { presence: Chat['presence'] }) {
   );
 }
 const st = StyleSheet.create({
-  online: { color: C.blue, fontSize: 12, lineHeight: 14 },
-  offline: { color: C.muted, fontSize: 12, lineHeight: 14 },
+  online: { color: C.blue, fontSize: 13, lineHeight: 15 },
+  offline: { color: C.muted, fontSize: 13, lineHeight: 15 },
 });

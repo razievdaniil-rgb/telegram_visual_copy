@@ -11,6 +11,7 @@ export default function ProfilePage() {
   return (
     <ProfileScreen
       profile={profile}
+      openedFromChat={!!chatId}
       presence={chat?.presence}
       back={goBack}
       openEditor={() => openEditor(chatId)}

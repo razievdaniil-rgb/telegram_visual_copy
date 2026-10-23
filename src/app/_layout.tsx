@@ -7,12 +7,14 @@ import { C } from '../ui';
 import { GlassEnvironment } from '../glass';
 import { useState } from 'react';
 import { FontGate } from '../font-gate';
+import { Wallpaper } from '../wallpaper';
 
 export const unstable_settings = { anchor: '(tabs)' };
 export default function RootLayout() {
   const [fontAttempt, setFontAttempt] = useState(0);
   const pathname = usePathname();
   const colored = pathname === '/settings' || pathname.startsWith('/profile/');
+  const chat = pathname.startsWith('/chat/');
   const backgroundColor = colored
     ? C.profile
     : pathname.startsWith('/chat/')
@@ -23,10 +25,11 @@ export default function RootLayout() {
       <FontGate key={fontAttempt} retry={() => setFontAttempt((attempt) => attempt + 1)}>
         <View style={styles.desktop}>
           <View style={styles.phone}>
-            <StatusBar style={colored ? 'light' : 'dark'} />
+            {chat && <Wallpaper root />}
+            <StatusBar style="dark" />
             <SafeAreaView
               edges={['top', 'left', 'right']}
-              style={[styles.safe, { backgroundColor }]}
+              style={[styles.safe, { backgroundColor: chat ? 'transparent' : backgroundColor }]}
             >
               <StoreProvider>
                 <GlassEnvironment>
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
   phone: {
     flex: 1,
     width: '100%',
-    maxWidth: Platform.OS === 'web' ? 460 : undefined,
+    maxWidth: Platform.OS === 'web' ? 402 : undefined,
     backgroundColor: C.surface,
   },
   safe: { flex: 1, backgroundColor: C.surface },
