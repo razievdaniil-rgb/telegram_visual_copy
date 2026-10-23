@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Image } from 'expo-image';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar } from './ui';
 import { KitSymbol } from './kit-symbol';
@@ -117,7 +118,15 @@ export function DialogueScreen({
               <View>
                 {showDate && (
                   <View style={s.dateWrap}>
-                    <Glass capture={false} style={s.dateGlass}>
+                    <View style={s.dateGlass}>
+                      <BlurView
+                        pointerEvents="none"
+                        intensity={75}
+                        tint="default"
+                        blurMethod="none"
+                        style={StyleSheet.absoluteFill}
+                      />
+                      <View pointerEvents="none" style={s.dateTint} />
                       <Text style={s.date}>
                         {new Date(m.sentAt).toLocaleDateString('ru-RU', {
                           day: 'numeric',
@@ -128,7 +137,7 @@ export function DialogueScreen({
                               : 'numeric',
                         })}
                       </Text>
-                    </Glass>
+                    </View>
                   </View>
                 )}
                 <View
@@ -299,14 +308,23 @@ const s = StyleSheet.create({
   },
   metaText: { fontFamily: systemFont, fontSize: 11, lineHeight: 12 },
   dateWrap: { alignItems: 'center', marginVertical: 10 },
-  dateGlass: { boxShadow: 'none', backgroundColor: '#FFFFFF25' },
+  dateGlass: { borderRadius: 100, overflow: 'hidden' },
+  dateTint: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#0000004D',
+    mixBlendMode: 'overlay',
+  },
   date: {
     ...type.footnote,
     fontFamily: systemFont,
     fontWeight: '600',
     paddingHorizontal: 6,
     paddingVertical: 3,
-    color: '#6B562E',
+    color: 'white',
   },
   empty: {
     alignSelf: 'center',

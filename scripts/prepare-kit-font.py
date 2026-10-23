@@ -21,5 +21,7 @@ for glyph_layers in font["COLR"].ColorLayers.values():
 font.save(destination)
 copy = TTFont(destination)
 assert copy.getBestCmap() == font.getBestCmap()
+assert copy["hmtx"].metrics == font["hmtx"].metrics
+assert copy.getTableData("glyf") == font.getTableData("glyf")
 assert all(layer.colorID == 0xFFFF for group in copy["COLR"].ColorLayers.values() for layer in group)
 print(f"Preserved {layers} COLR layers; wrote {destination.name}")
