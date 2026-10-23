@@ -15,15 +15,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { initials, type Profile } from './model';
 
 export const C = {
-  blue: '#007AFF',
+  blue: '#008BFF',
   text: '#000000',
-  muted: '#8E8E93',
-  line: '#D9D9DE',
+  muted: 'rgba(60, 60, 67, 0.6)',
+  line: '#E6E6E6',
   surface: '#F6F6F8',
   white: '#FFFFFF',
-  group: '#EFEFF4',
+  group: '#F2F2F7',
   incoming: '#FFFFFF',
-  outgoing: '#E1FFC7',
+  outgoing: '#EFFEDD',
   wallpaper: '#DCE3D5',
   red: '#FF3B30',
 };

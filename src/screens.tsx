@@ -188,7 +188,7 @@ export function ChatsScreen({
               onPress={() => openChat(chat.id)}
               style={({ pressed }) => [st.chatRow, pressed && { backgroundColor: '#F2F2F7' }]}
             >
-              <Avatar profile={profile} size={58} />
+              <Avatar profile={profile} size={62} />
               <View style={st.chatBody}>
                 <View style={st.chatTitleRow}>
                   <Text style={st.chatName} numberOfLines={1}>
@@ -424,8 +424,8 @@ export function ProfileScreen({
   );
 }
 const st = StyleSheet.create({
-  online: { color: C.blue, fontSize: 13 },
-  offline: { color: C.muted, fontSize: 13 },
+  online: { color: C.blue, fontSize: 12, lineHeight: 14 },
+  offline: { color: C.muted, fontSize: 12, lineHeight: 14 },
   searchWrap: {
     paddingHorizontal: 14,
     paddingTop: 6,
@@ -451,12 +451,13 @@ const st = StyleSheet.create({
   },
   filter: { paddingTop: 11, paddingBottom: 10 },
   activeFilter: { borderBottomWidth: 3, borderBottomColor: C.blue },
-  chatRow: { flexDirection: 'row', paddingLeft: 12, gap: 11, alignItems: 'center' },
+  // UI Kit: Chats - With Tabs (6916:25064), dimensions in logical points.
+  chatRow: { flexDirection: 'row', paddingLeft: 10, gap: 10, alignItems: 'center' },
   chatBody: {
     flex: 1,
-    minHeight: 79,
-    paddingVertical: 10,
-    paddingRight: 12,
+    minHeight: 78,
+    paddingVertical: 8,
+    paddingRight: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: C.line,
   },
@@ -466,16 +467,22 @@ const st = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
   },
-  chatName: { flex: 1, fontWeight: '600', fontSize: 17, color: C.text },
-  chatTime: { color: C.muted, fontSize: 13 },
+  chatName: {
+    flex: 1,
+    fontWeight: '500',
+    fontSize: 17,
+    lineHeight: 22,
+    letterSpacing: -0.43,
+    color: C.text,
+  },
+  chatTime: { color: C.muted, fontSize: 14, lineHeight: 20 },
   chatPreviewRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 12,
-    marginTop: 4,
-    minHeight: 35,
+    minHeight: 40,
   },
-  preview: { flex: 1, color: C.muted, fontSize: 15, lineHeight: 19 },
+  preview: { flex: 1, color: C.muted, fontSize: 15, lineHeight: 20, letterSpacing: -0.23 },
   badge: {
     minWidth: 21,
     height: 21,
@@ -500,7 +507,9 @@ const st = StyleSheet.create({
   peerTitle: { flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'stretch' },
   peerName: {
     fontSize: 17,
-    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: -0.43,
+    fontWeight: '500',
     maxWidth: '100%',
     paddingHorizontal: 5,
     color: C.text,
@@ -512,25 +521,27 @@ const st = StyleSheet.create({
     color: 'white',
     backgroundColor: '#8B9B86',
     overflow: 'hidden',
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
     borderRadius: 12,
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: -0.08,
+    fontWeight: '600',
   },
   bubble: {
     maxWidth: '84%',
     minWidth: 74,
-    borderRadius: 16,
-    paddingHorizontal: 11,
-    paddingTop: 7,
-    paddingBottom: 5,
+    borderRadius: 18,
+    paddingHorizontal: 9,
+    paddingTop: 5,
+    paddingBottom: 2,
     marginVertical: 2,
     boxShadow: '0px 1px 1px #00000012',
   },
   outgoing: { alignSelf: 'flex-end', backgroundColor: C.outgoing, borderBottomRightRadius: 5 },
   incoming: { alignSelf: 'flex-start', backgroundColor: C.incoming, borderBottomLeftRadius: 5 },
-  messageText: { fontSize: 17, lineHeight: 22, color: C.text },
+  messageText: { fontSize: 17, lineHeight: 22, letterSpacing: -0.43, color: C.text },
   metadata: {
     flexDirection: 'row',
     alignItems: 'center',
