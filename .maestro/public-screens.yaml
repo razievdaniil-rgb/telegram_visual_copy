@@ -7,9 +7,9 @@ appId: com.daniil.chatstudio
     timeout: 30000
 - takeScreenshot: chats
 - tapOn: 'Чат Анна Миронова'
-- assertVisible: 'Сообщение'
+- assertVisible: 'Сообщение.*'
 - takeScreenshot: dialogue
-- tapOn: 'Сообщение'
+- tapOn: 'Сообщение.*'
 - inputText: "First line\nSecond line"
 - takeScreenshot: keyboard
 - eraseText
@@ -18,7 +18,7 @@ appId: com.daniil.chatstudio
 - assertVisible: 'звонок'
 - takeScreenshot: profile
 - tapOn: 'Назад'
-- assertVisible: 'Сообщение'
+- assertVisible: 'Сообщение.*'
 - tapOn: 'Назад к чатам'
 - tapOn: 'Контакты'
 - assertVisible: 'Пригласить друзей'
