@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// Standard 13.1.1 wallpaper: original bundled mask, phase-0 software gradient.
+// Vector mask aligned to the bundled iOS preview; phase-0 software gradient.
 // Extend the image behind the OS safe area; headers do not restart the pattern.
 export function Wallpaper({ root = false }: { root?: boolean }) {
   const insets = useSafeAreaInsets();

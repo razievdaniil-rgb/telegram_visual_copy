@@ -1,0 +1,17 @@
+{
+  "vectorSource": "https://github.com/morethanwords/tweb/blob/9b50ea6901a11ff734fd65936a0e4bc2fa4c750b/public/assets/img/pattern.svg",
+  "vectorSha256": "1438ef595b769726f29bb0d2353e8fe41ce0df29309e83d017287800a774de77",
+  "iosPreviewSource": "Telegram-iOS fb0e62b / 5789658100176783156-m.resource",
+  "previewPixels": [155, 320],
+  "renderPixels": [1550, 3200],
+  "cropInVectorCoordinates": [480, 986.6666666666666, 960, 1973.3333333333333],
+  "alphaCorrelationAtPreviewSize": 0.9576194099993744,
+  "siftRegistration": {
+    "matchedFeatures": 281,
+    "inliers": 217,
+    "reprojectionThresholdPixels": 3,
+    "templatePixels": [310, 640],
+    "vectorSamplePixels": [720, 1480]
+  },
+  "note": "Preserves the crop of the bundled iOS preview. Does not confirm final device wallpaper transform without a Telegram 13.1.1 screenshot."
+}

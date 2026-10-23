@@ -14,7 +14,9 @@ Original files retain their upstream names/content in original/. They are not au
 - settings-*: Images.xcassets/Item List/Icons and PresentationResourcesSettings.swift. PNGs rendered at 3x with the source masks and background layers.
 - photo, qr: Images.xcassets/Settings/SetAvatar and QrButtonIcon.
 - plus: Images.xcassets/Item List/Icons/Add.
-- wallpaper-pattern.png: original submodules/TelegramUI/Resources/5789658100176783156-m.resource (bundled thumbnail).
+- original/wallpaper-preview.png: unchanged submodules/TelegramUI/Resources/5789658100176783156-m.resource (155x320).
+- original/wallpaper-full-web.svg: morethanwords/tweb public/assets/img/pattern.svg, last changed at 9b50ea6901a11ff734fd65936a0e4bc2fa4c750b. Source: https://github.com/morethanwords/tweb/blob/9b50ea6901a11ff734fd65936a0e4bc2fa4c750b/public/assets/img/pattern.svg . GPL-3.0 text retained in original/LICENSE-tweb.txt.
+- wallpaper-pattern.png: 1550x3200 raster of that vector, cropped to the central third and mapped to the iOS preview aspect. The crop matches the bundled preview (217 spatially distributed SIFT inliers, alpha correlation 0.9542). No shapes were redrawn. This does not substitute for a device screenshot comparison of the final wallpaper scale.
 - wallpaper-gradient.png: port of SoftwareGradientBackground.swift phase 0, default Classic colors.
 
 Geometric ports in src/message-bubble.tsx and src/message-ui.tsx derive from ChatMessageBubbleImages.swift and PresentationThemeEssentialGraphics.swift respectively. Changes and limitations: docs/TELEGRAM_13_REFERENCE.md. Telegram's upstream README asks derivative applications to publish their source and identify themselves as unofficial; ChatStudio retains its own application identity, an About disclosure, and its public source repository.
