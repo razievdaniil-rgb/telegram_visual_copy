@@ -2,7 +2,9 @@
 
 React Native + Expo SDK 57 + Expo Router + TypeScript, Android / iOS. Публичные экраны ориентированы на Telegram для iPhone. Настоящие Telegram-аккаунты и сеть не используются.
 
-![Публичные экраны по Telegram iOS UI Kit](docs/screenshots/overview.png)
+Текущий эталон — Telegram iOS **13.1.1**, исходники зафиксированы по коммиту fb0e62b. [Параметры и известные расхождения](docs/TELEGRAM_13_REFERENCE.md).
+
+![Текущее web-превью Telegram iOS 13.1.1](docs/screenshots/telegram13-web.png)
 
 ## Запуск
 

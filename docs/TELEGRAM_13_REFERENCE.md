@@ -21,7 +21,7 @@ Source: https://github.com/TelegramMessenger/Telegram-iOS/tree/fb0e62ba8a147f082
 | Profile             | `TelegramUI/Components/PeerInfo/PeerInfoScreen`                                                                                   | avatar 100 at y22 after safe area, title 28 medium, status 17; actions 58, radius 16, gap 8     |
 | Settings row        | `PeerInfoScreenDisclosureItem`                                                                                                    | row 52, icon 29, gap 16, side 16                                                                |
 
-Chat row height 68 is derived from upstream TextNode layout with the default 16pt font. Native font rounding and large text still need screenshot verification. No fake system clock, connection icons or keyboard are drawn by the application.
+Chat row height 68 is derived from upstream TextNode layout with the default 16pt font. Native font rounding and large text still need screenshot verification. The profile action background ends at 288pt after the status area; the first information section starts at 304pt (returned header height 268 + section spacing 36). No fake system clock, connection icons or keyboard are drawn by the application.
 
 ## Local resources and reproducibility
 
