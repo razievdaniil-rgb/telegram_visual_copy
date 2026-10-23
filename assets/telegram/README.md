@@ -19,4 +19,8 @@ Original, unmodified SVG exports from the user-supplied community kit, imported 
 | outgoingTail.svg | I6973:36435;6780:15575;6786:8287;6769:10207  | 13.6211×32        |
 | read.svg         | Chats — With Tabs / Read Status              | 17.4991×10.0485   |
 
+The exports named `compose.svg` and `mic.svg` were rejected during visual QA: those source nodes represent adjustment sliders and a muted call microphone. They are kept only as source records and are not registered in `kitAssets` or rendered. The correct compose and voice-message glyphs still need exporting.
+
+Profile/settings decoration assets are exported at native sizes 24, 20, 18 and 16; their respective `*-imgIcons.svg` masks are 476×379. Exact placements and mask offsets are recorded in `src/profile-pattern.tsx`, based on `I6802:22955;6800:21913` and `I6802:5689;6800:22188`.
+
 Figma Starter MCP quota interrupted exports for chats/settings tab icons, emoji, send and mute. Existing Ionicons for those slots remain provisional; they are not exact exported kit assets. Attachment/QR/settings row glyphs also need original exports. Do not mark visual acceptance complete until these have been replaced and compared. Avatars remain user data, not static kit examples. The kit contains premium decorations, channel/music/media content and hardware bezels outside the agreed text simulator scope; these are not embedded in the UI.

@@ -3,6 +3,7 @@ import { useFocusEffect } from 'expo-router';
 import {
   AccessibilityInfo,
   Alert,
+  Modal,
   Platform,
   Pressable,
   StyleSheet,
@@ -16,11 +17,56 @@ import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'ex
 import { Image } from 'expo-image';
 import { colors as C, systemFont, type } from './theme';
 import { kitAssets } from './kit-assets';
+import { Icon } from './ui';
 
-const TargetContext = createContext<React.RefObject<View | null> | null>(null);
+const TargetContext = createContext<{
+  targetRef?: React.RefObject<View | null>;
+  registerTarget?: (node: View | null) => () => void;
+}>({});
+const NoticeContext = createContext<(title: string, message: string) => void>((title, message) =>
+  Alert.alert(title, message),
+);
 export function GlassEnvironment({ children }: { children: React.ReactNode }) {
-  const target = useRef<View | null>(null);
-  return <TargetContext.Provider value={target}>{children}</TargetContext.Provider>;
+  const [notice, setNotice] = useState<{ title: string; message: string } | null>(null);
+  const showNotice = useCallback((title: string, message: string) => {
+    if (Platform.OS === 'web') setNotice({ title, message });
+    else Alert.alert(title, message);
+  }, []);
+  const [targetRef, setTargetRef] = useState<React.RefObject<View | null>>();
+  const registerTarget = useCallback((node: View | null) => {
+    setTargetRef(node ? { current: node } : undefined);
+    return () => setTargetRef((previous) => (previous?.current === node ? undefined : previous));
+  }, []);
+  return (
+    <NoticeContext.Provider value={showNotice}>
+      <TargetContext.Provider value={{ targetRef, registerTarget }}>
+        {children}
+        {Platform.OS === 'web' && (
+          <Modal
+            visible={notice !== null}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setNotice(null)}
+          >
+            <View style={g.noticeBackdrop}>
+              <View accessibilityViewIsModal style={g.notice}>
+                <Text style={g.noticeTitle}>{notice?.title}</Text>
+                <Text style={g.noticeText}>{notice?.message}</Text>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Понятно"
+                  onPress={() => setNotice(null)}
+                  style={g.noticeButton}
+                >
+                  <Text style={{ color: C.blue, fontSize: 17 }}>Понятно</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </TargetContext.Provider>
+    </NoticeContext.Provider>
+  );
 }
 export function GlassContent({
   children,
@@ -29,15 +75,12 @@ export function GlassContent({
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 }) {
-  const targetRef = useContext(TargetContext);
+  const { registerTarget } = useContext(TargetContext);
   const local = useRef<View | null>(null);
   useFocusEffect(
     useCallback(() => {
-      if (targetRef) targetRef.current = local.current;
-      return () => {
-        if (targetRef?.current === local.current) targetRef.current = null;
-      };
-    }, [targetRef]),
+      return registerTarget?.(local.current);
+    }, [registerTarget]),
   );
   return (
     <BlurTargetView ref={local} style={[{ flex: 1 }, style]}>
@@ -49,12 +92,14 @@ export function Glass({
   children,
   style,
   dark = false,
+  capture = true,
 }: {
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   dark?: boolean;
+  capture?: boolean;
 }) {
-  const targetRef = useContext(TargetContext);
+  const { targetRef } = useContext(TargetContext);
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     if (Platform.OS !== 'ios') return;
@@ -79,7 +124,7 @@ export function Glass({
         {native ? (
           <GlassView
             colorScheme="light"
-            glassEffectStyle="regular"
+            glassEffectStyle={dark ? 'clear' : 'regular'}
             style={StyleSheet.absoluteFill}
           />
         ) : reduced ? (
@@ -88,10 +133,10 @@ export function Glass({
           />
         ) : (
           <BlurView
-            intensity={65}
-            tint={dark ? 'dark' : 'light'}
-            blurTarget={targetRef ?? undefined}
-            blurMethod="dimezisBlurViewSdk31Plus"
+            intensity={dark ? 25 : 65}
+            tint={dark ? 'default' : 'light'}
+            blurTarget={capture ? targetRef : undefined}
+            blurMethod={capture ? 'dimezisBlurViewSdk31Plus' : 'none'}
             style={StyleSheet.absoluteFill}
           />
         )}
@@ -123,6 +168,7 @@ export function KitIcon({
 }
 export function GlassButton({
   icon,
+  fallbackIcon,
   title,
   label,
   onPress,
@@ -131,6 +177,7 @@ export function GlassButton({
   dark = false,
 }: {
   icon?: keyof typeof kitAssets;
+  fallbackIcon?: React.ComponentProps<typeof Icon>['name'];
   title?: string;
   label: string;
   onPress: () => void;
@@ -148,7 +195,9 @@ export function GlassButton({
         delayLongPress={900}
         style={({ pressed }) => [g.button, { minWidth: size, height: size }, pressed && g.pressed]}
       >
-        {icon ? (
+        {fallbackIcon ? (
+          <Icon name={fallbackIcon} size={28} color={dark ? 'white' : C.control} />
+        ) : icon ? (
           <KitIcon name={icon} color={dark ? 'white' : C.control} />
         ) : (
           <Text
@@ -164,8 +213,43 @@ export function GlassButton({
     </Glass>
   );
 }
-export const unavailable = () => Alert.alert('Недоступно', 'Эта функция недоступна в симуляторе');
+export function useNotice() {
+  return useContext(NoticeContext);
+}
+export function useUnavailable() {
+  const showNotice = useNotice();
+  return () => showNotice('Недоступно', 'Эта функция недоступна в симуляторе');
+}
 export const g = StyleSheet.create({
+  noticeBackdrop: {
+    flex: 1,
+    backgroundColor: '#00000050',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  notice: {
+    width: '100%',
+    maxWidth: 290,
+    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+    overflow: 'hidden',
+  },
+  noticeTitle: {
+    ...type.body,
+    fontFamily: systemFont,
+    fontWeight: '600',
+    textAlign: 'center',
+    paddingTop: 20,
+  },
+  noticeText: { ...type.footnote, fontFamily: systemFont, textAlign: 'center', padding: 16 },
+  noticeButton: {
+    height: 44,
+    borderTopColor: C.line,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   glass: {
     borderRadius: 100,
     overflow: 'hidden',

@@ -2,9 +2,7 @@
 export const kitAssets = {
   back: require('../assets/telegram/back.svg'),
   calls: require('../assets/telegram/calls.svg'),
-  compose: require('../assets/telegram/compose.svg'),
   contacts: require('../assets/telegram/contacts.svg'),
-  mic: require('../assets/telegram/mic.svg'),
   more: require('../assets/telegram/more.svg'),
   plus: require('../assets/telegram/plus.svg'),
   search: require('../assets/telegram/search.svg'),
