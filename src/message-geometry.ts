@@ -6,13 +6,19 @@ export function messageGeometry(
   rtl = false,
 ) {
   // ChatMessageDateAndStatusNode.swift:1011–1033, no-reactions branch.
-  const inline = !rtl && lastLine + dateWidth + 6 <= constraint;
+  const inline = !rtl && lastLine + dateWidth <= constraint;
   return {
     inline,
     width: Math.min(
       constraint,
-      Math.ceil(Math.max(widestLine, inline ? lastLine + dateWidth + 6 : dateWidth) + 1),
+      Math.ceil(Math.max(widestLine, inline ? lastLine + dateWidth : dateWidth) + 1),
     ),
     dateRowHeight: inline ? 0 : 13,
   };
+}
+
+export function maximumMessageWidth(screenWidth: number) {
+  const fill = screenWidth <= 500 ? screenWidth - 36 : Math.floor(screenWidth * 0.85);
+  // BubbleItemNode subtracts 3 edge insets + tail (15), then adds tail (6).
+  return Math.max(40, fill - 9);
 }

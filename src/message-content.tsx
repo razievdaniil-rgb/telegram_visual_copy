@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { PixelRatio, StyleSheet, Text, View } from 'react-native';
 import type { Message } from './model';
 import { MessageBubble } from './message-bubble';
 import { MessageChecks, timeLabel } from './message-ui';
@@ -39,7 +39,13 @@ export function MessageContent({
   const metaColor = outgoing ? C.outgoingMeta : C.incomingMeta;
   const rtl = /[\u0590-\u08ff]/.test(message.text.split('\n').at(-1) ?? '');
   const geometry = metrics
-    ? messageGeometry(constraint, metrics.width, metrics.lastWidth, dateWidth, rtl)
+    ? messageGeometry(
+        constraint,
+        metrics.width,
+        metrics.lastWidth,
+        dateWidth + 5 + (outgoing ? 13 : 0),
+        rtl,
+      )
     : { width: constraint, dateRowHeight: 13 };
   const contentWidth = geometry.width;
   const metadata = (
@@ -51,16 +57,16 @@ export function MessageContent({
   return (
     <View style={s.row}>
       <TextMeasure text={message.text} width={constraint} style={s.text} onMeasure={measure} />
-      <View
+      <Text
         accessible={false}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
         pointerEvents="none"
         onLayout={({ nativeEvent: { layout } }) => setDateWidth(layout.width)}
-        style={[s.meta, s.probe]}
+        style={[s.metaText, s.probe]}
       >
-        {metadata}
-      </View>
+        {meta}
+      </Text>
       <MessageBubble
         outgoing={outgoing}
         previous={previous}
@@ -68,19 +74,21 @@ export function MessageContent({
         maxWidth={maxWidth}
         width={contentWidth + 28}
       >
-        <Text
-          selectable
-          textBreakStrategy="simple"
-          lineBreakStrategyIOS="none"
-          style={[
-            s.text,
-            { width: contentWidth, paddingBottom: geometry.dateRowHeight, marginBottom: -2 },
-          ]}
-        >
-          {message.text}
-        </Text>
-        <View pointerEvents="none" style={[s.meta, s.date, { right: outgoing ? 17 : 11 }]}>
-          {metadata}
+        <View style={{ width: contentWidth }}>
+          <Text
+            selectable
+            textBreakStrategy="simple"
+            lineBreakStrategyIOS="none"
+            style={[
+              s.text,
+              { width: contentWidth, paddingBottom: geometry.dateRowHeight, marginBottom: -2 },
+            ]}
+          >
+            {message.text}
+          </Text>
+          <View pointerEvents="none" style={[s.meta, s.date, { right: outgoing ? -5 : 0 }]}>
+            {metadata}
+          </View>
         </View>
       </MessageBubble>
     </View>
@@ -95,8 +103,8 @@ const s = StyleSheet.create({
     color: C.text,
     includeFontPadding: false,
   },
-  meta: { flexDirection: 'row', gap: 3, alignItems: 'center' },
+  meta: { flexDirection: 'row', gap: 1, alignItems: 'center' },
   probe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
-  date: { position: 'absolute', bottom: 4 },
-  metaText: { fontFamily: systemFont, fontSize: 11, lineHeight: 12, includeFontPadding: false },
+  date: { position: 'absolute', bottom: -(1 - 1 / PixelRatio.get()) },
+  metaText: { fontFamily: systemFont, fontSize: 11, lineHeight: 13, includeFontPadding: false },
 });

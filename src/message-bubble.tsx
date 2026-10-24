@@ -80,6 +80,7 @@ export function MessageBubble({
 }
 const styles = StyleSheet.create({
   bubble: {
+    justifyContent: 'center',
     minWidth: 40,
     minHeight: 35,
     paddingTop: 6 + 1 / PixelRatio.get(),

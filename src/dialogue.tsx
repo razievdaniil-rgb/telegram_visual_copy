@@ -20,6 +20,7 @@ import { messagesFor, nameOf, type Chat, type Document, type Message } from './m
 import { dayKey } from './message-ui';
 import { PresenceLabel } from './presence';
 import { MessageContent } from './message-content';
+import { maximumMessageWidth } from './message-geometry';
 import { TelegramIcon } from './telegram-assets';
 
 export function DialogueScreen({
@@ -148,7 +149,7 @@ export function DialogueScreen({
                   message={m}
                   previous={!!samePrevious}
                   next={!!sameNext}
-                  maxWidth={width <= 500 ? width - 36 : Math.floor(width * 0.85)}
+                  maxWidth={maximumMessageWidth(width)}
                 />
               </View>
             );

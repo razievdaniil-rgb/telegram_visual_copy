@@ -6,6 +6,10 @@ on:
         description: Optional run containing ChatStudio-ios-simulator-app (UI-test-only retry)
         type: string
         default: ''
+      refresh_bundle:
+        description: Rebuild JS/assets in a compatible Simulator app without recompiling native dependencies
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -31,7 +35,7 @@ jobs:
           java-version: 17
       - run: mkdir -p artifacts/ios-simulator
       - run: npm ci
-        if: inputs.app_run_id == ''
+        if: inputs.app_run_id == '' || inputs.refresh_bundle
       - run: npx expo prebuild --platform ios
         if: inputs.app_run_id == ''
       - name: Install pinned Maestro CLI
@@ -74,6 +78,14 @@ jobs:
         run: |
           unzip -q artifacts/ios-simulator-app.zip -d artifacts/simulator-app
           cp artifacts/simulator-app/app-source-sha.txt artifacts/ios-simulator/
+          if [ '${{ inputs.refresh_bundle }}' = 'true' ]; then
+            NATIVE_SHA=$(cat artifacts/simulator-app/app-source-sha.txt)
+            git fetch --depth=1 origin "$NATIVE_SHA"
+            git diff --exit-code "$NATIVE_SHA" HEAD -- package.json package-lock.json app.json app.config.js
+            cp artifacts/simulator-app/app-source-sha.txt artifacts/ios-simulator/native-base-source-sha.txt
+            npx expo export:embed --platform ios --dev false --bytecode --max-workers 2 --entry-file node_modules/expo-router/entry.js --bundle-output artifacts/simulator-app/ChatStudio.app/main.jsbundle --assets-dest artifacts/simulator-app/ChatStudio.app
+            git rev-parse HEAD > artifacts/ios-simulator/app-source-sha.txt
+          fi
           xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
           maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
           python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines"}]'
