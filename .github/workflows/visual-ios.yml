@@ -76,7 +76,7 @@ jobs:
           cp artifacts/simulator-app/app-source-sha.txt artifacts/ios-simulator/
           xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
           maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
-          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard"}]'
+          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines"}]'
       - name: Save simulator metadata
         if: always()
         run: xcrun simctl list devices available -j > artifacts/ios-simulator/devices.json

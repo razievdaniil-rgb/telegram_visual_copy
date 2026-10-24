@@ -23,11 +23,13 @@ export const colors = {
   listCheck: '#21C004',
 };
 export const type = {
-  body: { fontSize: 17, lineHeight: 21, letterSpacing: 0 },
-  preview: { fontSize: 15, lineHeight: 20, letterSpacing: 0 },
-  footnote: { fontSize: 13, lineHeight: 16, letterSpacing: 0 },
+  // TextNode: floor(SF17 ascent + descent) = 20, spacing floor(20 * .12) = 2.
+  message: { fontSize: 17, lineHeight: 22 },
+  body: { fontSize: 17, lineHeight: 21 },
+  preview: { fontSize: 15, lineHeight: 20 },
+  footnote: { fontSize: 13, lineHeight: 16 },
   chatTitle: { fontSize: 16, lineHeight: 19, fontWeight: '600' as const },
-  title: { fontSize: 28, lineHeight: 34, letterSpacing: 0, fontWeight: '500' as const },
+  title: { fontSize: 28, lineHeight: 34, fontWeight: '500' as const },
 };
 export const layout = {
   row: 68,
@@ -40,5 +42,7 @@ export const layout = {
 };
 export const systemFont =
   Platform.OS === 'web'
-    ? '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif'
-    : undefined;
+    ? '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Helvetica Neue", Arial, sans-serif'
+    : Platform.OS === 'ios'
+      ? 'System'
+      : 'sans-serif';

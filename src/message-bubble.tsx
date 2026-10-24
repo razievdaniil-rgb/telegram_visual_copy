@@ -1,5 +1,5 @@
 import React, { useId, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, PixelRatio } from 'react-native';
 import Svg, { Defs, Mask, Rect, Ellipse, Path, G } from 'react-native-svg';
 import { colors, layout } from './theme';
 
@@ -11,12 +11,14 @@ export function MessageBubble({
   previous,
   next,
   maxWidth,
+  width,
   children,
 }: {
   outgoing: boolean;
   previous: boolean;
   next: boolean;
   maxWidth: number;
+  width?: number;
   children: React.ReactNode;
 }) {
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -37,8 +39,9 @@ export function MessageBubble({
         styles.bubble,
         {
           maxWidth,
+          width,
           alignSelf: outgoing ? 'flex-end' : 'flex-start',
-          marginBottom: next ? 0 : 2.333,
+          marginBottom: next ? 0 : 2 + 1 / PixelRatio.get(),
           paddingLeft: outgoing ? 11 : 17,
           paddingRight: outgoing ? 17 : 11,
         },
@@ -76,5 +79,10 @@ export function MessageBubble({
   );
 }
 const styles = StyleSheet.create({
-  bubble: { minWidth: 40, minHeight: 35, paddingTop: 6.333, paddingBottom: 5.667 },
+  bubble: {
+    minWidth: 40,
+    minHeight: 35,
+    paddingTop: 6 + 1 / PixelRatio.get(),
+    paddingBottom: 6 - 1 / PixelRatio.get(),
+  },
 });

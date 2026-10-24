@@ -17,9 +17,9 @@ import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
 import { Wallpaper } from './wallpaper';
 import { colors as C, systemFont, type } from './theme';
 import { messagesFor, nameOf, type Chat, type Document, type Message } from './model';
-import { dayKey, MessageChecks, timeLabel } from './message-ui';
+import { dayKey } from './message-ui';
 import { PresenceLabel } from './presence';
-import { MessageBubble } from './message-bubble';
+import { MessageContent } from './message-content';
 import { TelegramIcon } from './telegram-assets';
 
 export function DialogueScreen({
@@ -113,14 +113,11 @@ export function DialogueScreen({
               next.direction === m.direction &&
               dayKey(next.sentAt) === dayKey(m.sentAt) &&
               new Date(next.sentAt).getTime() - new Date(m.sentAt).getTime() < 600_000;
-            const outgoing = m.direction === 'outgoing';
             const samePrevious =
               previous &&
               previous.direction === m.direction &&
               dayKey(previous.sentAt) === dayKey(m.sentAt) &&
               new Date(m.sentAt).getTime() - new Date(previous.sentAt).getTime() < 600_000;
-            const metaColor = outgoing ? C.outgoingMeta : C.incomingMeta;
-            const meta = `${m.edited ? 'изменено ' : ''}${timeLabel(m.sentAt)}`;
             return (
               <View>
                 {showDate && (
@@ -147,30 +144,12 @@ export function DialogueScreen({
                     </View>
                   </View>
                 )}
-                <MessageBubble
-                  outgoing={outgoing}
+                <MessageContent
+                  message={m}
                   previous={!!samePrevious}
                   next={!!sameNext}
-                  maxWidth={width - 36}
-                >
-                  <Text selectable style={s.messageText}>
-                    {m.text}
-                    <Text
-                      aria-hidden
-                      accessibilityElementsHidden
-                      importantForAccessibility="no"
-                      style={s.reservedTime}
-                    >
-                      {`  ${meta}${outgoing ? '     ' : ''}`}
-                    </Text>
-                  </Text>
-                  <View style={[s.metadata, { right: outgoing ? 17 : 11 }]} pointerEvents="none">
-                    <Text style={[s.metaText, { color: metaColor }]}>{meta}</Text>
-                    {outgoing && (
-                      <MessageChecks receipt={m.receipt} color={C.outgoingCheck} compact />
-                    )}
-                  </View>
-                </MessageBubble>
+                  maxWidth={width <= 500 ? width - 36 : Math.floor(width * 0.85)}
+                />
               </View>
             );
           }}
@@ -297,16 +276,6 @@ const s = StyleSheet.create({
     justifyContent: 'center',
   },
   messages: { flexGrow: 1, justifyContent: 'flex-end', paddingHorizontal: 3, paddingTop: 72 },
-  messageText: { ...type.body, fontFamily: systemFont, color: C.text },
-  reservedTime: { fontSize: 11, letterSpacing: 0, color: 'transparent' },
-  metadata: {
-    position: 'absolute',
-    bottom: 4,
-    flexDirection: 'row',
-    gap: 3,
-    alignItems: 'center',
-  },
-  metaText: { fontFamily: systemFont, fontSize: 11, lineHeight: 12 },
   dateWrap: { alignItems: 'center', height: 34, justifyContent: 'center' },
   dateGlass: { borderRadius: 100, overflow: 'hidden' },
   dateTint: {
