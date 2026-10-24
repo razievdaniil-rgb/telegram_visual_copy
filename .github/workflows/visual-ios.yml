@@ -16,6 +16,7 @@ on:
         options:
           - public-screens
           - composer
+          - client-demo
         default: public-screens
 permissions:
   contents: read
@@ -96,11 +97,19 @@ jobs:
           xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
           FLOW='.maestro/public-screens.yaml'
           if [ '${{ inputs.scenario }}' = 'composer' ]; then FLOW='.maestro/composer.yaml'; fi
+          if [ '${{ inputs.scenario }}' = 'client-demo' ]; then FLOW='.maestro/client-demo.yaml'; fi
           maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro "$FLOW" || {
             echo 'First UI attempt failed; retry once on the already running driver. First debug artifacts are retained.'
             maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro "$FLOW"
           }
           python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines","input-multiline","input-sent"}]'
+      - name: Collect demonstration video
+        if: always() && inputs.scenario == 'client-demo'
+        run: |
+          VIDEO=$(find artifacts/ios-simulator/maestro -name 'client-demo.mp4' -type f -print -quit)
+          test -n "$VIDEO"
+          cp "$VIDEO" artifacts/ios-simulator/client-demo.mp4
+          test -s artifacts/ios-simulator/client-demo.mp4
       - name: Save simulator metadata
         if: always()
         run: xcrun simctl list devices available -j > artifacts/ios-simulator/devices.json

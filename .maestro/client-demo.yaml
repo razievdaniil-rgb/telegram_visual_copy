@@ -1,0 +1,59 @@
+appId: com.daniil.chatstudio
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: 'Чат Анна Миронова'
+    timeout: 60000
+- startRecording: client-demo
+- takeScreenshot: chats
+- tapOn: 'Чат Анна Миронова'
+- extendedWaitUntil:
+    visible:
+      id: message-input
+    timeout: 60000
+- takeScreenshot: dialogue
+- tapOn:
+    id: message-input
+- inputText: 'Привет! Показываю, как выглядит переписка в приложении.'
+- pressKey: enter
+- inputText: 'Можно писать в несколько строк.'
+- takeScreenshot: input-multiline
+- tapOn: 'Отправить сообщение'
+- hideKeyboard
+- assertVisible: '[\s\S]*Можно писать в несколько строк.*'
+- takeScreenshot: input-sent
+- tapOn: 'Открыть профиль'
+- assertVisible: 'звонок'
+- takeScreenshot: profile
+- tapOn: 'Назад'
+- longPressOn: 'Открыть профиль'
+- assertVisible: 'Сохранить настройки чата'
+- tapOn: 'Печатает…'
+- tapOn: 'Сохранить настройки чата'
+- assertVisible: 'Настройки чата сохранены'
+- tapOn: 'Добавить сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'Привет! Это ответ от собеседника, созданный в редакторе.'
+- hideKeyboard
+- scrollUntilVisible:
+    element: 'Добавить сообщение'
+    direction: DOWN
+- tapOn: 'Добавить сообщение'
+- assertVisible: 'Сообщение сохранено'
+- tapOn: 'Закрыть редактор'
+- assertVisible: '.*Это ответ от собеседника.*'
+- takeScreenshot: editor-result
+- tapOn: 'Назад к чатам'
+- tapOn: 'Контакты'
+- assertVisible: 'Пригласить друзей'
+- takeScreenshot: contacts
+- tapOn: 'Настройки'
+- assertVisible: 'Установить фотографию'
+- takeScreenshot: settings
+- tapOn: 'Звонки'
+- assertVisible: 'Позвонить'
+- takeScreenshot: calls
+- tapOn: 'Чаты'
+- assertVisible: 'Чат Анна Миронова'
+- stopRecording
