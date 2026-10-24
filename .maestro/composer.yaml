@@ -1,0 +1,22 @@
+appId: com.daniil.chatstudio
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: 'Чат Анна Миронова'
+    timeout: 60000
+- tapOn: 'Чат Анна Миронова'
+- extendedWaitUntil:
+    visible:
+      id: message-input
+    timeout: 60000
+- tapOn:
+    id: message-input
+- inputText: 'First line'
+- pressKey: enter
+- inputText: 'Second line'
+- assertVisible: '[\s\S]*Second line[\s\S]*'
+- takeScreenshot: input-multiline
+- tapOn: 'Отправить сообщение'
+- assertVisible: '[\s\S]*Second line[\s\S]*'
+- takeScreenshot: input-sent

@@ -10,6 +10,13 @@ on:
         description: Rebuild JS/assets in a compatible Simulator app without recompiling native dependencies
         type: boolean
         default: false
+      scenario:
+        description: UI scenario
+        type: choice
+        options:
+          - public-screens
+          - composer
+        default: public-screens
 permissions:
   contents: read
   actions: read
@@ -87,11 +94,13 @@ jobs:
             git rev-parse HEAD > artifacts/ios-simulator/app-source-sha.txt
           fi
           xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
-          maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml || {
+          FLOW='.maestro/public-screens.yaml'
+          if [ '${{ inputs.scenario }}' = 'composer' ]; then FLOW='.maestro/composer.yaml'; fi
+          maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro "$FLOW" || {
             echo 'First UI attempt failed; retry once on the already running driver. First debug artifacts are retained.'
-            maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
+            maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro "$FLOW"
           }
-          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines"}]'
+          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines","input-multiline","input-sent"}]'
       - name: Save simulator metadata
         if: always()
         run: xcrun simctl list devices available -j > artifacts/ios-simulator/devices.json

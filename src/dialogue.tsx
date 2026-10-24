@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   Keyboard,
@@ -21,6 +21,7 @@ import { dayKey } from './message-ui';
 import { PresenceLabel } from './presence';
 import { MessageContent } from './message-content';
 import { maximumMessageWidth } from './message-geometry';
+import { TextMeasure, type TextMetrics } from './text-measure';
 import { TelegramIcon } from './telegram-assets';
 
 export function DialogueScreen({
@@ -42,6 +43,10 @@ export function DialogueScreen({
   const messages = messagesFor(data, chat.id);
   const [text, setText] = useState('');
   const [inputHeight, setInputHeight] = useState(21);
+  const [inputWidth, setInputWidth] = useState(200);
+  const measureInput = useCallback((metrics: TextMetrics) => {
+    setInputHeight(Math.max(21, Math.min(130, Math.ceil(metrics.height))));
+  }, []);
   const [keyboard, setKeyboard] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const [width, setWidth] = useState(402);
@@ -156,6 +161,12 @@ export function DialogueScreen({
           }}
         />
       </GlassContent>
+      <TextMeasure
+        text={text.endsWith('\n') ? `${text}\u200b` : text || ' '}
+        width={inputWidth}
+        style={s.inputMeasure}
+        onMeasure={measureInput}
+      />
       <View pointerEvents="box-none" style={s.header}>
         <GlassButton icon="back" label="Назад к чатам" onPress={back} />
         <Glass style={s.peerGlass}>
@@ -210,9 +221,7 @@ export function DialogueScreen({
             multiline
             value={text}
             onChangeText={setText}
-            onContentSizeChange={(event) =>
-              setInputHeight(Math.max(21, Math.min(130, event.nativeEvent.contentSize.height)))
-            }
+            onLayout={({ nativeEvent: { layout } }) => setInputWidth(layout.width)}
             scrollEnabled={inputHeight >= 130}
             style={[s.input, { height: inputHeight }]}
           />
@@ -342,6 +351,7 @@ const s = StyleSheet.create({
     minHeight: 21,
     maxHeight: 130,
   },
+  inputMeasure: { ...type.body, fontFamily: systemFont, includeFontPadding: false },
   emoji: {
     width: 30,
     height: 40,
