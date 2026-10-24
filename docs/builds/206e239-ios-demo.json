@@ -1,0 +1,80 @@
+{
+  "source_sha": "206e239277295155db882c28b6f6397c2b0679d1",
+  "native_base_sha": "6a69921e0ac352271b83a2e60a78aa65d8832241",
+  "run_id": 40133692978,
+  "job_id": 120990614042,
+  "artifact_id": 12575784934,
+  "artifact_zip_sha256": "f19c666ba2192a1a285a94f3f149c31f27b245bb8842ec66a7ac0e8608dc0a8f",
+  "conclusion": "success",
+  "device": "iPhone 17 Pro / iOS 26.4 Simulator",
+  "checks_run_id": 40133684156,
+  "checks": ["TypeScript", "lint", "20 tests", "iOS/Android/web production export"],
+  "raw_video": {
+    "duration_seconds": 139.018333,
+    "width": 1206,
+    "height": 2622,
+    "bytes": 30685508,
+    "sha256": "242b9877b0adcd610704d3c35f31dfbd10553d44de48fb6034e6b101b2de610c"
+  },
+  "client_video": {
+    "path": "artifacts\\client-demo\\Telegram-iPhone-demo-client.mp4",
+    "duration_seconds": 121.7,
+    "width": 720,
+    "height": 1566,
+    "codec": "h264",
+    "bytes": 2981217,
+    "sha256": "af40b65bfe5334aed325ba0803c803c313e5f8d24ffea32bd87034a3013c0131",
+    "edits": "720px/30fps H.264 compression; removed first 17 seconds of idle time; no interface changes or generated frames"
+  },
+  "screenshots": {
+    "calls": {
+      "sha256": "c9013cc48128007a7885ba202ed98b913ca3789dfc14ff7620a50d3faca9938a",
+      "viewed": true
+    },
+    "chats": {
+      "sha256": "d98960e16ebe368ca35917f6129270e753e0bf8a60779c33e44fc13df54426d2",
+      "viewed": true
+    },
+    "contacts": {
+      "sha256": "86bdf607c4b2844bf8e50cd3c1cb51ff88ee6d16e916afd9a91a215872d7ab2d",
+      "viewed": true
+    },
+    "dialogue": {
+      "sha256": "3cab784623182ef94563fae9bd86ba8fadb273afe2aca2d0880361cc8d5c6c13",
+      "viewed": true
+    },
+    "editor-result": {
+      "sha256": "82327268ce3573354f3ecb776787ec9300e409f263c33c5a547fe78a2f5afaf6",
+      "viewed": true
+    },
+    "input-multiline": {
+      "sha256": "807a790fdbba5e35e3fa82732b0118ce0c70a06eb9f64f4907fe5f83cf5c3672",
+      "viewed": true
+    },
+    "input-sent": {
+      "sha256": "b926f1b8ded46b134ad6df8ca8fb1ae99bb00f65ca534c1d81e9305f7c896462",
+      "viewed": true
+    },
+    "profile": {
+      "sha256": "9573708f8c09b35ceb545d457d1627a994522d40138e296cccd36b1f3bb86976",
+      "viewed": true
+    },
+    "settings": {
+      "sha256": "8f1f8fd5d762854a5db978bb3a87c525df9ae3c49483987b673f84bd8eae2669",
+      "viewed": true
+    }
+  },
+  "video_review": "10 sampled original frames, 10 delivery frames, first/last delivery frames and full decode; editor header, reply order, typing status, multiline input, public screens inspected",
+  "superseded_run": {
+    "id": 40132675883,
+    "conclusion": "failure",
+    "reason": "Test tapped static field label instead of input; empty text correctly rejected. Added stable field ID. Visual review also found and corrected editor safe-area overlap."
+  },
+  "limits": [
+    "No physical iPhone or Android verification",
+    "No fresh browser visual verification",
+    "Android/web use Inter rather than Apple SF",
+    "Native glass, OS keyboard, emoji and system bars vary by OS",
+    "No pixel-perfect comparison against real Telegram 13.1.1; wallpaper scale, remaining outlines and animations require final reference comparison"
+  ]
+}

@@ -6,7 +6,7 @@ React Native + Expo SDK 57 + Expo Router + TypeScript, Android / iOS. Публи
 
 Проверка текста на iOS Simulator 26.4: длинный текст и исправленный двухстрочный ввод. [Перенос измерения текста из исходников](docs/TEXT_LAYOUT_PORT.md).
 
-![Нативная проверка текста Telegram iOS 13.1.1](docs/screenshots/telegram13-text-current.png)
+![Нативная проверка текста Telegram iOS 13.1.1](docs/screenshots/telegram13-shared-ios.png)
 
 ## Запуск
 
