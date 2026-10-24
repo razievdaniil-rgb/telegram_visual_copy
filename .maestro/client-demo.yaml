@@ -33,8 +33,10 @@ appId: com.daniil.chatstudio
 - tapOn: 'Сохранить настройки чата'
 - assertVisible: 'Настройки чата сохранены'
 - tapOn: 'Добавить сообщение'
-- tapOn: 'Текст сообщения'
+- tapOn:
+    id: editor-message-input
 - inputText: 'Привет! Это ответ от собеседника, созданный в редакторе.'
+- assertVisible: '.*Это ответ от собеседника.*'
 - hideKeyboard
 - scrollUntilVisible:
     element: 'Добавить сообщение'

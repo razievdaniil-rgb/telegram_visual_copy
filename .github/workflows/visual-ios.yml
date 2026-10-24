@@ -106,9 +106,7 @@ jobs:
       - name: Collect demonstration video
         if: always() && inputs.scenario == 'client-demo'
         run: |
-          VIDEO=$(find artifacts/ios-simulator/maestro -name 'client-demo.mp4' -type f -print -quit)
-          test -n "$VIDEO"
-          cp "$VIDEO" artifacts/ios-simulator/client-demo.mp4
+          python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); videos=list((p/"maestro").rglob("client-demo.mp4")); assert videos; shutil.copyfile(max(videos,key=lambda f:f.stat().st_mtime),p/"client-demo.mp4")'
           test -s artifacts/ios-simulator/client-demo.mp4
       - name: Save simulator metadata
         if: always()

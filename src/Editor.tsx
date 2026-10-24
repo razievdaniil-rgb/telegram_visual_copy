@@ -543,6 +543,7 @@ function MessageForm({
       />
       <Field
         label="Текст сообщения"
+        testID="editor-message-input"
         placeholder="Введите сообщение"
         multiline
         value={text}
@@ -604,7 +605,11 @@ function MessageForm({
             setError('Введите текст сообщения.');
             return;
           }
-          const sentAt = parseLocal(date, time);
+          // Changing only text/receipts must not round away seconds and move
+          // the message before others in the same minute. New messages also
+          // retain the timestamp captured when their form was opened.
+          const sentAt =
+            date === parts.date && time === parts.time ? initial.sentAt : parseLocal(date, time);
           if (!sentAt) {
             setError('Проверьте дату и время. Например: 2026-10-22, 15:30.');
             return;

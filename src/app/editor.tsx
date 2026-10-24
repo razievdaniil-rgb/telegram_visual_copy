@@ -8,7 +8,10 @@ export default function EditorPage() {
   const { chatId } = useLocalSearchParams<{ chatId?: string }>();
   const { data, dispatch } = useStore();
   return (
-    <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+    <SafeAreaView
+      edges={['top', 'left', 'right', 'bottom']}
+      style={{ flex: 1, backgroundColor: '#EFEFF4' }}
+    >
       <Editor
         data={data}
         dispatch={dispatch}
