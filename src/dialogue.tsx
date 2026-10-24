@@ -44,9 +44,12 @@ export function DialogueScreen({
   const [text, setText] = useState('');
   const [inputHeight, setInputHeight] = useState(21);
   const [inputWidth, setInputWidth] = useState(200);
-  const measureInput = useCallback((metrics: TextMetrics) => {
-    setInputHeight(Math.max(21, Math.min(130, Math.ceil(metrics.height))));
-  }, []);
+  const measureInput = useCallback(
+    (metrics: TextMetrics) => {
+      setInputHeight(Math.max(21, Math.min(130, Math.ceil(metrics.height))));
+    },
+    [setInputHeight],
+  );
   const [keyboard, setKeyboard] = useState(false);
   const [atBottom, setAtBottom] = useState(true);
   const [width, setWidth] = useState(402);
