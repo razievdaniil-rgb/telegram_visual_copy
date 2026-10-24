@@ -13,4 +13,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm test
-      - run: npm run export:web
+      - name: Export iOS, Android and web bundles
+        run: npx expo export --platform all --max-workers 2
