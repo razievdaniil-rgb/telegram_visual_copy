@@ -203,6 +203,7 @@ export function DialogueScreen({
         </Glass>
         <Glass style={s.field}>
           <TextInput
+            testID="message-input"
             accessibilityLabel="Сообщение"
             placeholder="Сообщение"
             placeholderTextColor="#999999"

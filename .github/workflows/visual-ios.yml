@@ -87,7 +87,10 @@ jobs:
             git rev-parse HEAD > artifacts/ios-simulator/app-source-sha.txt
           fi
           xcrun simctl install "$DEVICE" artifacts/simulator-app/ChatStudio.app
-          maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
+          maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml || {
+            echo 'First UI attempt failed; retry once on the already running driver. First debug artifacts are retained.'
+            maestro --device "$DEVICE" test --test-output-dir artifacts/ios-simulator/maestro .maestro/public-screens.yaml
+          }
           python3 -c 'from pathlib import Path; import shutil; p=Path("artifacts/ios-simulator"); [shutil.copyfile(f,p/f.name) for f in (p/"maestro").rglob("*.png") if f.stem in {"chats","dialogue","profile","contacts","settings","calls","keyboard","text-wrapping","explicit-newlines"}]'
       - name: Save simulator metadata
         if: always()

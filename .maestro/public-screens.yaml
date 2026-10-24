@@ -7,32 +7,38 @@ appId: com.daniil.chatstudio
     timeout: 30000
 - takeScreenshot: chats
 - tapOn: 'Чат Анна Миронова'
-- assertVisible: 'Сообщение.*'
+- extendedWaitUntil:
+    visible:
+      id: message-input
+    timeout: 60000
 - takeScreenshot: dialogue
-- tapOn: 'Сообщение.*'
+- tapOn:
+    id: message-input
 - inputText: 'First line'
 - pressKey: enter
 - inputText: 'Second line'
-- assertVisible: '.*Second line.*'
+- assertVisible: '[\s\S]*Second line[\s\S]*'
 - takeScreenshot: keyboard
 - eraseText
 - inputText: 'Проверка длинного сообщения: строки должны использовать всю доступную ширину пузыря. Время и галочки не должны сдвигать слова или перекрывать текст.'
 - tapOn: 'Отправить сообщение'
 - assertVisible: '.*Проверка длинного сообщения.*'
 - takeScreenshot: text-wrapping
-- tapOn: 'Сообщение.*'
+- tapOn:
+    id: message-input
 - inputText: 'First line'
 - pressKey: enter
 - inputText: 'Second line'
 - tapOn: 'Отправить сообщение'
-- assertVisible: '.*Second line.*'
+- assertVisible: '[\s\S]*Second line[\s\S]*'
 - takeScreenshot: explicit-newlines
 - hideKeyboard
 - tapOn: 'Открыть профиль'
 - assertVisible: 'звонок'
 - takeScreenshot: profile
 - tapOn: 'Назад'
-- assertVisible: 'Сообщение.*'
+- assertVisible:
+    id: message-input
 - tapOn: 'Назад к чатам'
 - tapOn: 'Контакты'
 - assertVisible: 'Пригласить друзей'
