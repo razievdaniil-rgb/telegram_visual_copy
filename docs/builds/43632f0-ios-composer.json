@@ -1,0 +1,20 @@
+{
+  "zipSha256": "56d5363ddd9b4fe2f38b11ad03c3f750f6552d2671d73121518507d9badd8543",
+  "screenshots": {
+    "input-multiline": {
+      "sha256": "b6f5e450f9538fdea82630abdcd60fe4e47e5dad23383deaeaaec785d6d2f432",
+      "pixels": [1206, 2622]
+    },
+    "input-sent": {
+      "sha256": "5e36180deca67ce25a056c56f11aa05723718abfb987e1fb60a9c1e828350b71",
+      "pixels": [1206, 2622]
+    }
+  },
+  "bundleSource": "43632f0d6eaec2ad326b7da31ad6030e678d456d",
+  "nativeBase": "6a69921e0ac352271b83a2e60a78aa65d8832241",
+  "workflowRun": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40087171042",
+  "artifactId": 12558046606,
+  "result": "Flow passed on first attempt. Both screenshots visually reviewed: two lines are visible before sending; sent text retains the newline; composer returns to one line.",
+  "goldenComparison": false,
+  "physicalDeviceTested": false
+}

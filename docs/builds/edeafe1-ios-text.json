@@ -1,0 +1,54 @@
+{
+  "zipSha256": "cde505c9cfe6eaf41ba61c7ad48e20009851a2eea89af2b6769412abf6bb69a3",
+  "screenshots": {
+    "calls": {
+      "sha256": "0f51bff9e7fb51fc6205b5d708ba074f237019b1875d2cb3db3853af8331caf3",
+      "pixels": [1206, 2622]
+    },
+    "chats": {
+      "sha256": "33c8e58df845a1de79c2c7f629d1bba79baeaf77b738fb08ad7d912129d2d16b",
+      "pixels": [1206, 2622]
+    },
+    "contacts": {
+      "sha256": "7ed3039a34d328e667bf13ab613f7c77b423b414a756eabbdccbdb3e04409d45",
+      "pixels": [1206, 2622]
+    },
+    "dialogue": {
+      "sha256": "0a40c16280582ee1d2e0fac3243c99e5fd6f0456a21432e38f8847965e9e94d4",
+      "pixels": [1206, 2622]
+    },
+    "explicit-newlines": {
+      "sha256": "36345329bf887d9b22f12c1705f3d76d2993eb073fb3de9987bbadcf415cdb56",
+      "pixels": [1206, 2622]
+    },
+    "keyboard": {
+      "sha256": "967aa644e773f61e8b2f395eccba9f0aa800924c6b0b74ba5158c384f9811192",
+      "pixels": [1206, 2622]
+    },
+    "profile": {
+      "sha256": "8333c7019b9729c1d13b7180b6c9af67d88fa76bb6fc302cb99b17bdb73b6cda",
+      "pixels": [1206, 2622]
+    },
+    "settings": {
+      "sha256": "c3ed12773d38b03e3609b82363ff5d30e42f09eb5380aa611b217f2c9d8f8c5a",
+      "pixels": [1206, 2622]
+    },
+    "text-wrapping": {
+      "sha256": "273242e0d2bc929c3c0e9286d5a2d39042ca7e6cd6d37bbaefeaf8d999c46b5b",
+      "pixels": [1206, 2622]
+    }
+  },
+  "bundleSource": "edeafe152ab340a38e95bcab2d973e000de76827",
+  "nativeBase": "6a69921e0ac352271b83a2e60a78aa65d8832241",
+  "workflowRun": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40085951816",
+  "artifactId": 12557077712,
+  "result": "All flow steps passed, all nine screenshots reviewed.",
+  "visualFindings": [
+    "Long Russian message wraps across the available width.",
+    "Explicit newline is preserved in the sent message.",
+    "Keyboard screenshot exposed composer clipping despite successful accessibility assertion; corrected after this run and checked separately."
+  ],
+  "firstAttemptRetryUsed": false,
+  "goldenComparison": false,
+  "physicalDeviceTested": false
+}
