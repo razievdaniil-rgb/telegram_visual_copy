@@ -1,12 +1,23 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { kitFont } from './kit-symbol';
 import { Button, Loading } from './ui';
 
 export function FontGate({ children, retry }: { children: React.ReactNode; retry: () => void }) {
-  const [ready, error] = useFonts({ ...Ionicons.font, iostgico: kitFont });
+  const [ready, error] = useFonts({
+    ...Ionicons.font,
+    iostgico: kitFont,
+    ...(Platform.OS !== 'ios'
+      ? {
+          'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),
+          'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
+          'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
+          'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
+        }
+      : {}),
+  });
   if (error)
     return (
       <View style={{ flex: 1, padding: 28, justifyContent: 'center', gap: 16 }}>

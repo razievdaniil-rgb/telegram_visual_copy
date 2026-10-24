@@ -40,9 +40,4 @@ export const layout = {
   bubble: 16,
   mergedBubble: 8,
 };
-export const systemFont =
-  Platform.OS === 'web'
-    ? '-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Helvetica Neue", Arial, sans-serif'
-    : Platform.OS === 'ios'
-      ? 'System'
-      : 'sans-serif';
+export const systemFont = Platform.OS === 'ios' ? 'System' : 'Inter-Regular';

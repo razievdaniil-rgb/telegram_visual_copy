@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef } from 'react';
-import { Text } from 'react-native';
+import { Text } from './text';
 import type { TextMeasureProps } from './text-measure';
 
 // react-native-web does not implement onTextLayout. Read the browser's actual

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { Text } from './text';
 import { emptyDocument, reducer, type Action, type Document } from './model';
 import { loadDocument, saveDocument } from './storage';
 import { Button, Empty, Loading } from './ui';

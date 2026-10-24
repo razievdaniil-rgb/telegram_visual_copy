@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Animated, AccessibilityInfo, Platform, Text, View, StyleSheet } from 'react-native';
+import { Animated, AccessibilityInfo, Platform, View, StyleSheet } from 'react-native';
+import { Text } from './text';
 import { C } from './ui';
 import type { Chat } from './model';
 export function PresenceLabel({ presence }: { presence: Chat['presence'] }) {

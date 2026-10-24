@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { PixelRatio, StyleSheet, Text, View } from 'react-native';
+import { PixelRatio, StyleSheet, View } from 'react-native';
+import { Text } from './text';
 import type { Message } from './model';
 import { MessageBubble } from './message-bubble';
 import { MessageChecks, timeLabel } from './message-ui';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, type TextStyle } from 'react-native';
+import { type TextStyle } from 'react-native';
+import { Text } from './text';
 
 export type TextMetrics = { width: number; lastWidth: number; height: number; lines: number };
 export type TextMeasureProps = {

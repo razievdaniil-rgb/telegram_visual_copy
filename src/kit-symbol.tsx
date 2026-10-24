@@ -1,9 +1,7 @@
 import React from 'react';
-import { Platform, Text } from 'react-native';
-import { SymbolView } from 'expo-symbols';
-import { Image } from 'expo-image';
+import { Text } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 import { colors as C } from './theme';
-import { kitAssets } from './kit-assets';
 
 export const kitFont = require('../assets/telegram/iostgico-monochrome.ttf');
 // Codepoints are copied from the high-fidelity Figma contexts, not inferred from icon names.
@@ -89,40 +87,29 @@ export function SystemSymbol({
   color?: string;
   size?: number;
 }) {
-  const names = {
-    back: 'chevron.backward',
-    search: 'magnifyingglass',
-    close: 'xmark',
-    forward: 'chevron.forward',
-  } as const;
-  if (Platform.OS === 'ios')
-    return (
-      <SymbolView
-        name={names[name]}
-        tintColor={color}
-        size={size}
-        weight="medium"
-        style={{ width: size, height: size }}
-      />
-    );
-  if (name === 'search') return <KitSymbol name="search" size={size + 4} color={color} />;
-  if (name === 'back' || name === 'forward')
-    return (
-      <Image
-        source={kitAssets.back}
-        tintColor={color}
-        contentFit="contain"
-        style={{ width: 28, height: 28, transform: [{ scaleX: name === 'forward' ? -1 : 1 }] }}
-      />
-    );
   return (
-    <Text
-      aria-hidden
-      accessible={false}
-      allowFontScaling={false}
-      style={{ fontSize: size + 4, lineHeight: size + 4, color }}
-    >
-      ×
-    </Text>
+    <Svg width={size} height={size} viewBox="0 0 20 20" accessible={false}>
+      {name === 'search' ? (
+        <>
+          <Circle cx="8.4" cy="8.4" r="5.8" fill="none" stroke={color} strokeWidth="1.8" />
+          <Path d="M12.7 12.7L17.6 17.6" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+        </>
+      ) : (
+        <Path
+          d={
+            name === 'close'
+              ? 'M4.2 4.2L15.8 15.8M15.8 4.2L4.2 15.8'
+              : name === 'back'
+                ? 'M12.5 2.5L5 10L12.5 17.5'
+                : 'M7.5 2.5L15 10L7.5 17.5'
+          }
+          fill="none"
+          stroke={color}
+          strokeWidth="1.9"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+    </Svg>
   );
 }

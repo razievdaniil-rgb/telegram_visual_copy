@@ -4,13 +4,12 @@ import {
   Image,
   Pressable,
   StyleSheet,
-  Text,
-  TextInput,
   View,
   type TextInputProps,
   type ViewStyle,
   type ColorValue,
 } from 'react-native';
+import { Text, TextInput } from './text';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { initials, type Profile } from './model';

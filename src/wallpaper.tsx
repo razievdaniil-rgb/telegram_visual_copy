@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -7,12 +7,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Extend the image behind the OS safe area; headers do not restart the pattern.
 export function Wallpaper({ root = false }: { root?: boolean }) {
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
   return (
     <View
       pointerEvents="none"
       style={[
         StyleSheet.absoluteFill,
-        { top: root ? 0 : -insets.top, overflow: 'hidden', backgroundColor: '#DBDDBB' },
+        {
+          top: root ? 0 : -insets.top,
+          bottom: undefined,
+          height,
+          overflow: 'hidden',
+          backgroundColor: '#DBDDBB',
+        },
       ]}
     >
       <Image

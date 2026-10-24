@@ -7,11 +7,11 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
+import { Text } from './text';
 import { BlurTargetView, BlurView } from 'expo-blur';
 import { GlassView, isGlassEffectAPIAvailable, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { Image } from 'expo-image';
@@ -31,8 +31,7 @@ const NoticeContext = createContext<(title: string, message: string) => void>((t
 export function GlassEnvironment({ children }: { children: React.ReactNode }) {
   const [notice, setNotice] = useState<{ title: string; message: string } | null>(null);
   const showNotice = useCallback((title: string, message: string) => {
-    if (Platform.OS === 'web') setNotice({ title, message });
-    else Alert.alert(title, message);
+    setNotice({ title, message });
   }, []);
   const [targetRef, setTargetRef] = useState<React.RefObject<View | null>>();
   const registerTarget = useCallback((node: View | null) => {
@@ -43,29 +42,27 @@ export function GlassEnvironment({ children }: { children: React.ReactNode }) {
     <NoticeContext.Provider value={showNotice}>
       <TargetContext.Provider value={{ targetRef, registerTarget }}>
         {children}
-        {Platform.OS === 'web' && (
-          <Modal
-            visible={notice !== null}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setNotice(null)}
-          >
-            <View style={g.noticeBackdrop}>
-              <View accessibilityViewIsModal style={g.notice}>
-                <Text style={g.noticeTitle}>{notice?.title}</Text>
-                <Text style={g.noticeText}>{notice?.message}</Text>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Понятно"
-                  onPress={() => setNotice(null)}
-                  style={g.noticeButton}
-                >
-                  <Text style={{ color: C.blue, fontSize: 17 }}>Понятно</Text>
-                </Pressable>
-              </View>
+        <Modal
+          visible={notice !== null}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setNotice(null)}
+        >
+          <View style={g.noticeBackdrop}>
+            <View accessibilityViewIsModal style={g.notice}>
+              <Text style={g.noticeTitle}>{notice?.title}</Text>
+              <Text style={g.noticeText}>{notice?.message}</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Понятно"
+                onPress={() => setNotice(null)}
+                style={g.noticeButton}
+              >
+                <Text style={{ color: C.blue, fontSize: 17, fontWeight: '600' }}>Понятно</Text>
+              </Pressable>
             </View>
-          </Modal>
-        )}
+          </View>
+        </Modal>
       </TargetContext.Provider>
     </NoticeContext.Provider>
   );
@@ -254,9 +251,9 @@ export const g = StyleSheet.create({
   },
   notice: {
     width: '100%',
-    maxWidth: 290,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    maxWidth: 270,
+    borderRadius: 14,
+    backgroundColor: '#F2F2F2',
     overflow: 'hidden',
   },
   noticeTitle: {
