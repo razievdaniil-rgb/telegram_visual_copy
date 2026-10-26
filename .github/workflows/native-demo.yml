@@ -54,8 +54,19 @@ jobs:
             telegram-native-xcode27.1-arm64-
       - name: Compile native Telegram for the simulator
         if: env.APP_RUN == ''
+        timeout-minutes: 60
         run: |
           set -o pipefail
+          (
+            while true; do
+              date -u
+              ps -Ao pid,ppid,%cpu,rss,etime,comm | sort -k4 -nr | head -n 12 || true
+              vm_stat | head -n 12
+              sleep 60
+            done
+          ) > artifacts/native-demo/compiler-resources.log 2>&1 &
+          MONITOR=$!
+          trap 'kill "$MONITOR" 2>/dev/null || true' EXIT
           for ATTEMPT in 1 2 3; do
             if python3 native/scripts/build.py build-simulator --build-number '${{ github.run_number }}' 2>&1 | tee "artifacts/native-demo/compile-$ATTEMPT.log"; then break; fi
             if [ "$ATTEMPT" = 3 ] || ! grep -Eq 'Error downloading|GET returned 50[234]|Connection reset|Read timed out' "artifacts/native-demo/compile-$ATTEMPT.log"; then exit 1; fi
@@ -100,12 +111,15 @@ jobs:
           python3 - <<'PY'
           import json, os, subprocess
           d=json.load(open('artifacts/native-demo/simulators.json'))
-          runtime=next(r['identifier'] for r in d['runtimes'] if r.get('isAvailable') and r['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-'))
+          runtimes=[r for r in d['runtimes'] if r.get('isAvailable') and r['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-')]
+          runtime=max(runtimes,key=lambda r:tuple(int(n) for n in r['version'].split('.')))['identifier']
           phones=[t for t in d['devicetypes'] if t['name'].startswith('iPhone')]
           phone=next((t for t in phones if t['name']=='iPhone 18 Pro'), phones[-1])
           udid=subprocess.check_output(['xcrun','simctl','create','Native Telegram Demo',phone['identifier'],runtime],text=True).strip()
+          with open('artifacts/native-demo/device-udid.txt','w') as f: f.write(udid)
           with open(os.environ['GITHUB_ENV'],'a') as f: f.write('DEVICE='+udid+'\n')
           PY
+          DEVICE=$(cat artifacts/native-demo/device-udid.txt)
           xcrun simctl boot "$DEVICE"
           xcrun simctl bootstatus "$DEVICE" -b
           open -a Simulator --args -CurrentDeviceUDID "$DEVICE"
@@ -126,8 +140,15 @@ jobs:
           sleep 2
       - name: Collect last screen and native crash reports
         if: always() && env.DEVICE != ''
+        timeout-minutes: 2
         run: |
-          xcrun simctl io "$DEVICE" screenshot artifacts/native-demo/last-screen.png || true
+          python3 - <<'PY'
+          import os, subprocess
+          try:
+              subprocess.run(['xcrun','simctl','io',os.environ['DEVICE'],'screenshot','artifacts/native-demo/last-screen.png'],timeout=30,check=False)
+          except subprocess.TimeoutExpired:
+              print('Simulator screenshot timed out; continuing with diagnostic collection')
+          PY
           mkdir -p artifacts/native-demo/crashes
           find "$HOME/Library/Logs/DiagnosticReports" -maxdepth 1 -name 'Telegram*' -exec cp {} artifacts/native-demo/crashes/ \; || true
       - uses: actions/upload-artifact@v4

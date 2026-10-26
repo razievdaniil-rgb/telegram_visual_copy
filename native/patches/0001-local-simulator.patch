@@ -20,7 +20,7 @@ index 4c3a641..82d1552 100644
 +        bazel_command_line.set_disable_provisioning_profiles()
 +        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions', '--features=disable_legacy_signing', '--jobs=2']
 +    if arguments.simulatorLocalMode:
-+        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions']
++        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions', '--jobs=2']
 +        if arguments.configuration in ('debug_sim_arm64', 'release_sim_arm64'):
 +            bazel_command_line.set_disable_provisioning_profiles()
      if arguments.embedWatchApp:
