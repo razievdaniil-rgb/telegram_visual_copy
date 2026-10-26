@@ -108,17 +108,7 @@ jobs:
           python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --platform simulator --output artifacts/native-demo/verification.json
           cp artifacts/native-build/app-source-sha.txt artifacts/native-demo/
           xcrun simctl list -j > artifacts/native-demo/simulators.json
-          python3 - <<'PY'
-          import json, os, subprocess
-          d=json.load(open('artifacts/native-demo/simulators.json'))
-          runtimes=[r for r in d['runtimes'] if r.get('isAvailable') and r['identifier'].startswith('com.apple.CoreSimulator.SimRuntime.iOS-')]
-          runtime=max(runtimes,key=lambda r:tuple(int(n) for n in r['version'].split('.')))['identifier']
-          phones=[t for t in d['devicetypes'] if t['name'].startswith('iPhone')]
-          phone=next((t for t in phones if t['name']=='iPhone 18 Pro'), phones[-1])
-          udid=subprocess.check_output(['xcrun','simctl','create','Native Telegram Demo',phone['identifier'],runtime],text=True).strip()
-          with open('artifacts/native-demo/device-udid.txt','w') as f: f.write(udid)
-          with open(os.environ['GITHUB_ENV'],'a') as f: f.write('DEVICE='+udid+'\n')
-          PY
+          python3 native/scripts/create_demo_device.py
           DEVICE=$(cat artifacts/native-demo/device-udid.txt)
           xcrun simctl boot "$DEVICE"
           xcrun simctl bootstatus "$DEVICE" -b
