@@ -104,7 +104,9 @@ jobs:
           chmod +x "$MAESTRO_BIN"
           dirname "$MAESTRO_BIN" >> "$GITHUB_PATH"
       - name: Create a dedicated iPhone and install the simulator app
+        timeout-minutes: 10
         run: |
+          set -x
           python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --platform simulator --output artifacts/native-demo/verification.json
           cp artifacts/native-build/app-source-sha.txt artifacts/native-demo/
           xcrun simctl list -j > artifacts/native-demo/simulators.json
@@ -112,13 +114,18 @@ jobs:
           DEVICE=$(cat artifacts/native-demo/device-udid.txt)
           xcrun simctl boot "$DEVICE"
           xcrun simctl bootstatus "$DEVICE" -b
-          find /Applications /System/Applications -maxdepth 8 -name '*Simulator*.app' -print > artifacts/native-demo/simulator-app-paths.txt
-          SIMULATOR_APP=$(head -n 1 artifacts/native-demo/simulator-app-paths.txt)
-          if [ -n "$SIMULATOR_APP" ]; then
-            open -a "$SIMULATOR_APP" --args -CurrentDeviceUDID "$DEVICE" || echo 'Simulator window did not open; continuing with simctl'
-          else
-            echo 'No Simulator GUI bundle found; using the booted simulator through simctl'
-          fi
+          python3 - <<'PY'
+          import glob, os, subprocess
+          patterns=['/Applications/*.app/Contents/Developer/Applications/*Simulator*.app', '/Applications/*.app/Contents/Applications/*Simulator*.app', '/Library/Developer/Applications/*Simulator*.app', '/System/Applications/*Simulator*.app', '/System/Library/CoreServices/*Simulator*.app']
+          candidates=sorted(set(path for pattern in patterns for path in glob.glob(pattern)))
+          with open('artifacts/native-demo/simulator-app-paths.txt','w') as f: f.write('\n'.join(candidates))
+          print('Simulator GUI candidates:',candidates,flush=True)
+          if candidates:
+              try:
+                  subprocess.run(['open','-a',candidates[0],'--args','-CurrentDeviceUDID',os.environ.get('DEVICE') or open('artifacts/native-demo/device-udid.txt').read()],timeout=20,check=False)
+              except subprocess.TimeoutExpired:
+                  print('Simulator GUI launch timed out; continuing with simctl',flush=True)
+          PY
           unzip -q artifacts/native-build/Telegram.ipa -d artifacts/native-demo-app
           xcrun simctl install "$DEVICE" artifacts/native-demo-app/Payload/Telegram.app
           CONTAINER=$(xcrun simctl get_app_container "$DEVICE" org.chatstudio.localsimulator data)
