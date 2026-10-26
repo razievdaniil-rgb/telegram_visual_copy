@@ -1,0 +1,67 @@
+name: Native Telegram - unsigned iPhone IPA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['native/cloud-build-request.json', '.github/workflows/native-build.yml']
+permissions:
+  contents: read
+concurrency:
+  group: native-telegram-iphone-build
+  cancel-in-progress: true
+jobs:
+  compile:
+    runs-on: xcode-27
+    timeout-minutes: 180
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.1.app/Contents/Developer
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm the actual macOS and Xcode environment
+        run: |
+          mkdir -p artifacts/cloud-build
+          sw_vers | tee artifacts/cloud-build/environment.txt
+          xcodebuild -version | tee -a artifacts/cloud-build/environment.txt
+          xcrun --sdk iphoneos --show-sdk-version | tee -a artifacts/cloud-build/environment.txt
+          df -h
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare full pinned Telegram source and recursive dependencies
+        run: |
+          set -o pipefail
+          python3 native/scripts/prepare.py --full 2>&1 | tee artifacts/cloud-build/prepare.log
+      - uses: actions/cache/restore@v4
+        id: native-cache
+        with:
+          path: ~/telegram-bazel-cache
+          key: telegram-native-xcode27.1-arm64-${{ hashFiles('native/upstream.json', 'native/patches/*.patch', 'native/Sources/**/*.swift') }}-${{ github.run_id }}
+          restore-keys: telegram-native-xcode27.1-arm64-
+      - name: Compile the original iPhone application without installation signing
+        run: |
+          set -o pipefail
+          python3 native/scripts/build.py build-unsigned-device --build-number "${{ github.run_number }}" 2>&1 | tee artifacts/cloud-build/compile.log
+      - name: Verify device architecture and package integrity
+        run: python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --output artifacts/native-build/verification.json
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: Telegram-iPhone-IPA-needs-signing
+          path: |
+            artifacts/native-build/Telegram.ipa
+            artifacts/native-build/verification.json
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Native-Telegram-build-diagnostics
+          path: artifacts/cloud-build/
+          retention-days: 7
+      - uses: actions/cache/save@v4
+        if: always() && !cancelled()
+        continue-on-error: true
+        with:
+          path: ~/telegram-bazel-cache
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}

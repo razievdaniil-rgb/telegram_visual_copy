@@ -64,7 +64,7 @@ def prepare(checkout, check_only=False, full=False):
             sparse = git(checkout, "config", "--bool", "core.sparseCheckout", check=False).stdout.strip() == b"true"
             if sparse:
                 git(checkout, "sparse-checkout", "disable")
-            subprocess.run(["git", "-C", str(checkout), "submodule", "update", "--init", "--recursive", "--jobs", "4"], check=True)
+            subprocess.run(["git", "-C", str(checkout), "submodule", "update", "--init", "--recursive", "--depth", "1", "--jobs", "4"], check=True)
     report = {
         "upstream": actual,
         "patch_sha256": hashlib.sha256(PATCH.read_bytes()).hexdigest(),

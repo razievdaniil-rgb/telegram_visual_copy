@@ -43,7 +43,7 @@ def main():
     for source in (NATIVE / "scripts").glob("*.py"):
         ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
     ast.parse((checkout / "build-system/Make/Make.py").read_text(encoding="utf-8"))
-    for mode in ["generate-simulator", "build-simulator"]:
+    for mode in ["generate-simulator", "build-simulator", "build-unsigned-device"]:
         subprocess.run([sys.executable, str(NATIVE / "scripts/build.py"), mode, "--checkout", str(checkout), "--print-command"], check=True)
     result = subprocess.run([sys.executable, str(NATIVE / "scripts/build.py"), "build-device", "--print-command"], capture_output=True)
     assert result.returncode != 0, "Device build must reject the dummy simulator configuration"

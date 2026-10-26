@@ -1,21 +1,24 @@
 diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
-index 4c3a641..2dbd240 100644
+index 4c3a641..82d1552 100644
 --- a/build-system/Make/Make.py
 +++ b/build-system/Make/Make.py
 @@ -480,6 +480,9 @@ def resolve_configuration(base_path, bazel_command_line: BazelCommandLine, argum
          provisioning_profiles_path=provisioning_path,
          additional_codesigning_output_path=additional_codesigning_output_path
      )
-+    if getattr(arguments, 'simulatorLocalMode', False) or getattr(arguments, 'disableProvisioningProfiles', False):
++    if getattr(arguments, 'simulatorLocalMode', False) or getattr(arguments, 'localUnsignedBuild', False) or getattr(arguments, 'disableProvisioningProfiles', False):
 +        # This target has no remote push. A simulator must not require a matching APNs profile.
 +        codesigning_data.aps_environment = ''
      if codesigning_data.aps_environment is None:
          print('Could not find a valid aps-environment entitlement in the provided provisioning profiles')
          sys.exit(1)
-@@ -631,6 +634,10 @@ def build(bazel, arguments):
+@@ -631,6 +634,13 @@ def build(bazel, arguments):
      )
  
      bazel_command_line.set_configuration(arguments.configuration)
++    if arguments.localUnsignedBuild:
++        bazel_command_line.set_disable_provisioning_profiles()
++        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions', '--features=disable_legacy_signing', '--jobs=2']
 +    if arguments.simulatorLocalMode:
 +        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions']
 +        if arguments.configuration in ('debug_sim_arm64', 'release_sim_arm64'):
@@ -23,10 +26,12 @@ index 4c3a641..2dbd240 100644
      if arguments.embedWatchApp:
          if arguments.configuration in ('debug_arm64', 'release_arm64'):
              if arguments.watchApiId is None or arguments.watchApiHash is None:
-@@ -1017,6 +1024,8 @@ if __name__ == '__main__':
+@@ -1017,6 +1027,10 @@ if __name__ == '__main__':
      )
  
      buildParser = subparsers.add_parser('build', help='Build the app')
++    buildParser.add_argument('--localUnsignedBuild', action='store_true', default=False,
++                             help='Compile a local device IPA without signing; installation requires subsequent signing.')
 +    buildParser.add_argument('--simulatorLocalMode', action='store_true', default=False,
 +                             help='Local simulator: no extensions; simulator builds do not require signing.')
      buildParser.add_argument(

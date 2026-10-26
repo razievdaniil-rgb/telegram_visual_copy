@@ -17,8 +17,9 @@ def command_for(args):
     configuration = args.configuration.resolve()
     command = [sys.executable, "build-system/Make/Make.py", "--cacheDir=" + str(args.cache.resolve())]
     simulator = args.mode in ("generate-simulator", "build-simulator")
-    signing = checkout / "build-system/fake-codesigning" if simulator else args.signing
-    if not simulator and signing is None and args.mode != "generate-device":
+    unsigned = args.mode == "build-unsigned-device"
+    signing = checkout / "build-system/fake-codesigning" if simulator or unsigned else args.signing
+    if not simulator and not unsigned and signing is None and args.mode != "generate-device":
         raise ValueError("Device builds need --signing with the matching profiles/certificates")
     if args.mode.startswith("generate"):
         command += ["generateProject", "--configurationPath=" + str(configuration), "--disableExtensions"]
@@ -29,13 +30,16 @@ def command_for(args):
         else:
             command += ["--xcodeManagedCodesigning"]
     else:
-        command += ["build", "--configurationPath=" + str(configuration), "--codesigningInformationPath=" + str(signing.resolve()), "--buildNumber=" + str(args.build_number), "--configuration=" + ("debug_sim_arm64" if simulator else "release_arm64"), "--simulatorLocalMode", "--outputBuildArtifactsPath=" + str(args.output.resolve())]
+        variant = "debug_sim_arm64" if simulator else ("debug_arm64" if unsigned else "release_arm64")
+        command += ["build", "--configurationPath=" + str(configuration), "--codesigningInformationPath=" + str(signing.resolve()), "--buildNumber=" + str(args.build_number), "--configuration=" + variant, "--simulatorLocalMode", "--outputBuildArtifactsPath=" + str(args.output.resolve())]
+        if unsigned:
+            command += ["--localUnsignedBuild"]
     return command
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=["generate-simulator", "generate-device", "build-simulator", "build-device"])
+    parser.add_argument("mode", choices=["generate-simulator", "generate-device", "build-simulator", "build-device", "build-unsigned-device"])
     parser.add_argument("--checkout", type=Path, default=ROOT / "artifacts/native-telegram-ios")
     parser.add_argument("--configuration", type=Path, default=NATIVE / "configuration.simulator.json")
     parser.add_argument("--signing", type=Path)
@@ -45,7 +49,7 @@ def main():
     parser.add_argument("--print-command", action="store_true", help="Inspect the command on any OS; do not execute it")
     args = parser.parse_args()
     try:
-        if not args.mode.endswith("simulator") and args.configuration.resolve() == (NATIVE / "configuration.simulator.json").resolve():
+        if args.mode in ("generate-device", "build-device") and args.configuration.resolve() == (NATIVE / "configuration.simulator.json").resolve():
             raise ValueError("Use a private device configuration with your own bundle_id and team_id")
         command = command_for(args)
         print(shlex.join(command), flush=True)
