@@ -7,13 +7,13 @@ on:
   workflow_dispatch:
 jobs:
   model-and-overlay:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Compile and test the portable Swift data model
-        run: swift test --package-path native
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/workspace" -w /workspace swift:6.0 swift test --package-path native
       - name: Parse native integration and editor sources (not an iOS typecheck)
-        run: swiftc -frontend -parse native/Sources/Core/*.swift native/Sources/UI/*.swift
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/workspace" -w /workspace swift:6.0 bash -c 'swiftc -frontend -parse native/Sources/Core/*.swift native/Sources/UI/*.swift'
       - uses: actions/checkout@v4
         with:
           repository: TelegramMessenger/Telegram-iOS

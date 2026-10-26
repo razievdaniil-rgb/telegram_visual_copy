@@ -50,7 +50,7 @@ swift test --package-path native
 python3 native/scripts/test_preparation.py --checkout artifacts/native-telegram-ios
 ```
 
-Workflow **Native Swift sources** запускает Swift-тесты на macOS, синтаксический разбор новых файлов и применение патча к чистым зафиксированным исходникам. Его артефакт `Telegram-Native-Source-Kit` — набор исходников, **не IPA**. Синтаксический разбор не проверяет совместимость UIKit/Telegram API.
+Workflow **Native Swift sources** запускает переносимые Swift-тесты в официальном контейнере Swift 6.0 на Linux, синтаксический разбор новых файлов и применение патча к чистым зафиксированным исходникам. Предыдущая версия workflow также прошла на macOS; переносимые проверки отделены от очереди Xcode-runner. Его артефакт `Telegram-Native-Source-Kit` — набор исходников, **не IPA**. Синтаксический разбор не проверяет совместимость UIKit/Telegram API. [Официальные Docker-образы Swift](https://www.swift.org/install/linux/docker/).
 
 ## Генерация проекта и сборка на Mac
 
