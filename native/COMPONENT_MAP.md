@@ -1,0 +1,30 @@
+# Оригинальный интерфейс и точки локальной интеграции
+
+Все пути ниже — относительно подготовленного checkout Telegram iOS `fb0e62ba`. Экраны не перенесены в React Native и не воспроизведены новыми SwiftUI-макетами: используются исходные классы.
+
+| Экран / слой | Оригинальный код | Наша доработка |
+|---|---|---|
+| Запуск | `submodules/TelegramUI/Sources/AppDelegate.swift`, `ApplicationContext.swift` | Создать локальную запись аккаунта до построения контекста; не показывать стартовые запросы разрешений контактов/уведомлений |
+| Навигация и вкладки | `submodules/TelegramUI/Sources/TelegramRootController.swift` | Невидимый долгий жест в центральной области заголовка; показ отдельного UIKit-редактора |
+| Список чатов | `submodules/ChatListUI/Sources/ChatListController.swift`, `Node/ChatListItem.swift` | Список получает оригинальные Postbox-записи; ручная галочка последнего сообщения применяется в существующем отображении |
+| Диалог | `submodules/TelegramUI/Sources/ChatController.swift` | Сам экран оставлен оригинальным; операции перенаправлены ниже, в TelegramCore |
+| Текст, пузыри, переносы | `submodules/TelegramUI/Components/Chat/ChatMessageTextBubbleContentNode`, `ChatMessageBubbleItemNode`, `ChatMessageItemImpl` | Геометрия, шрифты и измерение текста не переписаны; ручные галочки подключены в item/content |
+| Ввод текста и клавиатура | `submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode` | Поле оригинальное; `enqueueMessages` записывает локальное сообщение вместо сетевой очереди |
+| Статус и «печатает» | `submodules/TelegramUI/Components/ChatTitleView`, `TelegramCore/Sources/Account/Account.swift` | Нативные потоки activity получают ручной статус, обновляются при сохранении документа |
+| Профиль и настройки | `submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen` | Оригинальные представления получают `TelegramUser`, `CachedUserData`, локальные avatar resources |
+| Аккаунт и хранилище | `submodules/TelegramCore/Sources/Account/Account.swift`, Postbox | Локальное `AuthorizedAccountState`, без настоящего SMS-входа; JSON → транзакционная проекция Postbox |
+| Отправка/изменение/удаление | `PendingMessages/EnqueueMessage.swift`, `RequestEditMessage.swift`, `TelegramEngine/Messages/DeleteMessagesInteractively.swift` | В локальном режиме изменяется документ и перестраивается проекция, сетевой метод не вызывается |
+| Сетевой транспорт | `submodules/TelegramCore/Sources/Network/Network.swift` | Основная сессия приостановлена, network access выключен, worker не создаётся, запросы не отправляются; нужны проверки трафика на реальном запуске |
+| Сборка | `build-system/Make/Make.py` | Флаг локального режима отключает расширения, для симулятора — provisioning; APNs-профиль не требуется |
+
+Новые файлы копируются в `TelegramCore/Sources/LocalSimulator` и `TelegramUI/Sources/LocalSimulator`. Оба upstream BUILD используют glob `Sources/**/*.swift`; отдельного нового iOS-target или Expo-модуля не добавлено.
+
+## Поток данных
+
+Редактор / публичная отправка → проверка документа версии 1 → атомарная запись JSON → транзакция Postbox → существующие подписки и оригинальные экраны.
+
+При неудачной записи JSON модель в памяти не заменяется. При следующем запуске Postbox восстанавливается из последнего сохранённого документа. Публичные профильные/сетевые операции, не входящие в локальные функции, ещё нужно проверить отдельно; сохранение исходного вида кнопки не означает реализацию её сетевой функции.
+
+## Проверка внешнего вида
+
+Первая проверка на Mac: оригинальная сборка той же ревизии и наш форк, одинаковое устройство/система/размер текста/локализация. Сверить список, короткий и многострочный текст, группировку, даты, галочки, профиль, клавиатуру и переходы. До записи симулятора и сравнения кадров визуальное совпадение не подтверждено. Исходный интерфейс выбран как основа, но это не заменяет проверку интеграции.

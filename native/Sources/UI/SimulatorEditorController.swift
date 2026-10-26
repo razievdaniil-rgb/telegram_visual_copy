@@ -26,7 +26,7 @@ final class SimulatorEditorController: UITableViewController, UIDocumentPickerDe
     private func showError(_ text: String) {
         let alert = UIAlertController(title: "Не удалось сохранить", message: text, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
+        (navigationController?.topViewController ?? self).present(alert, animated: true)
     }
     private func save(_ update: (inout SimulatorDocument) throws -> Void, completion: (() -> Void)? = nil) {
         do {
@@ -297,6 +297,7 @@ private final class SimulatorMessageForm: UITableViewController {
     private let direction = UISegmentedControl(items: ["Входящее", "Исходящее"])
     private let receipt = UISegmentedControl(items: ["Одна галочка", "Две галочки"])
     private let date = UIDatePicker()
+    private var dateChanged = false
     private let edited = UISwitch()
     init(message: SimulatorMessage, onSave: @escaping (SimulatorMessage) -> Void) {
         self.message = message; self.onSave = onSave
@@ -306,16 +307,18 @@ private final class SimulatorMessageForm: UITableViewController {
         receipt.selectedSegmentIndex = message.receipt == .sent ? 0 : 1
         date.datePickerMode = .dateAndTime; date.preferredDatePickerStyle = .compact
         date.date = SimulatorDocument.date(message.sentAt) ?? Date()
+        date.addTarget(self, action: #selector(didChangeDate), for: .valueChanged)
         edited.isOn = message.edited
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(commit))
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @objc private func didChangeDate() { dateChanged = true }
     @objc private func commit() {
         view.endEditing(true); message.text = text.text
         message.direction = direction.selectedSegmentIndex == 0 ? .incoming : .outgoing
         message.receipt = receipt.selectedSegmentIndex == 0 ? .sent : .read
         // Do not erase the original seconds when changing unrelated fields.
-        if SimulatorDocument.date(message.sentAt) != date.date { message.sentAt = SimulatorDocument.timestamp(date.date) }
+        if dateChanged { message.sentAt = SimulatorDocument.timestamp(date.date) }
         message.edited = edited.isOn; onSave(message)
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 5 }

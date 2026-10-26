@@ -51,5 +51,6 @@ jobs:
             native/upstream.json
             native/configuration.simulator.json
             native/README.md
+            native/COMPONENT_MAP.md
             native/Package.swift
             native/Tests/
