@@ -60,5 +60,7 @@ jobs:
             native/configuration.simulator.json
             native/README.md
             native/COMPONENT_MAP.md
+            native/CLOUD_BUILD.md
+            native/INSTALL_WINDOWS.md
             native/Package.swift
             native/Tests/
