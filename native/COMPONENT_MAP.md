@@ -5,6 +5,7 @@
 | Экран / слой | Оригинальный код | Наша доработка |
 |---|---|---|
 | Запуск | `submodules/TelegramUI/Sources/AppDelegate.swift`, `ApplicationContext.swift` | Создать локальную запись аккаунта до построения контекста; не показывать стартовые запросы разрешений контактов/уведомлений |
+| Готовность локальных данных | `TelegramCore/Sources/State/AccountStateManager.swift`, `TelegramUI/Sources/ChatHistoryViewForLocation.swift` | Начинать локальный аккаунт без незавершённой синхронизации; сохранять `CachedUserData.businessIntro` как известное отсутствие, чтобы история не ждала отключённый сервер |
 | Навигация и вкладки | `submodules/TelegramUI/Sources/TelegramRootController.swift` | Невидимый долгий жест в центральной области заголовка; показ отдельного UIKit-редактора |
 | Список чатов | `submodules/ChatListUI/Sources/ChatListController.swift`, `Node/ChatListItem.swift` | Список получает оригинальные Postbox-записи; ручная галочка последнего сообщения применяется в существующем отображении |
 | Диалог | `submodules/TelegramUI/Sources/ChatController.swift` | Сам экран оставлен оригинальным; операции перенаправлены ниже, в TelegramCore |
