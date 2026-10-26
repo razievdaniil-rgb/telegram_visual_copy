@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-26",
+  "source_commit": "5002a27549bfc88a1fd630722dfc63f31c10d32d",
+  "upstream_repository": "https://github.com/TelegramMessenger/Telegram-iOS",
+  "upstream_revision": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "upstream_version": "13.1.1",
+  "native_source_checks": {
+    "url": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40354955926",
+    "conclusion": "success",
+    "portable_swift_tests": 8,
+    "swift_syntax_parse": "passed; no UIKit or Telegram module typecheck",
+    "upstream_patch_round_trip": "passed for 13 files on clean pinned source",
+    "overlay_idempotence": "passed",
+    "artifact": "Telegram-Native-Source-Kit"
+  },
+  "archived_prototype_checks": {
+    "url": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40354955820",
+    "conclusion": "success",
+    "checks": ["npm ci", "TypeScript", "lint", "27 tests", "Expo bundle export", "production PWA export"]
+  },
+  "ios_build_verified": false,
+  "ipa_available": false,
+  "not_verified": [
+    "Full compilation of TelegramCore, TelegramUI, ChatListUI and dependencies",
+    "Native launch and Postbox projection on simulator/device",
+    "Native editor interactions, persistence, keyboard and visual frame comparisons",
+    "Network traffic audit and offline execution",
+    "Signing, App Groups/Keychain capabilities and sideloading compatibility",
+    "Installation and signature renewal on the customer's iPhone"
+  ],
+  "scope": "Source preparation and build scripts; user confirmed no Mac is available."
+}
