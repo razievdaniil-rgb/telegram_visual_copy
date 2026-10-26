@@ -112,7 +112,13 @@ jobs:
           DEVICE=$(cat artifacts/native-demo/device-udid.txt)
           xcrun simctl boot "$DEVICE"
           xcrun simctl bootstatus "$DEVICE" -b
-          open -a "$DEVELOPER_DIR/Applications/Simulator.app" --args -CurrentDeviceUDID "$DEVICE"
+          find /Applications /System/Applications -maxdepth 8 -name '*Simulator*.app' -print > artifacts/native-demo/simulator-app-paths.txt
+          SIMULATOR_APP=$(head -n 1 artifacts/native-demo/simulator-app-paths.txt)
+          if [ -n "$SIMULATOR_APP" ]; then
+            open -a "$SIMULATOR_APP" --args -CurrentDeviceUDID "$DEVICE" || echo 'Simulator window did not open; continuing with simctl'
+          else
+            echo 'No Simulator GUI bundle found; using the booted simulator through simctl'
+          fi
           unzip -q artifacts/native-build/Telegram.ipa -d artifacts/native-demo-app
           xcrun simctl install "$DEVICE" artifacts/native-demo-app/Payload/Telegram.app
           CONTAINER=$(xcrun simctl get_app_container "$DEVICE" org.chatstudio.localsimulator data)
