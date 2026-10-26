@@ -56,7 +56,7 @@ public enum TelegramSimulator {
                 transaction.updatePeerChatListInclusion(id, inclusion: .notIncluded)
                 transaction.removeHole(peerId: id, threadId: nil, namespace: Namespaces.Message.Cloud, space: .everywhere, range: 1 ... (Int32.max - 1))
             }
-            for group in [PeerGroupId.root, PeerGroupId.archive] {
+            for group in [PeerGroupId.root, Namespaces.PeerGroup.archive] {
                 for hole in transaction.allChatListHoles(groupId: group) {
                     transaction.replaceChatListHole(groupId: group, index: hole.index, hole: nil)
                 }
