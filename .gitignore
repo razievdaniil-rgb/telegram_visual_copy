@@ -50,6 +50,10 @@ yarn-error.*
 .env.*
 !.env.example
 .claude/
+native/.build/
+native/.swiftpm/
+native/configuration.device.json
+native/scripts/__pycache__/
 
 # Large local design references
 *.fig

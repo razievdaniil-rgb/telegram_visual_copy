@@ -1,0 +1,344 @@
+diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
+index 4c3a641..de77277 100644
+--- a/build-system/Make/Make.py
++++ b/build-system/Make/Make.py
+@@ -631,6 +631,10 @@ def build(bazel, arguments):
+     )
+ 
+     bazel_command_line.set_configuration(arguments.configuration)
++    if arguments.simulatorLocalMode:
++        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions']
++        if arguments.configuration in ('debug_sim_arm64', 'release_sim_arm64'):
++            bazel_command_line.set_disable_provisioning_profiles()
+     if arguments.embedWatchApp:
+         if arguments.configuration in ('debug_arm64', 'release_arm64'):
+             if arguments.watchApiId is None or arguments.watchApiHash is None:
+@@ -1017,6 +1021,8 @@ if __name__ == '__main__':
+     )
+ 
+     buildParser = subparsers.add_parser('build', help='Build the app')
++    buildParser.add_argument('--simulatorLocalMode', action='store_true', default=False,
++                             help='Local simulator: no extensions; simulator builds do not require signing.')
+     buildParser.add_argument(
+         '--buildNumber',
+         required=True,
+diff --git a/submodules/ChatListUI/Sources/Node/ChatListItem.swift b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
+index e41738b..0e00fb6 100644
+--- a/submodules/ChatListUI/Sources/Node/ChatListItem.swift
++++ b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
+@@ -1592,7 +1592,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
+                         if message.flags.contains(.Incoming), !initialHideAuthor, let author = message.author, case .user = author {
+                             result += "\n\(item.presentationData.strings.VoiceOver_ChatList_MessageFrom(author.displayTitle(strings: item.presentationData.strings, displayOrder: item.presentationData.nameDisplayOrder)).string)"
+                         }
+-                        if !message.flags.contains(.Incoming), let combinedReadState = peerData.combinedReadState, combinedReadState.isOutgoingMessageIndexRead(message.index) {
++                        if !message.flags.contains(.Incoming) && (TelegramSimulator.receipt(for: message.id) ?? peerData.combinedReadState?.isOutgoingMessageIndexRead(message.index) ?? false) {
+                             result += "\n\(item.presentationData.strings.VoiceOver_ChatList_MessageRead)"
+                         }
+                         result += "\n\(messageText)"
+@@ -3384,7 +3384,9 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
+                     if hasFailedMessages {
+                         statusState = .failed(item.presentationData.theme.chatList.failedFillColor, item.presentationData.theme.chatList.failedForegroundColor)
+                     } else {
+-                        if let forumTopicData = forumTopicData {
++                        if TelegramSimulator.enabled, let read = TelegramSimulator.receipt(for: message.id) {
++                            statusState = read ? .read(item.presentationData.theme.chatList.checkmarkColor) : .delivered(item.presentationData.theme.chatList.checkmarkColor)
++                        } else if let forumTopicData = forumTopicData {
+                             if message.id.namespace == forumTopicData.maxOutgoingReadMessageId.namespace, message.id.id >= forumTopicData.maxOutgoingReadMessageId.id {
+                                 statusState = .read(item.presentationData.theme.chatList.checkmarkColor)
+                             } else {
+diff --git a/submodules/TelegramCore/Sources/Account/Account.swift b/submodules/TelegramCore/Sources/Account/Account.swift
+index af6b607..bde46f8 100644
+--- a/submodules/TelegramCore/Sources/Account/Account.swift
++++ b/submodules/TelegramCore/Sources/Account/Account.swift
+@@ -333,6 +333,9 @@ public func accountWithId(accountManager: AccountManager<TelegramAccountManagerT
+                 }
+                 |> mapToSignal { localizationSettings, proxySettings, networkEngine -> Signal<AccountResult, NoError> in
+                     return postbox.transaction { transaction -> (PostboxCoding?, LocalizationSettings?, ProxySettings?, NetworkSettings?, AppConfiguration) in
++                        if TelegramSimulator.enabled {
++                            TelegramSimulator.initialize(transaction: transaction)
++                        }
+                         var state = transaction.getState()
+                         if state == nil, let backupData = backupData {
+                             let backupState = AuthorizedAccountState(isTestingEnvironment: beginWithTestingEnvironment, masterDatacenterId: backupData.masterDatacenterId, peerId: PeerId(backupData.peerId), state: nil, invalidatedChannels: [])
+@@ -383,8 +386,12 @@ public func accountWithId(accountManager: AccountManager<TelegramAccountManagerT
+                                     }
+                                     |> mapToSignal { phoneNumber in
+                                         return initializedNetwork(accountId: id, arguments: networkArguments, supplementary: supplementary, datacenterId: Int(authorizedState.masterDatacenterId), keychain: keychain, basePath: path, testingEnvironment: authorizedState.isTestingEnvironment, languageCode: localizationSettings?.primaryComponent.languageCode, proxySettings: proxySettings, networkSettings: networkSettings, networkEngine: networkEngine, phoneNumber: phoneNumber, useRequestTimeoutTimers: useRequestTimeoutTimers, appConfiguration: appConfig)
+-                                        |> map { network -> AccountResult in
+-                                            return .authorized(Account(accountManager: accountManager, id: id, basePath: path, testingEnvironment: authorizedState.isTestingEnvironment, postbox: postbox, network: network, networkArguments: networkArguments, peerId: authorizedState.peerId, auxiliaryMethods: auxiliaryMethods, supplementary: supplementary, isSupportUser: isSupportUser))
++                                        |> mapToSignal { network -> Signal<AccountResult, NoError> in
++                                            let account = Account(accountManager: accountManager, id: id, basePath: path, testingEnvironment: authorizedState.isTestingEnvironment, postbox: postbox, network: network, networkArguments: networkArguments, peerId: authorizedState.peerId, auxiliaryMethods: auxiliaryMethods, supplementary: supplementary, isSupportUser: isSupportUser)
++                                            if TelegramSimulator.enabled {
++                                                return TelegramSimulator.project(account: account) |> map { .authorized(account) }
++                                            }
++                                            return .single(.authorized(account))
+                                         }
+                                     }
+                                 case _:
+@@ -1718,6 +1725,11 @@ public class Account {
+     }
+     
+     public func peerInputActivities(peerId: PeerActivitySpace) -> Signal<[(PeerId, PeerInputActivity)], NoError> {
++        if TelegramSimulator.enabled {
++            return TelegramSimulatorWorkspace.shared.changed.get() |> map { _ in
++                TelegramSimulator.isTyping(peerId: peerId.peerId) ? [(peerId.peerId, .typingText)] : []
++            }
++        }
+         return self.peerInputActivityManager.activities(peerId: peerId)
+         |> map { activities in
+             return activities.map({ ($0.0, $0.1.activity) })
+diff --git a/submodules/TelegramCore/Sources/Network/Network.swift b/submodules/TelegramCore/Sources/Network/Network.swift
+index 7a8db1d..a8d4ffc 100644
+--- a/submodules/TelegramCore/Sources/Network/Network.swift
++++ b/submodules/TelegramCore/Sources/Network/Network.swift
+@@ -743,6 +743,9 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
+             
+             let mainSessionDelegate = NetworkMainSessionDelegate(connectionStatus: connectionStatus)
+             let mainSession = engine.makeSession(datacenterId: datacenterId, role: .main, usageCalculationInfo: usageCalculationInfo(basePath: basePath, category: nil), delegate: mainSessionDelegate)
++            if TelegramSimulator.enabled {
++                mainSession.setPaused(true)
++            }
+             
+             var useExperimentalFeatures = networkSettings?.useExperimentalDownload ?? true
+             if let data = appConfiguration.data, let _ = data["ios_killswitch_disable_downloadv2"] {
+@@ -947,6 +950,7 @@ public final class Network: NSObject {
+     
+     private let _connectionStatus: Promise<ConnectionStatus>
+     public var connectionStatus: Signal<ConnectionStatus, NoError> {
++        if TelegramSimulator.enabled { return .single(.online(proxyAddress: nil)) }
+         return self._connectionStatus.get() |> distinctUntilChanged
+     }
+     
+@@ -1059,6 +1063,7 @@ public final class Network: NSObject {
+                 return .never()
+             }
+         }, isContextNetworkAccessAllowed: { [weak self] in
++            if TelegramSimulator.enabled { return .single(false) }
+             if let strongSelf = self {
+                 return strongSelf.shouldKeepConnection.get() |> distinctUntilChanged
+             } else {
+@@ -1077,6 +1082,7 @@ public final class Network: NSObject {
+         
+         let fastDownloads = engine.kind == .rust
+         self._multiplexedRequestManager = MultiplexedRequestManager(cdnMaxRequestsPerWorker: fastDownloads ? 4 : 3, cdnMaxWorkersPerTarget: fastDownloads ? 8 : 4, takeWorker: { [weak self] target, tag, continueInBackground in
++            if TelegramSimulator.enabled { return nil }
+             if let strongSelf = self {
+                 let datacenterId: Int
+                 let isCdn: Bool
+@@ -1142,6 +1148,7 @@ public final class Network: NSObject {
+         #endif
+ 
+         let shouldKeepConnectionSignal = self.shouldKeepConnection.get()
++        |> map { TelegramSimulator.enabled ? false : $0 }
+         |> distinctUntilChanged |> deliverOn(queue)
+         self.shouldKeepConnectionDisposable.set(shouldKeepConnectionSignal.start(next: { [weak self] value in
+             if let strongSelf = self {
+@@ -1312,6 +1319,7 @@ public final class Network: NSObject {
+     }
+     
+     private func worker(datacenterId: Int, isCdn: Bool, isMedia: Bool, tag: MediaResourceFetchTag?) -> Signal<Download, NoError> {
++        if TelegramSimulator.enabled { return .never() }
+         return Signal { [weak self] subscriber in
+             if let strongSelf = self {
+                 subscriber.putNext(strongSelf.makeWorker(datacenterId: datacenterId, isCdn: isCdn, isMedia: isMedia, tag: tag))
+@@ -1372,6 +1380,7 @@ public final class Network: NSObject {
+     }
+     
+     func requestWithAdditionalInfo<T>(_ data: (FunctionDescription, Buffer, DeserializeFunctionResponse<T>), info: NetworkRequestAdditionalInfo, tag: NetworkRequestDependencyTag? = nil, automaticFloodWait: Bool = true, onFloodWaitError: ((String) -> Void)? = nil) -> Signal<NetworkRequestResult<T>, MTRpcError> {
++        if TelegramSimulator.enabled { return .never() }
+         let requestService = self.requestService
+         return Signal { [requestService] subscriber in
+             let request = NetworkEngineRequest(
+@@ -1418,6 +1427,7 @@ public final class Network: NSObject {
+     }
+     
+     func request<T>(_ data: (FunctionDescription, Buffer, DeserializeFunctionResponse<T>), tag: NetworkRequestDependencyTag? = nil, automaticFloodWait: Bool = true, onFloodWaitError: ((String) -> Void)? = nil) -> Signal<T, MTRpcError> {
++        if TelegramSimulator.enabled { return .never() }
+         let requestService = self.requestService
+         return Signal { [requestService] subscriber in
+             let request = NetworkEngineRequest(
+diff --git a/submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift b/submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
+index 9cb3108..7a3ab12 100644
+--- a/submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
++++ b/submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
+@@ -728,6 +728,9 @@ private func opportunisticallyTransformOutgoingMedia(network: Network, postbox:
+ }
+ 
+ public func enqueueMessages(account: Account, peerId: PeerId, messages: [EnqueueMessage]) -> Signal<[MessageId?], NoError> {
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.send(account: account, peerId: peerId, messages: messages)
++    }
+     let signal: Signal<[(Bool, EnqueueMessage)], NoError>
+     if let transformOutgoingMessageMedia = account.transformOutgoingMessageMedia {
+         signal = opportunisticallyTransformOutgoingMedia(network: account.network, postbox: account.postbox, transformOutgoingMessageMedia: transformOutgoingMessageMedia, messages: messages, userInteractive: true)
+diff --git a/submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift b/submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
+index 5d93338..ea6900a 100644
+--- a/submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
++++ b/submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
+@@ -28,6 +28,9 @@ public enum RequestEditMessageError {
+ }
+ 
+ func _internal_requestEditMessage(account: Account, messageId: MessageId, text: String, media: RequestEditMessageMedia, entities: TextEntitiesMessageAttribute?, richText: RichTextMessageAttribute?, inlineStickers: [MediaId: Media], webpagePreviewAttribute: WebpagePreviewMessageAttribute?, disableUrlPreview: Bool, scheduleInfoAttribute: OutgoingScheduleInfoMessageAttribute?, invertMediaAttribute: InvertMediaMessageAttribute?) -> Signal<RequestEditMessageResult, RequestEditMessageError> {
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.edit(account: account, id: messageId, text: text)
++    }
+     return requestEditMessage(accountPeerId: account.peerId, postbox: account.postbox, network: account.network, stateManager: account.stateManager, transformOutgoingMessageMedia: account.transformOutgoingMessageMedia, messageMediaPreuploadManager: account.messageMediaPreuploadManager, mediaReferenceRevalidationContext: account.mediaReferenceRevalidationContext, messageId: messageId, text: text, media: media, entities: entities, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, disableUrlPreview: disableUrlPreview, scheduleInfoAttribute: scheduleInfoAttribute, invertMediaAttribute: invertMediaAttribute)
+ }
+ 
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
+index 25aa698..7052671 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
+@@ -10,6 +10,9 @@ private enum EphemeralDeleteMessageRequest {
+ }
+ 
+ func _internal_deleteMessagesInteractively(account: Account, messageIds: [MessageId], type: InteractiveMessagesDeletionType, deleteAllInGroup: Bool = false) -> Signal<Void, NoError> {
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.delete(account: account, ids: messageIds)
++    }
+     return account.postbox.transaction { transaction -> [EphemeralDeleteMessageRequest] in
+         var ephemeralRequests: [EphemeralDeleteMessageRequest] = []
+         for messageId in messageIds where messageId.namespace == Namespaces.Message.EphemeralLocal || messageId.namespace == Namespaces.Message.WelcomeMessageCloud {
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+index fe15eed..e190ba9 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+@@ -104,6 +104,7 @@ public extension TelegramEngine {
+         }
+ 
+         public func applyMaxReadIndexInteractively(index: MessageIndex) -> Signal<Void, NoError> {
++            if TelegramSimulator.enabled { TelegramSimulator.markRead(peerId: index.id.peerId) }
+             return _internal_applyMaxReadIndexInteractively(postbox: self.account.postbox, stateManager: self.account.stateManager, index: index)
+         }
+ 
+@@ -113,6 +114,7 @@ public extension TelegramEngine {
+         /// state, which is what a secret chat has. Reports whether a read was applied; it
+         /// is not for a secret chat, where reading is destructive and irreversible.
+         public func applyMaxReadMessageIdInteractively(messageId: MessageId) -> Signal<Bool, NoError> {
++            if TelegramSimulator.enabled { TelegramSimulator.markRead(peerId: messageId.peerId) }
+             return _internal_applyMaxReadMessageIdInteractively(postbox: self.account.postbox, stateManager: self.account.stateManager, messageId: messageId)
+         }
+ 
+diff --git a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift b/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
+index 65b156f..719ec6d 100644
+--- a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
++++ b/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
+@@ -203,7 +203,7 @@ public final class ChatMessageBubbleContentItem {
+         self.message = message
+         self.topMessage = topMessage
+         self.content = content
+-        self.read = read
++        self.read = TelegramSimulator.enabled ? (TelegramSimulator.receipt(for: message.id) ?? read) : read
+         self.chatLocation = chatLocation
+         self.presentationData = presentationData
+         self.associatedData = associatedData
+diff --git a/submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift b/submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
+index 852384b..2f8d0fa 100644
+--- a/submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
++++ b/submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
+@@ -58,6 +58,9 @@ public final class ChatMessageItemImpl: ChatMessageItem, CustomStringConvertible
+     }
+     
+     public var read: Bool {
++        if TelegramSimulator.enabled, let read = TelegramSimulator.receipt(for: self.message.id) {
++            return read
++        }
+         switch self.content {
+             case let .message(_, read, _, _, _):
+                 return read
+diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
+index 1ceb46b..733777f 100644
+--- a/submodules/TelegramUI/Sources/AppDelegate.swift
++++ b/submodules/TelegramUI/Sources/AppDelegate.swift
+@@ -1105,12 +1105,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             return true
+         }
+ 
+-        let pushRegistry = PKPushRegistry(queue: .main)
+-        if #available(iOS 9.0, *) {
+-            pushRegistry.desiredPushTypes = Set([.voIP])
++        if !TelegramSimulator.enabled {
++            let pushRegistry = PKPushRegistry(queue: .main)
++            if #available(iOS 9.0, *) {
++                pushRegistry.desiredPushTypes = Set([.voIP])
++            }
++            self.pushRegistry = pushRegistry
++            pushRegistry.delegate = self
+         }
+-        self.pushRegistry = pushRegistry
+-        pushRegistry.delegate = self
+ 
+         self.accountManagerState = extractAccountManagerState(records: accountManager._internalAccountRecordsSync())
+         let _ = (accountManager.accountRecords()
+@@ -1125,7 +1127,11 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             }
+         }
+         
+-        let sharedContextSignal = currentPresentationDataAndSettings(accountManager: accountManager, systemUserInterfaceStyle: systemUserInterfaceStyle)
++        let simulatorAccountReady: Signal<Void, NoError> = TelegramSimulator.enabled ? TelegramSimulator.prepareAccount(accountManager) : .single(())
++        let sharedContextSignal = simulatorAccountReady
++        |> mapToSignal { _ in
++            currentPresentationDataAndSettings(accountManager: accountManager, systemUserInterfaceStyle: TelegramSimulator.enabled ? .light : systemUserInterfaceStyle)
++        }
+         |> map { initialPresentationDataAndSettings -> (AccountManager, InitialPresentationDataAndSettings) in
+             return (accountManager, initialPresentationDataAndSettings)
+         }
+diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
+index 22ecc71..3c25d55 100644
+--- a/submodules/TelegramUI/Sources/TelegramRootController.swift
++++ b/submodules/TelegramUI/Sources/TelegramRootController.swift
+@@ -72,6 +72,31 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
+ }
+ 
+ public final class TelegramRootController: NavigationController, TelegramRootControllerInterface {
++    private var simulatorEditorGesture: UILongPressGestureRecognizer?
++    private var simulatorErrorDisposable: Disposable?
++
++    override public func viewDidAppear(_ animated: Bool) {
++        super.viewDidAppear(animated)
++        if TelegramSimulator.enabled && simulatorEditorGesture == nil {
++            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(openSimulatorEditor(_:)))
++            gesture.minimumPressDuration = 1.2
++            gesture.cancelsTouchesInView = false
++            view.addGestureRecognizer(gesture)
++            simulatorEditorGesture = gesture
++        }
++    }
++
++    @objc private func openSimulatorEditor(_ gesture: UILongPressGestureRecognizer) {
++        guard gesture.state == .began, presentedViewController == nil else { return }
++        let point = gesture.location(in: view)
++        let top = view.safeAreaInsets.top
++        guard point.y >= top, point.y <= top + 64,
++              point.x > view.bounds.width * 0.25, point.x < view.bounds.width * 0.75 else { return }
++        view.endEditing(true)
++        let editor = UINavigationController(rootViewController: SimulatorEditorController(account: context.account))
++        editor.overrideUserInterfaceStyle = .light
++        present(editor, animated: true)
++    }
+     private let context: AccountContext
+     
+     public var rootTabController: TabBarController?
+@@ -106,6 +131,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
+         
+         super.init(mode: .automaticMasterDetail, theme: NavigationControllerTheme(presentationTheme: self.presentationData.theme))
++        if TelegramSimulator.enabled {
++            simulatorErrorDisposable = (TelegramSimulatorWorkspace.shared.errors |> deliverOnMainQueue).start(next: { [weak self] message in
++                guard let self = self, self.presentedViewController == nil else { return }
++                let alert = UIAlertController(title: "Не удалось сохранить", message: message, preferredStyle: .alert)
++                alert.addAction(UIAlertAction(title: "OK", style: .default))
++                self.present(alert, animated: true)
++            })
++        }
+         
+         self.presentationDataDisposable = (context.sharedContext.presentationData
+         |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
+@@ -144,6 +177,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+     }
+     
+     deinit {
++        self.simulatorErrorDisposable?.dispose()
+         self.permissionsDisposable?.dispose()
+         self.presentationDataDisposable?.dispose()
+         self.applicationInFocusDisposable?.dispose()

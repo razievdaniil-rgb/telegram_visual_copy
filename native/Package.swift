@@ -1,0 +1,13 @@
+// swift-tools-version: 6.0
+import PackageDescription
+
+// Portable domain tests. The iOS app itself is built by upstream Bazel, not SwiftPM.
+let package = Package(
+    name: "TelegramSimulatorModel",
+    products: [.library(name: "SimulatorModel", targets: ["SimulatorModel"])],
+    targets: [
+        .target(name: "SimulatorModel", path: "Sources/Core", exclude: ["TelegramSimulator.swift"], sources: ["SimulatorDocument.swift"]),
+        .testTarget(name: "SimulatorModelTests", dependencies: ["SimulatorModel"], path: "Tests")
+    ],
+    swiftLanguageModes: [.v5]
+)

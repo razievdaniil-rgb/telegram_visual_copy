@@ -1,0 +1,54 @@
+name: Native Swift sources
+on:
+  push:
+    paths: ['native/**', '.github/workflows/native-source.yml']
+  pull_request:
+    paths: ['native/**', '.github/workflows/native-source.yml']
+  workflow_dispatch:
+jobs:
+  model-and-overlay:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and test the portable Swift data model
+        run: swift test --package-path native
+      - name: Parse native integration and editor sources (not an iOS typecheck)
+        run: swiftc -frontend -parse native/Sources/Core/*.swift native/Sources/UI/*.swift
+      - uses: actions/checkout@v4
+        with:
+          repository: TelegramMessenger/Telegram-iOS
+          ref: fb0e62ba8a147f0821da6aa63c09da7d79a10111
+          path: artifacts/native-ci-upstream
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /build-system/Make/Make.py
+            /submodules/TelegramCore/Sources/Account/Account.swift
+            /submodules/TelegramCore/Sources/Network/Network.swift
+            /submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
+            /submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+            /submodules/TelegramUI/Sources/AppDelegate.swift
+            /submodules/TelegramUI/Sources/TelegramRootController.swift
+            /submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
+            /submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
+            /submodules/ChatListUI/Sources/Node/ChatListItem.swift
+      - name: Apply the native patch and verify reproducibility
+        run: |
+          python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream
+          python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream
+          python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream --check
+          python3 native/scripts/test_preparation.py --checkout artifacts/native-ci-upstream
+      - name: Package source kit (not an IPA)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Telegram-Native-Source-Kit
+          path: |
+            native/Sources/
+            native/scripts/
+            native/patches/
+            native/upstream.json
+            native/configuration.simulator.json
+            native/README.md
+            native/Package.swift
+            native/Tests/
