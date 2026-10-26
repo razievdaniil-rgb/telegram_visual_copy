@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("ipa", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--platform", choices=["device", "simulator"], default="device")
     args = parser.parse_args()
     with zipfile.ZipFile(args.ipa) as archive, tempfile.TemporaryDirectory() as directory:
         corrupt = archive.testzip()
@@ -33,8 +34,9 @@ def main():
         architectures = subprocess.check_output(["xcrun", "lipo", "-archs", str(binary)], text=True).strip()
         build_info = subprocess.check_output(["xcrun", "vtool", "-show-build", str(binary)], text=True)
         platforms = re.findall(r"^\s*platform\s+(\S+)", build_info, re.MULTILINE)
-        if "arm64" not in architectures.split() or not platforms or any(value != "IOS" for value in platforms):
-            raise RuntimeError(f"Not an arm64 iPhone build: {architectures}; {platforms}")
+        expected = "IOSSIMULATOR" if args.platform == "simulator" else "IOS"
+        if "arm64" not in architectures.split() or not platforms or any(value != expected for value in platforms):
+            raise RuntimeError(f"Not an arm64 {expected} build: {architectures}; {platforms}")
         for framework in ["TelegramCoreFramework", "TelegramUIFramework"]:
             entry = prefix + f"Frameworks/{framework}.framework/{framework}"
             if archive.getinfo(entry).file_size == 0:
@@ -47,7 +49,7 @@ def main():
             "build": info.get("CFBundleVersion"),
             "architectures": architectures,
             "platforms": platforms,
-            "requires_installation_signing": True,
+            "requires_installation_signing": args.platform == "device",
             "runtime_verified": False,
             "installation_verified": False
         }
