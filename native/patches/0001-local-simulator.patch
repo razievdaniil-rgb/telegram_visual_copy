@@ -57,7 +57,7 @@ index e41738b..0e00fb6 100644
                                  statusState = .read(item.presentationData.theme.chatList.checkmarkColor)
                              } else {
 diff --git a/submodules/TelegramCore/Sources/Account/Account.swift b/submodules/TelegramCore/Sources/Account/Account.swift
-index af6b607..520ef1d 100644
+index af6b607..839a492 100644
 --- a/submodules/TelegramCore/Sources/Account/Account.swift
 +++ b/submodules/TelegramCore/Sources/Account/Account.swift
 @@ -333,6 +333,9 @@ public func accountWithId(accountManager: AccountManager<TelegramAccountManagerT
@@ -85,7 +85,23 @@ index af6b607..520ef1d 100644
                                          }
                                      }
                                  case _:
-@@ -1718,6 +1725,11 @@ public class Account {
+@@ -1464,6 +1471,7 @@ public class Account {
+         
+         let shouldBeMaster = combineLatest(self.shouldBeServiceTaskMaster.get(), postbox.isMasterClient())
+         |> map { [weak self] shouldBeMaster, isMaster -> Bool in
++            if TelegramSimulator.enabled { return false }
+             if shouldBeMaster == .always && !isMaster {
+                 self?.postbox.becomeMasterClient()
+             }
+@@ -1684,6 +1692,7 @@ public class Account {
+     }
+     
+     public func resetStateManagement() {
++        if TelegramSimulator.enabled { return }
+         self.stateManager.reset()
+         self.restartContactManagement()
+         self.managedStickerPacksDisposable.set(manageStickerPacks(network: self.network, postbox: self.postbox).start())
+@@ -1718,6 +1727,11 @@ public class Account {
      }
      
      public func peerInputActivities(peerId: PeerActivitySpace) -> Signal<[(PeerId, PeerInputActivity)], NoError> {
@@ -97,7 +113,7 @@ index af6b607..520ef1d 100644
          return self.peerInputActivityManager.activities(peerId: peerId)
          |> map { activities in
              return activities.map({ ($0.0, $0.1.activity) })
-@@ -1725,6 +1737,16 @@ public class Account {
+@@ -1725,6 +1739,16 @@ public class Account {
      }
      
      public func allPeerInputActivities() -> Signal<[PeerActivitySpace: [(PeerId, PeerInputActivity)]], NoError> {

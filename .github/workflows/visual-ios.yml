@@ -1,4 +1,4 @@
-name: iOS Simulator visual verification
+name: Archived Expo prototype - iOS visual verification
 on:
   workflow_dispatch:
     inputs:
