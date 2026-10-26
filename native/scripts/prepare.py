@@ -12,6 +12,8 @@ NATIVE = Path(__file__).resolve().parents[1]
 ROOT = NATIVE.parent
 UPSTREAM = json.loads((NATIVE / "upstream.json").read_text(encoding="utf-8"))
 PATCH = NATIVE / "patches" / "0001-local-simulator.patch"
+RULES_REVISION = "485016eb5b0948cc17307064e7977a6d68e94046"
+RULES_PATCH = NATIVE / "vendor-patches" / "rules-apple-unsigned.patch"
 
 
 def git(checkout, *arguments, check=True):
@@ -24,6 +26,22 @@ def sources():
         yield source, Path("submodules/TelegramCore/Sources/LocalSimulator") / source.name
     for source in sorted((NATIVE / "Sources" / "UI").glob("*.swift")):
         yield source, Path("submodules/TelegramUI/Sources/LocalSimulator") / source.name
+
+
+def prepare_rules(checkout, check_only=False):
+    rules = checkout / "build-system/bazel-rules/rules_apple"
+    if not (rules / ".git").exists():
+        return False
+    revision = git(rules, "rev-parse", "HEAD").stdout.decode().strip()
+    if revision != RULES_REVISION:
+        raise RuntimeError("rules_apple differs from the pinned upstream submodule")
+    applied = git(rules, "apply", "--reverse", "--check", str(RULES_PATCH), check=False).returncode == 0
+    if not applied:
+        if check_only:
+            raise RuntimeError("The unsigned packaging patch is absent from rules_apple")
+        git(rules, "apply", "--check", str(RULES_PATCH))
+        git(rules, "apply", str(RULES_PATCH))
+    return True
 
 
 def prepare(checkout, check_only=False, full=False):
@@ -65,6 +83,7 @@ def prepare(checkout, check_only=False, full=False):
             if sparse:
                 git(checkout, "sparse-checkout", "disable")
             subprocess.run(["git", "-C", str(checkout), "submodule", "update", "--init", "--recursive", "--depth", "1", "--jobs", "4"], check=True)
+    vendor_applied = prepare_rules(checkout, check_only=check_only)
     report = {
         "upstream": actual,
         "patch_sha256": hashlib.sha256(PATCH.read_bytes()).hexdigest(),
@@ -72,6 +91,7 @@ def prepare(checkout, check_only=False, full=False):
         "checked_out_at": str(checkout),
         "full_submodules_requested": full,
         "ios_build_verified": False,
+        "unsigned_packaging_patch_applied": vendor_applied,
     }
     print(json.dumps(report, ensure_ascii=True, indent=2))
     return report

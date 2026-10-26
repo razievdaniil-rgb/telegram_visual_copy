@@ -34,6 +34,13 @@ jobs:
             /submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
             /submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
             /submodules/ChatListUI/Sources/Node/ChatListItem.swift
+      - uses: actions/checkout@v4
+        with:
+          repository: ali-fareed/rules_apple
+          ref: 485016eb5b0948cc17307064e7977a6d68e94046
+          path: artifacts/native-ci-upstream/build-system/bazel-rules/rules_apple
+          sparse-checkout-cone-mode: false
+          sparse-checkout: /apple/internal/ios_rules.bzl
       - name: Apply the native patch and verify reproducibility
         run: |
           python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream
@@ -48,6 +55,7 @@ jobs:
             native/Sources/
             native/scripts/
             native/patches/
+            native/vendor-patches/
             native/upstream.json
             native/configuration.simulator.json
             native/README.md
