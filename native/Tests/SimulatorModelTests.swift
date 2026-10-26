@@ -26,6 +26,12 @@ final class SimulatorModelTests: XCTestCase {
         let data = try JSONSerialization.data(withJSONObject: ["kind": "telegram-simulator-backup", "version": 1, "document": raw, "preferences": ["version": 1]])
         XCTAssertEqual(try SimulatorDocument.decode(data), document)
     }
+    func testAbsentAvatarIsEncodedAsExplicitNullForExistingClients() throws {
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: SimulatorDocument().encoded()) as? [String: Any])
+        let owner = try XCTUnwrap(object["self"] as? [String: Any])
+        XCTAssertTrue(owner["avatar"] is NSNull)
+        XCTAssertEqual(try SimulatorDocument.decode(SimulatorDocument().encoded()), SimulatorDocument())
+    }
     func testInvalidReferencesEnumsAndNativeTimestampAreRejected() throws {
         var document = example(); document.profiles = []
         XCTAssertThrowsError(try document.encoded())

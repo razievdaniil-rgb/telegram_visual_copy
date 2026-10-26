@@ -14,6 +14,21 @@ public struct SimulatorProfile: Codable, Equatable {
     public var bio: String
     public var avatar: String?
     public var color: String
+    enum CodingKeys: String, CodingKey { case id, firstName, lastName, username, phone, bio, avatar, color }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(firstName, forKey: .firstName)
+        try container.encode(lastName, forKey: .lastName)
+        try container.encode(username, forKey: .username)
+        try container.encode(phone, forKey: .phone)
+        try container.encode(bio, forKey: .bio)
+        try container.encode(color, forKey: .color)
+        // The version-1 web decoder requires an explicit null, not an omitted key.
+        if let avatar = avatar { try container.encode(avatar, forKey: .avatar) }
+        else { try container.encodeNil(forKey: .avatar) }
+    }
 
     public init(id: String = UUID().uuidString, firstName: String = "", lastName: String = "", username: String = "", phone: String = "", bio: String = "", avatar: String? = nil, color: String = "#5F9BE5") {
         self.id = id; self.firstName = firstName; self.lastName = lastName
