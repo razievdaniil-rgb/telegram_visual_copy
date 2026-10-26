@@ -20,6 +20,7 @@ import { kitAssets } from './kit-assets';
 import { Icon } from './ui';
 import { KitSymbol, SystemSymbol, type KitSymbolName } from './kit-symbol';
 import { TelegramIcon, type TelegramIconName } from './telegram-assets';
+import { WebGlass, webGlassStyle } from './glass-material';
 
 const TargetContext = createContext<{
   targetRef?: React.RefObject<View | null>;
@@ -54,11 +55,13 @@ export function GlassEnvironment({ children }: { children: React.ReactNode }) {
               <Text style={g.noticeText}>{notice?.message}</Text>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Понятно"
+                accessibilityLabel="РџРѕРЅСЏС‚РЅРѕ"
                 onPress={() => setNotice(null)}
                 style={g.noticeButton}
               >
-                <Text style={{ color: C.blue, fontSize: 17, fontWeight: '600' }}>Понятно</Text>
+                <Text style={{ color: C.blue, fontSize: 17, fontWeight: '600' }}>
+                  РџРѕРЅСЏС‚РЅРѕ
+                </Text>
               </Pressable>
             </View>
           </View>
@@ -118,9 +121,11 @@ export function Glass({
   const native =
     Platform.OS === 'ios' && !reduced && isGlassEffectAPIAvailable() && isLiquidGlassAvailable();
   return (
-    <View style={[g.glass, style]}>
+    <View style={[g.glass, webGlassStyle, style]}>
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-        {native ? (
+        {Platform.OS === 'web' ? (
+          <WebGlass dark={dark} />
+        ) : native ? (
           <GlassView
             colorScheme="light"
             glassEffectStyle={dark ? 'clear' : 'regular'}
@@ -139,7 +144,7 @@ export function Glass({
             style={StyleSheet.absoluteFill}
           />
         )}
-        {!native && !reduced && (
+        {Platform.OS !== 'web' && !native && !reduced && (
           <View
             style={[StyleSheet.absoluteFill, { backgroundColor: dark ? '#FFFFFF12' : '#FFFFFFB3' }]}
           />
@@ -239,7 +244,11 @@ export function useNotice() {
 }
 export function useUnavailable() {
   const showNotice = useNotice();
-  return () => showNotice('Недоступно', 'Эта функция недоступна в симуляторе');
+  return () =>
+    showNotice(
+      'РќРµРґРѕСЃС‚СѓРїРЅРѕ',
+      'Р­С‚Р° С„СѓРЅРєС†РёСЏ РЅРµРґРѕСЃС‚СѓРїРЅР° РІ СЃРёРјСѓР»СЏС‚РѕСЂРµ',
+    );
 }
 export const g = StyleSheet.create({
   noticeBackdrop: {

@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Glass, GlassButton } from './glass';
 import { SystemSymbol } from './kit-symbol';
 import { TelegramIcon } from './telegram-assets';
+import { useWebKeyboard } from './web-shell';
 import { useChatSearch } from './chat-search';
 import { colors as C, systemFont, type } from './theme';
 export function PublicHeader({
@@ -39,6 +40,7 @@ export function PublicHeader({
 }
 export function FloatingTabs({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const webKeyboard = useWebKeyboard();
   const { query, setQuery } = useChatSearch();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const params = state.routes[state.index].params as { search?: string } | undefined;
@@ -63,7 +65,11 @@ export function FloatingTabs({ state, descriptors, navigation }: BottomTabBarPro
         {
           left: side,
           right: side,
-          bottom: searching && keyboardHeight ? keyboardHeight + 8 : Math.max(8, insets.bottom),
+          bottom: webKeyboard
+            ? 8
+            : searching && keyboardHeight
+              ? keyboardHeight + 8
+              : Math.max(8, insets.bottom),
         },
       ]}
     >

@@ -16,7 +16,7 @@ import { colors, systemFont } from './theme';
 function textStyle(style: StyleProp<TextStyle>): StyleProp<TextStyle> {
   const resolved = StyleSheet.flatten(style);
   if (resolved?.fontFamily && resolved.fontFamily !== systemFont) return style;
-  if (Platform.OS === 'ios') return [{ fontFamily: systemFont }, style];
+  if (Platform.OS === 'ios' || Platform.OS === 'web') return [{ fontFamily: systemFont }, style];
   const weight = resolved?.fontWeight;
   const numeric = weight === 'bold' ? 700 : Number(weight) || 400;
   const face =

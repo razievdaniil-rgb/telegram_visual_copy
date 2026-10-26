@@ -9,7 +9,7 @@ export function FontGate({ children, retry }: { children: React.ReactNode; retry
   const [ready, error] = useFonts({
     ...Ionicons.font,
     iostgico: kitFont,
-    ...(Platform.OS !== 'ios'
+    ...(Platform.OS === 'android'
       ? {
           'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),
           'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),

@@ -40,4 +40,9 @@ export const layout = {
   bubble: 16,
   mergedBubble: 8,
 };
-export const systemFont = Platform.OS === 'ios' ? 'System' : 'Inter-Regular';
+export const systemFont =
+  Platform.OS === 'web'
+    ? '-apple-system, BlinkMacSystemFont, TelegramFallback, sans-serif'
+    : Platform.OS === 'ios'
+      ? 'System'
+      : 'Inter-Regular';

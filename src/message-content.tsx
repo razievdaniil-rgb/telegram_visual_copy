@@ -6,6 +6,7 @@ import { MessageBubble } from './message-bubble';
 import { MessageChecks, timeLabel } from './message-ui';
 import { TextMeasure, type TextMetrics } from './text-measure';
 import { colors as C, systemFont, type } from './theme';
+import { usePreferences } from './preferences';
 import { messageGeometry } from './message-geometry';
 
 // ChatMessageTextBubbleContentNode + DateAndStatusNode, text-only branch:
@@ -22,6 +23,12 @@ export function MessageContent({
   previous: boolean;
   next: boolean;
 }) {
+  const { preferences } = usePreferences();
+  const messageText = {
+    ...s.text,
+    fontSize: preferences.fontSize,
+    lineHeight: preferences.fontSize + 5,
+  };
   const outgoing = message.direction === 'outgoing';
   const constraint = Math.max(12, maxWidth - 28);
   const [metrics, setMetrics] = useState<TextMetrics | null>(null);
@@ -57,8 +64,9 @@ export function MessageContent({
   );
   return (
     <View style={s.row}>
-      <TextMeasure text={message.text} width={constraint} style={s.text} onMeasure={measure} />
+      <TextMeasure text={message.text} width={constraint} style={messageText} onMeasure={measure} />
       <Text
+        aria-hidden
         accessible={false}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
@@ -81,7 +89,7 @@ export function MessageContent({
             textBreakStrategy="simple"
             lineBreakStrategyIOS="none"
             style={[
-              s.text,
+              messageText,
               { width: contentWidth, paddingBottom: geometry.dateRowHeight, marginBottom: -2 },
             ]}
           >

@@ -15,3 +15,10 @@ jobs:
       - run: npm test
       - name: Export iOS, Android and web bundles
         run: npx expo export --platform all --max-workers 2
+      - name: Build installable offline PWA
+        run: npm run build:pwa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Telegram-PWA
+          path: dist/
+          if-no-files-found: error

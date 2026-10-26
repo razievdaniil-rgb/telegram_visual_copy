@@ -211,6 +211,9 @@ export function SettingsScreen({ data }: { data: Document }) {
                       if (action === 'profile')
                         router.push({ pathname: '/profile/[id]', params: { id: data.self.id } });
                       else if (action === 'calls') router.navigate('/calls');
+                      else if (row.title === 'Оформление') router.push('/appearance');
+                      else if (row.title === 'Папки с чатами') router.push('/folders');
+                      else if (row.title === 'Данные и память') router.push('/data');
                       else if (action === 'about')
                         showNotice(
                           'ChatStudio',

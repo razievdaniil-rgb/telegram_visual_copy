@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BackupPanel } from './backup-panel';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -104,6 +105,7 @@ export function Editor({ data, dispatch, close, currentChatId, addExample }: Pro
             Настройте переписки здесь. Закройте редактор, чтобы просматривать их без элементов
             управления.
           </Text>
+          <BackupPanel />
           <Text style={ed.section}>МОЙ ПРОФИЛЬ</Text>
           <EditorRow
             title={nameOf(data.self)}

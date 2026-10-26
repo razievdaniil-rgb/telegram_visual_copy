@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from './text';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar } from './ui';
-import { GlassButton, GlassContent, useUnavailable } from './glass';
+import { GlassButton, GlassContent, useUnavailable, useNotice } from './glass';
 import { nameOf, type Chat, type Profile } from './model';
 import { colors as C, systemFont, type } from './theme';
 import { TelegramIcon, type TelegramIconName } from './telegram-assets';
+import { ActionMenu } from './action-menu';
+import { copyText } from './copy-text';
 export function ProfileScreen({
   profile,
   presence,
@@ -23,6 +25,8 @@ export function ProfileScreen({
   openedFromChat?: boolean;
 }) {
   const unavailable = useUnavailable();
+  const notice = useNotice();
+  const [menu, setMenu] = useState(false);
   const insets = useSafeAreaInsets();
   const actions: { icon: TelegramIconName; label: string; onPress?: () => void }[] = openedFromChat
     ? [
@@ -66,7 +70,9 @@ export function ProfileScreen({
                   key={action.label}
                   accessibilityRole="button"
                   accessibilityLabel={action.label}
-                  onPress={action.onPress ?? unavailable}
+                  onPress={
+                    action.label === 'ещё' ? () => setMenu(true) : (action.onPress ?? unavailable)
+                  }
                   style={s.action}
                 >
                   <View style={s.actionIcon}>
@@ -105,6 +111,25 @@ export function ProfileScreen({
         <GlassButton icon="back" label="Назад" onPress={back} />
         <GlassButton title="Изм." label="Изменить профиль" onPress={unavailable} />
       </View>
+      {menu && (
+        <ActionMenu
+          title={nameOf(profile)}
+          close={() => setMenu(false)}
+          items={[
+            ...(message ? [{ title: 'Написать сообщение', action: message }] : []),
+            {
+              title: 'Копировать номер',
+              action: () => {
+                void copyText(profile.phone).catch(() =>
+                  notice('Не удалось скопировать', 'Выделите номер в профиле и скопируйте его.'),
+                );
+              },
+            },
+            { title: 'Поделиться контактом', action: unavailable },
+            { title: 'Заблокировать', action: unavailable },
+          ]}
+        />
+      )}
     </View>
   );
 }

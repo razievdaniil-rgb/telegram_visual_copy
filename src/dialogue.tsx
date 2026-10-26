@@ -12,7 +12,7 @@ import { Text, TextInput } from './text';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Avatar } from './ui';
-import { Glass, GlassButton, GlassContent, useUnavailable } from './glass';
+import { Glass, GlassButton, GlassContent, useUnavailable, useNotice } from './glass';
 import { Wallpaper } from './wallpaper';
 import { colors as C, systemFont, type } from './theme';
 import { messagesFor, nameOf, type Chat, type Document, type Message } from './model';
@@ -22,6 +22,13 @@ import { MessageContent } from './message-content';
 import { maximumMessageWidth } from './message-geometry';
 import { TextMeasure, type TextMetrics } from './text-measure';
 import { TelegramIcon } from './telegram-assets';
+import { ActionMenu } from './action-menu';
+import { useStore } from './store';
+import { usePreferences } from './preferences';
+import { toggleId } from './preferences-model';
+import { useWebKeyboard } from './web-shell';
+import { useLocalSearchParams } from 'expo-router';
+import { copyText } from './copy-text';
 
 export function DialogueScreen({
   data,
@@ -40,6 +47,14 @@ export function DialogueScreen({
 }) {
   const profile = data.profiles.find((p) => p.id === chat.profileId)!;
   const messages = messagesFor(data, chat.id);
+  const { dispatch } = useStore();
+  const notice = useNotice();
+  const { preferences, change } = usePreferences();
+  const { messageId } = useLocalSearchParams<{ messageId?: string }>();
+  const [selected, setSelected] = useState<Message | null>(null);
+  const [chatMenu, setChatMenu] = useState(false);
+  const [editing, setEditing] = useState<Message | null>(null);
+  const webKeyboard = useWebKeyboard();
   const [text, setText] = useState('');
   const [inputHeight, setInputHeight] = useState(21);
   const [inputWidth, setInputWidth] = useState(200);
@@ -49,14 +64,21 @@ export function DialogueScreen({
     },
     [setInputHeight],
   );
-  const [keyboard, setKeyboard] = useState(false);
+  const [nativeKeyboard, setKeyboard] = useState(false);
+  const keyboard = Platform.OS === 'web' ? webKeyboard : nativeKeyboard;
   const [atBottom, setAtBottom] = useState(true);
   const [width, setWidth] = useState(402);
   const list = useRef<FlatList<Message>>(null);
+  const jumpAttempts = useRef(0);
+  const jumpTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const lastId = messages.at(-1)?.id;
   const previousLastId = useRef<string | undefined>(undefined);
   const unavailable = useUnavailable();
   const insets = useSafeAreaInsets();
+  useEffect(() => {
+    jumpAttempts.current = 0;
+    return () => clearTimeout(jumpTimer.current);
+  }, [messageId]);
   useEffect(() => {
     const show = Keyboard.addListener('keyboardDidShow', () => setKeyboard(true));
     const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboard(false));
@@ -66,13 +88,19 @@ export function DialogueScreen({
     };
   }, []);
   useEffect(() => {
-    if (atBottom || previousLastId.current !== lastId)
+    if (!messageId && (atBottom || previousLastId.current !== lastId))
       requestAnimationFrame(() => list.current?.scrollToEnd({ animated: false }));
     previousLastId.current = lastId;
-  }, [messages.length, lastId, atBottom]);
+  }, [messages.length, lastId, atBottom, messageId]);
+  const jumpToMessage = () => {
+    const index = messages.findIndex((m) => m.id === messageId);
+    if (index >= 0) list.current?.scrollToIndex({ index, animated: false, viewPosition: 0.5 });
+  };
   const submit = () => {
     if (!text.trim()) return;
-    send(text);
+    if (editing) dispatch({ type: 'message/save', message: { ...editing, text, edited: true } });
+    else send(text);
+    setEditing(null);
     setText('');
     setInputHeight(21);
     setAtBottom(true);
@@ -90,6 +118,13 @@ export function DialogueScreen({
           ref={list}
           data={messages}
           keyExtractor={(message) => message.id}
+          onScrollToIndexFailed={({ averageItemLength, index }) => {
+            list.current?.scrollToOffset({ offset: averageItemLength * index, animated: false });
+            if (++jumpAttempts.current <= 3) {
+              clearTimeout(jumpTimer.current);
+              jumpTimer.current = setTimeout(jumpToMessage, 120);
+            }
+          }}
           contentContainerStyle={[
             s.messages,
             {
@@ -105,7 +140,8 @@ export function DialogueScreen({
           }}
           scrollEventThrottle={100}
           onContentSizeChange={() => {
-            if (atBottom) list.current?.scrollToEnd({ animated: false });
+            if (messageId) jumpToMessage();
+            else if (atBottom) list.current?.scrollToEnd({ animated: false });
           }}
           ListEmptyComponent={
             <View style={s.empty}>
@@ -152,12 +188,22 @@ export function DialogueScreen({
                     </View>
                   </View>
                 )}
-                <MessageContent
-                  message={m}
-                  previous={!!samePrevious}
-                  next={!!sameNext}
-                  maxWidth={maximumMessageWidth(width)}
-                />
+                <Pressable
+                  onLongPress={() => setSelected(m)}
+                  delayLongPress={500}
+                  style={
+                    messageId === m.id
+                      ? { backgroundColor: '#0088FF20', borderRadius: 16 }
+                      : undefined
+                  }
+                >
+                  <MessageContent
+                    message={m}
+                    previous={!!samePrevious}
+                    next={!!sameNext}
+                    maxWidth={maximumMessageWidth(width)}
+                  />
+                </Pressable>
               </View>
             );
           }}
@@ -166,7 +212,11 @@ export function DialogueScreen({
       <TextMeasure
         text={text.endsWith('\n') ? `${text}\u200b` : text || ' '}
         width={inputWidth}
-        style={s.inputMeasure}
+        style={{
+          ...s.inputMeasure,
+          fontSize: preferences.fontSize,
+          lineHeight: preferences.fontSize + 4,
+        }}
         onMeasure={measureInput}
       />
       <View pointerEvents="box-none" style={s.header}>
@@ -189,7 +239,7 @@ export function DialogueScreen({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Аватар собеседника"
-            onPress={openProfile}
+            onPress={() => setChatMenu(true)}
           >
             <Avatar profile={profile} size={40} />
           </Pressable>
@@ -215,6 +265,26 @@ export function DialogueScreen({
           </Pressable>
         </Glass>
         <Glass style={s.field}>
+          {editing && (
+            <Pressable
+              accessibilityLabel="Отменить редактирование"
+              onPress={() => {
+                setEditing(null);
+                setText('');
+              }}
+              style={{
+                position: 'absolute',
+                bottom: '100%',
+                left: 0,
+                right: 0,
+                padding: 8,
+                backgroundColor: C.white,
+                borderRadius: 12,
+              }}
+            >
+              <Text style={{ color: C.blue, fontSize: 13 }}>Редактирование сообщения · Отмена</Text>
+            </Pressable>
+          )}
           <TextInput
             testID="message-input"
             accessibilityLabel="Сообщение"
@@ -225,7 +295,14 @@ export function DialogueScreen({
             onChangeText={setText}
             onLayout={({ nativeEvent: { layout } }) => setInputWidth(layout.width)}
             scrollEnabled={inputHeight >= 130}
-            style={[s.input, { height: inputHeight }]}
+            style={[
+              s.input,
+              {
+                height: inputHeight,
+                fontSize: preferences.fontSize,
+                lineHeight: preferences.fontSize + 4,
+              },
+            ]}
           />
           <Pressable
             accessibilityRole="button"
@@ -256,6 +333,60 @@ export function DialogueScreen({
           )}
         </Glass>
       </View>
+      {selected && (
+        <ActionMenu
+          title="Сообщение"
+          close={() => setSelected(null)}
+          items={[
+            {
+              title: 'Копировать',
+              action: () => {
+                void copyText(selected.text).catch(() =>
+                  notice(
+                    'Не удалось скопировать',
+                    'Выделите текст сообщения и выберите «Копировать».',
+                  ),
+                );
+              },
+            },
+            ...(selected.direction === 'outgoing'
+              ? [
+                  {
+                    title: 'Редактировать',
+                    action: () => {
+                      setEditing(selected);
+                      setText(selected.text);
+                    },
+                  },
+                ]
+              : []),
+            { title: 'Ответить', action: unavailable },
+            { title: 'Переслать', action: unavailable },
+            {
+              title: 'Удалить',
+              danger: true,
+              action: () => dispatch({ type: 'message/delete', id: selected.id }),
+            },
+          ]}
+        />
+      )}
+      {chatMenu && (
+        <ActionMenu
+          title={nameOf(profile)}
+          close={() => setChatMenu(false)}
+          items={[
+            { title: 'Профиль', action: openProfile },
+            {
+              title: preferences.archived.includes(chat.id) ? 'Вернуть из архива' : 'В архив',
+              action: () => change((p) => ({ ...p, archived: toggleId(p.archived, chat.id) })),
+            },
+            {
+              title: preferences.pinned.includes(chat.id) ? 'Открепить' : 'Закрепить',
+              action: () => change((p) => ({ ...p, pinned: toggleId(p.pinned, chat.id) })),
+            },
+          ]}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 }
