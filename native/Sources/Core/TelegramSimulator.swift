@@ -65,7 +65,11 @@ public enum TelegramSimulator {
             transaction.updatePeersInternal(people.map(profile), update: { _, next in next })
             transaction.replaceContactPeerIds(currentContacts)
             for person in people {
-                transaction.updatePeerCachedData(peerIds: Set([peerId(person.id)]), update: { _, _ in CachedUserData().withUpdatedAbout(person.bio) })
+                transaction.updatePeerCachedData(peerIds: Set([peerId(person.id)]), update: { _, _ in
+                    // Original ChatHistoryView waits for BusinessIntro to become known.
+                    // Local profiles have no business intro; never wait for a server response.
+                    CachedUserData().withUpdatedAbout(person.bio).withUpdatedBusinessIntro(nil)
+                })
             }
             for chat in document.chats {
                 let id = peerId(chat.profileId)

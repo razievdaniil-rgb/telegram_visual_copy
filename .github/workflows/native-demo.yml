@@ -92,6 +92,13 @@ jobs:
           run-id: ${{ env.APP_RUN }}
           github-token: ${{ github.token }}
           path: artifacts/native-build
+      - uses: actions/cache/save@v4
+        id: save-simulator-cache
+        if: env.APP_RUN == '' && success()
+        continue-on-error: true
+        with:
+          path: ~/telegram-bazel-cache
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -117,7 +124,7 @@ jobs:
           python3 - <<'PY'
           import glob, os, subprocess
           patterns=['/Applications/*.app/Contents/Developer/Applications/*Simulator*.app', '/Applications/*.app/Contents/Applications/*Simulator*.app', '/Library/Developer/Applications/*Simulator*.app', '/System/Applications/*Simulator*.app', '/System/Library/CoreServices/*Simulator*.app']
-          candidates=sorted(set(path for pattern in patterns for path in glob.glob(pattern)))
+          candidates=sorted(set(path for pattern in patterns for path in glob.glob(pattern) if path.endswith('/Simulator.app')))
           with open('artifacts/native-demo/simulator-app-paths.txt','w') as f: f.write('\n'.join(candidates))
           print('Simulator GUI candidates:',candidates,flush=True)
           if candidates:
@@ -161,7 +168,7 @@ jobs:
           path: artifacts/native-demo/
           retention-days: 7
       - uses: actions/cache/save@v4
-        if: always() && !cancelled() && env.APP_RUN == ''
+        if: always() && !cancelled() && env.APP_RUN == '' && steps.save-simulator-cache.outcome != 'success'
         continue-on-error: true
         with:
           path: ~/telegram-bazel-cache

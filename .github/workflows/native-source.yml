@@ -23,6 +23,7 @@ jobs:
           sparse-checkout: |
             /build-system/Make/Make.py
             /submodules/TelegramCore/Sources/Account/Account.swift
+            /submodules/TelegramCore/Sources/State/AccountStateManager.swift
             /submodules/TelegramCore/Sources/Network/Network.swift
             /submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
             /submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
