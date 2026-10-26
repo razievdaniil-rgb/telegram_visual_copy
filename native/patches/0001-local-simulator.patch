@@ -1,8 +1,18 @@
 diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
-index 4c3a641..de77277 100644
+index 4c3a641..2dbd240 100644
 --- a/build-system/Make/Make.py
 +++ b/build-system/Make/Make.py
-@@ -631,6 +631,10 @@ def build(bazel, arguments):
+@@ -480,6 +480,9 @@ def resolve_configuration(base_path, bazel_command_line: BazelCommandLine, argum
+         provisioning_profiles_path=provisioning_path,
+         additional_codesigning_output_path=additional_codesigning_output_path
+     )
++    if getattr(arguments, 'simulatorLocalMode', False) or getattr(arguments, 'disableProvisioningProfiles', False):
++        # This target has no remote push. A simulator must not require a matching APNs profile.
++        codesigning_data.aps_environment = ''
+     if codesigning_data.aps_environment is None:
+         print('Could not find a valid aps-environment entitlement in the provided provisioning profiles')
+         sys.exit(1)
+@@ -631,6 +634,10 @@ def build(bazel, arguments):
      )
  
      bazel_command_line.set_configuration(arguments.configuration)
@@ -13,7 +23,7 @@ index 4c3a641..de77277 100644
      if arguments.embedWatchApp:
          if arguments.configuration in ('debug_arm64', 'release_arm64'):
              if arguments.watchApiId is None or arguments.watchApiHash is None:
-@@ -1017,6 +1021,8 @@ if __name__ == '__main__':
+@@ -1017,6 +1024,8 @@ if __name__ == '__main__':
      )
  
      buildParser = subparsers.add_parser('build', help='Build the app')
@@ -47,7 +57,7 @@ index e41738b..0e00fb6 100644
                                  statusState = .read(item.presentationData.theme.chatList.checkmarkColor)
                              } else {
 diff --git a/submodules/TelegramCore/Sources/Account/Account.swift b/submodules/TelegramCore/Sources/Account/Account.swift
-index af6b607..bde46f8 100644
+index af6b607..520ef1d 100644
 --- a/submodules/TelegramCore/Sources/Account/Account.swift
 +++ b/submodules/TelegramCore/Sources/Account/Account.swift
 @@ -333,6 +333,9 @@ public func accountWithId(accountManager: AccountManager<TelegramAccountManagerT
@@ -87,6 +97,23 @@ index af6b607..bde46f8 100644
          return self.peerInputActivityManager.activities(peerId: peerId)
          |> map { activities in
              return activities.map({ ($0.0, $0.1.activity) })
+@@ -1725,6 +1737,16 @@ public class Account {
+     }
+     
+     public func allPeerInputActivities() -> Signal<[PeerActivitySpace: [(PeerId, PeerInputActivity)]], NoError> {
++        if TelegramSimulator.enabled {
++            return TelegramSimulatorWorkspace.shared.changed.get() |> map { _ in
++                var result: [PeerActivitySpace: [(PeerId, PeerInputActivity)]] = [:]
++                for chat in TelegramSimulatorWorkspace.shared.snapshot().chats where chat.presence == .typing {
++                    let id = TelegramSimulator.peerId(chat.profileId)
++                    result[PeerActivitySpace(peerId: id, category: .global)] = [(id, .typingText)]
++                }
++                return result
++            }
++        }
+         return self.peerInputActivityManager.allActivities()
+         |> map { activities in
+             var result: [PeerActivitySpace: [(PeerId, PeerInputActivity)]] = [:]
 diff --git a/submodules/TelegramCore/Sources/Network/Network.swift b/submodules/TelegramCore/Sources/Network/Network.swift
 index 7a8db1d..a8d4ffc 100644
 --- a/submodules/TelegramCore/Sources/Network/Network.swift

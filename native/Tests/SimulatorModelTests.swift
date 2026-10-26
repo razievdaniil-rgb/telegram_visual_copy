@@ -39,10 +39,10 @@ final class SimulatorModelTests: XCTestCase {
         XCTAssertThrowsError(try SimulatorDocument.decode(Data(invalidEnum.utf8)))
     }
     func testStableNativeIds() {
-        XCTAssertEqual(SimulatorDocument.numericId("self"), SimulatorDocument.numericId("self"))
-        XCTAssertNotEqual(SimulatorDocument.numericId("self"), SimulatorDocument.numericId("anna"))
-        XCTAssertGreaterThan(SimulatorDocument.messageId("one"), 0)
-        XCTAssertLessThan(SimulatorDocument.messageId("one"), Int32.max)
+        // Compatibility values: changing the ID scheme must not silently remap saved chats.
+        XCTAssertEqual(SimulatorDocument.numericId("self"), 251894799241912)
+        XCTAssertEqual(SimulatorDocument.numericId("anna"), 222667032143036)
+        XCTAssertEqual(SimulatorDocument.messageId("one"), 567084309)
     }
     func testSaveRestartAndInvalidImportPreservePreviousDocument() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
