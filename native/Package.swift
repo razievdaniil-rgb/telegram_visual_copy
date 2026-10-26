@@ -4,6 +4,7 @@ import PackageDescription
 // Portable domain tests. The iOS app itself is built by upstream Bazel, not SwiftPM.
 let package = Package(
     name: "TelegramSimulatorModel",
+    platforms: [.macOS(.v13), .iOS(.v15)],
     products: [.library(name: "SimulatorModel", targets: ["SimulatorModel"])],
     targets: [
         .target(name: "SimulatorModel", path: "Sources/Core", exclude: ["TelegramSimulator.swift"], sources: ["SimulatorDocument.swift"]),
