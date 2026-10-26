@@ -56,7 +56,12 @@ jobs:
         if: env.APP_RUN == ''
         run: |
           set -o pipefail
-          python3 native/scripts/build.py build-simulator --build-number '${{ github.run_number }}' 2>&1 | tee artifacts/native-demo/compile.log
+          for ATTEMPT in 1 2 3; do
+            if python3 native/scripts/build.py build-simulator --build-number '${{ github.run_number }}' 2>&1 | tee "artifacts/native-demo/compile-$ATTEMPT.log"; then break; fi
+            if [ "$ATTEMPT" = 3 ] || ! grep -Eq 'Error downloading|GET returned 50[234]|Connection reset|Read timed out' "artifacts/native-demo/compile-$ATTEMPT.log"; then exit 1; fi
+            echo 'Retrying a transient dependency download failure; compiler errors are not retried.'
+            sleep 5
+          done
           python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --platform simulator --output artifacts/native-build/verification.json
           git rev-parse HEAD > artifacts/native-build/app-source-sha.txt
       - uses: actions/upload-artifact@v4

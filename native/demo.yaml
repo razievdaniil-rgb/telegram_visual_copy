@@ -2,12 +2,12 @@ appId: org.chatstudio.localsimulator
 ---
 - launchApp
 - extendedWaitUntil:
-    visible: '.*Анна.*'
+    visible: '[\s\S]*Анна[\s\S]*'
     timeout: 90000
 - takeScreenshot: artifacts/native-demo/chats
-- tapOn: '.*Анна.*'
+- tapOn: '[\s\S]*Анна[\s\S]*'
 - extendedWaitUntil:
-    visible: '.*Отлично, покажи.*'
+    visible: '[\s\S]*Отлично, покажи[\s\S]*'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/dialogue
 - tapOn:
@@ -26,5 +26,7 @@ appId: org.chatstudio.localsimulator
     visible: 'Редактор'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/editor
-- tapOn: '.*Анна.*'
+- tapOn:
+    text: '[\s\S]*Анна[\s\S]*'
+    index: 0
 - takeScreenshot: artifacts/native-demo/editor-profile

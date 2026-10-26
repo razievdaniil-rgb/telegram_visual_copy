@@ -23,20 +23,28 @@ width = 240
 height = round(width * video['height'] / video['width'])
 sheet = Image.new('RGB', (width * 5, (height + 28) * 2), '#E8EBEF')
 draw = ImageDraw.Draw(sheet)
-for index in range(10):
-    at = min(duration - .1, duration * (index + .5) / 10)
+frame_probe = json.loads(subprocess.check_output([
+    'ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_frames',
+    '-show_entries', 'frame=pts_time', '-of', 'json', str(source)
+], encoding='utf-8'))
+timestamps = [(index, float(frame['pts_time'])) for index, frame in enumerate(frame_probe['frames']) if 'pts_time' in frame]
+assert timestamps, 'No presentation timestamps in the recording'
+selected = sorted(set(min(timestamps, key=lambda pair: abs(pair[1] - duration * (index + .5) / 10)) for index in range(10)))
+expression = '+'.join(f'eq(n\\,{index})' for index, _ in selected)
+subprocess.run([
+    'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(source),
+    '-vf', 'select=' + expression, '-fps_mode', 'vfr', '-start_number', '0', str(target / 'frame-%02d.png')
+], check=True)
+for index, (original_index, at) in enumerate(selected):
     frame = target / f'frame-{index:02}.png'
-    subprocess.run([
-        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', str(at),
-        '-i', str(source), '-frames:v', '1', str(frame)
-    ], check=True)
     image = Image.open(frame).convert('RGB')
     image.thumbnail((width, height), Image.Resampling.LANCZOS)
     x, y = index % 5 * width, index // 5 * (height + 28)
     sheet.paste(image, (x, y))
-    draw.text((x + 8, y + height + 6), f'{at:.1f} s', fill='#111111')
+    draw.text((x + 8, y + height + 6), f'#{original_index}  {at:.3f} s', fill='#111111')
 sheet.save(target / 'contact-sheet.jpg', quality=92)
 (target / 'probe.json').write_text(json.dumps(probe, indent=2), encoding='utf-8')
+(target / 'frame-timestamps.json').write_text(json.dumps(dict(selected=selected, frames=frame_probe['frames']), indent=2), encoding='utf-8')
 print(json.dumps({
     'duration': duration, 'width': video['width'], 'height': video['height'],
     'codec': video['codec_name'], 'bytes': source.stat().st_size,
