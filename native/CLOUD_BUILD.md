@@ -6,6 +6,8 @@
 
 Это полноценная компиляция оригинального Telegram и наших дополнений на облачном Mac. Предыдущий workflow **Native Swift sources** проверяет только исходники и модель — его ZIP не является приложением.
 
+**Проверенная сборка:** [bf3488d — успешно](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40363919274). [Скачать ZIP с Telegram.ipa и отчётом](https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40363919274/artifacts/12673175127). Это отладочная сборка для iPhone, которая требует последующей подписи. Установка на устройство ещё не подтверждена.
+
 ## Что делает workflow
 
 1. Запускает стандартный arm64 runner `xcode-27`, выбирает Xcode 27.1 и записывает фактические версии macOS/Xcode/SDK в отчёт.
