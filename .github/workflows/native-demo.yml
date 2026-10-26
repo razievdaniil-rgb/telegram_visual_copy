@@ -112,7 +112,7 @@ jobs:
           DEVICE=$(cat artifacts/native-demo/device-udid.txt)
           xcrun simctl boot "$DEVICE"
           xcrun simctl bootstatus "$DEVICE" -b
-          open -a Simulator --args -CurrentDeviceUDID "$DEVICE"
+          open -a "$DEVELOPER_DIR/Applications/Simulator.app" --args -CurrentDeviceUDID "$DEVICE"
           unzip -q artifacts/native-build/Telegram.ipa -d artifacts/native-demo-app
           xcrun simctl install "$DEVICE" artifacts/native-demo-app/Payload/Telegram.app
           CONTAINER=$(xcrun simctl get_app_container "$DEVICE" org.chatstudio.localsimulator data)
