@@ -1,0 +1,14 @@
+{
+  "raw_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+  "clip_sha256": "ba42b1429f9a21e5ab1183f78edf0332608d8a77f8fb313128cc1f3b884bb1d0",
+  "raw_packets": 7626,
+  "clip_packets": 7510,
+  "first_source_packet": 116,
+  "constant_pts_shift_seconds": 74.44,
+  "max_pts_shift_difference_seconds": 8.526512829121202e-14,
+  "encoded_frames_unchanged": true,
+  "timing_unchanged": true,
+  "clip_bytes": 112382081,
+  "clip_duration_seconds": 324.305,
+  "clip_path": "C:\\Users\\Daniil\\telegram_visual_copy\\artifacts\\native-qa-final\\Telegram-native-QA-2026-10-27.mp4"
+}

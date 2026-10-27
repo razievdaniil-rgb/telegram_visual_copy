@@ -1,0 +1,21 @@
+{
+  "source_sha": "649829f92d80fcaca682315bc38c0a8a4ca03d05",
+  "upstream": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "run": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40526563306",
+  "job": 122267653014,
+  "compile": "success",
+  "bazel_seconds": 1213.246,
+  "actions": 7758,
+  "disk_cache_hits": 5525,
+  "artifact": 12746296256,
+  "artifact_sha256": "ce11086e3c6661515e9fdfe50cefd34ff1b76384354540a816b7f12cb546043b",
+  "ipa_sha256": "04919db6e926466c8282eaec98365e0936cf2f411a231659a10fee11dc8bab21",
+  "ipa_bytes": 610984497,
+  "bundle_id": "org.chatstudio.localsimulator",
+  "version": "13.1.1",
+  "build": "3",
+  "architecture": "arm64",
+  "platform": "IOSSIMULATOR",
+  "physical_iphone_installation_verified": false,
+  "paired_original_visual_comparison_verified": false
+}

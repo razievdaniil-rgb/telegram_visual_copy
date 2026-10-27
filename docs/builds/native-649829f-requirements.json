@@ -1,0 +1,35 @@
+{
+  "application_source": "649829f92d80fcaca682315bc38c0a8a4ca03d05",
+  "upstream": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "device": "iPhone 13 Pro Max Simulator",
+  "os": "iOS 27.0",
+  "core_tests": 12,
+  "patched_files": 15,
+  "unchanged_original_ui_files": 13,
+  "checks": {
+    "public": "passed; suite 40531395846",
+    "editor_profiles_and_chats": "passed; suite 40531395846",
+    "messages_edit_receipts_restart": "passed; suite 40531395846",
+    "presence": "passed; run 40533744940 plus inspected typing frames",
+    "avatar_restart": "passed; job 122284955719",
+    "manual_date_hour_minute_edit": "passed; job 122292043842",
+    "public_send_copy_restart": "passed; job 122300887501"
+  },
+  "typing_animation": {
+    "verification": "manual frame inspection; original AX does not expose typing label",
+    "frames": 180,
+    "changed_frames": 75,
+    "start": 395.005,
+    "end": 397.988,
+    "median_moving_interval_ms": 16.7,
+    "observed_gap_ms": 60
+  },
+  "paired_original_visual_comparison_verified": false,
+  "physical_iphone_verified": false,
+  "current_device_ipa_released": false,
+  "limitations": [
+    "CI software GPU has frame gaps; physical motion is not accepted from it",
+    "Overall run 40531395846 is red from the absent AX typing label and old copy label; affected cases repeated successfully in later runs",
+    "Original fonts, icons and geometry are retained; this is not a completed pixel comparison"
+  ]
+}
