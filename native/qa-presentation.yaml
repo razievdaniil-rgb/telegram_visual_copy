@@ -19,6 +19,17 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/film-03-sent
 - hideKeyboard
 - longPressOn: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
+- assertVisible: 'Скопировать|Копировать|Copy'
+- assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
+- tapOn: 'Скопировать|Копировать|Copy'
+- longPressOn: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
+- tapOn: 'Выбрать|Select'
+- extendedWaitUntil:
+    visible: 'Отмена'
+    timeout: 10000
+- takeScreenshot: artifacts/native-demo/film-03b-selected
+- tapOn: 'Отмена'
+- longPressOn: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
 - assertVisible: 'Изменить'
 - assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
 - takeScreenshot: artifacts/native-demo/film-04-message-menu

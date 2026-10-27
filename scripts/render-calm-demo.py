@@ -70,7 +70,7 @@ def main():
     last = min(len(times) - 1, bisect.bisect_left(times, ranges[-1]['end']))
     select = f"select='between(n,{first},{last})'"
     analysis = subprocess.Popen([
-        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-i', str(source),
+        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
         '-vf', select + ',scale=180:390,format=gray', '-fps_mode', 'passthrough',
         '-frames:v', str(last - first + 1), '-f', 'rawvideo', '-'
     ], stdout=subprocess.PIPE)
@@ -156,14 +156,15 @@ def main():
         return
     first, last = mapping[0][0], mapping[-1][0]
     decoder = subprocess.Popen([
-        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-i', str(source),
+        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
         '-vf', f"select='between(n,{first},{last})',scale=720:1558,format=rgb24",
         '-fps_mode', 'passthrough', '-frames:v', str(last - first + 1),
         '-f', 'rawvideo', '-'
     ], stdout=subprocess.PIPE)
     stage = args.output.with_suffix('.stage.mp4')
+    assert not stage.exists(), 'Use a fresh output name after an interrupted render'
     encoder = subprocess.Popen([
-        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-f', 'rawvideo',
+        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-f', 'rawvideo',
         '-pixel_format', 'rgb24', '-video_size', '720x1622', '-framerate', '30', '-i', '-',
         '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '21', '-profile:v', 'main', '-level:v', '4.0',
         '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(stage)
