@@ -50,6 +50,18 @@ final class SimulatorModelTests: XCTestCase {
         XCTAssertEqual(SimulatorDocument.numericId("anna"), 222667032143036)
         XCTAssertEqual(SimulatorDocument.messageId("one"), 567084309)
     }
+    func testTimelineIdsFollowDatesInsteadOfHashOrArrayOrder() throws {
+        var document = example()
+        document.messages.reverse()
+        XCTAssertEqual(document.timelineIds(), ["one": 1, "two": 2])
+        document.messages.append(SimulatorMessage(id: "third", chatId: "chat", text: "Позже", sentAt: "2026-10-27T00:00:00Z"))
+        XCTAssertEqual(document.timelineIds(), ["one": 1, "two": 2, "third": 3])
+        let original = document
+        document.messages[0].sentAt = "2026-10-25T10:20:00Z"
+        XCTAssertEqual(document.timelineIds(), ["two": 1, "one": 2, "third": 3])
+        XCTAssertEqual(document.messages.map(\.id), original.messages.map(\.id))
+        XCTAssertEqual(try SimulatorDocument.decode(document.encoded()).timelineIds(), document.timelineIds())
+    }
     func testSaveRestartAndInvalidImportPreservePreviousDocument() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }

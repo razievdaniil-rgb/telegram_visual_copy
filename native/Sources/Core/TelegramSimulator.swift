@@ -12,7 +12,8 @@ public enum TelegramSimulator {
     }
     public static func messageId(_ message: SimulatorMessage, in document: SimulatorDocument) -> MessageId? {
         guard let chat = document.chats.first(where: { $0.id == message.chatId }) else { return nil }
-        return MessageId(peerId: peerId(chat.profileId), namespace: Namespaces.Message.Cloud, id: SimulatorDocument.messageId(message.id))
+        guard let id = document.timelineIds()[message.id] else { return nil }
+        return MessageId(peerId: peerId(chat.profileId), namespace: Namespaces.Message.Cloud, id: id)
     }
     public static func profile(_ profile: SimulatorProfile) -> TelegramUser {
         var photo: [TelegramMediaImageRepresentation] = []
@@ -25,6 +26,10 @@ public enum TelegramSimulator {
     }
     public static func prepareAccount(_ manager: AccountManager<TelegramAccountManagerTypes>) -> Signal<Void, NoError> {
         return manager.transaction { transaction -> Void in
+            transaction.updateSharedData(SharedDataKeys.localizationSettings, { current in
+                // Telegram normally downloads Russian after login; this app is offline.
+                current ?? PreferencesEntry(SimulatorLocalization.russian())
+            })
             // A separate bundle/container must be used. Never reuse an installed Telegram's data.
             if let record = transaction.getRecords().first {
                 transaction.setCurrentId(record.id)
@@ -47,12 +52,16 @@ public enum TelegramSimulator {
             }
         }
         return account.postbox.transaction { transaction -> Void in
+            let timelineIds = document.timelineIds()
             let previousContacts = transaction.getContactPeerIds()
             let currentContacts = Set(document.profiles.map { peerId($0.id) })
             let previousInclusions = Dictionary(uniqueKeysWithValues: previousContacts.map { ($0, transaction.getPeerChatListInclusion($0)) })
             // Preserve message rows/stable IDs during edits and sends so the original
             // list transition animates only the changed content, not the entire history.
-            let wantedMessages = Set(document.messages.compactMap { messageId($0, in: document) })
+            let wantedMessages = Dictionary(uniqueKeysWithValues: document.messages.compactMap { message -> (MessageId, UInt32)? in
+                guard let chat = document.chats.first(where: { $0.id == message.chatId }), let id = timelineIds[message.id] else { return nil }
+                return (MessageId(peerId: peerId(chat.profileId), namespace: Namespaces.Message.Cloud, id: id), UInt32(SimulatorDocument.messageId(message.id)))
+            })
             let wantedChats = Set(document.chats.map { peerId($0.profileId) })
             for id in previousContacts.union(currentContacts) {
                 var from = MessageIndex.upperBound(peerId: id, namespace: Namespaces.Message.Cloud)
@@ -60,7 +69,7 @@ public enum TelegramSimulator {
                 var obsolete: [MessageId] = []
                 while true {
                     let batch = transaction.getMessages(peerId: id, namespace: Namespaces.Message.Cloud, from: from, includeFrom: false, to: to, limit: 100)
-                    obsolete.append(contentsOf: batch.filter { !wantedMessages.contains($0.id) }.map(\.id))
+                    obsolete.append(contentsOf: batch.filter { wantedMessages[$0.id] != $0.stableId }.map(\.id))
                     guard let oldest = batch.min(by: { $0.index < $1.index }) else { break }
                     from = oldest.index
                 }
@@ -97,9 +106,10 @@ public enum TelegramSimulator {
                     return (SimulatorDocument.date($0.sentAt) ?? .distantPast) < (SimulatorDocument.date($1.sentAt) ?? .distantPast)
                 }
                 let stored: [StoreMessage] = messages.compactMap { message in
-                    guard let messageId = messageId(message, in: document), let date = SimulatorDocument.date(message.sentAt) else { return nil }
+                    guard let localId = timelineIds[message.id], let date = SimulatorDocument.date(message.sentAt) else { return nil }
+                    let messageId = MessageId(peerId: id, namespace: Namespaces.Message.Cloud, id: localId)
                     let attributes: [MessageAttribute] = message.edited ? [EditedMessageAttribute(date: Int32(date.timeIntervalSince1970), isHidden: false)] : []
-                    return StoreMessage(id: messageId, customStableId: nil, globallyUniqueId: nil, groupingKey: nil, threadId: nil, timestamp: Int32(date.timeIntervalSince1970), flags: message.direction == .incoming ? [.Incoming] : [], tags: [], globalTags: [], localTags: [], forwardInfo: nil, authorId: message.direction == .incoming ? id : ownerPeerId, text: message.text, attributes: attributes, media: [])
+                    return StoreMessage(id: messageId, customStableId: UInt32(SimulatorDocument.messageId(message.id)), globallyUniqueId: nil, groupingKey: nil, threadId: nil, timestamp: Int32(date.timeIntervalSince1970), flags: message.direction == .incoming ? [.Incoming] : [], tags: [], globalTags: [], localTags: [], forwardInfo: nil, authorId: message.direction == .incoming ? id : ownerPeerId, text: message.text, attributes: attributes, media: [])
                 }
                 var added: [StoreMessage] = []
                 for message in stored {
@@ -111,9 +121,11 @@ public enum TelegramSimulator {
                     }
                 }
                 let _ = transaction.addMessages(added, location: .Random)
-                let maxId = messages.map { SimulatorDocument.messageId($0.id) }.max() ?? 0
-                let maxRead = messages.filter { $0.direction == .outgoing && $0.receipt == .read }.map { SimulatorDocument.messageId($0.id) }.max() ?? 0
-                transaction.resetIncomingReadStates([id: [Namespaces.Message.Cloud: .idBased(maxIncomingReadId: 0, maxOutgoingReadId: maxRead, maxKnownId: maxId, count: Int32(chat.unread), markedUnread: chat.unread > 0)]])
+                let maxId = messages.compactMap { timelineIds[$0.id] }.max() ?? 0
+                let maxRead = messages.filter { $0.direction == .outgoing && $0.receipt == .read }.compactMap { timelineIds[$0.id] }.max() ?? 0
+                let incoming = messages.filter { $0.direction == .incoming }
+                let readIncoming = incoming.prefix(max(0, incoming.count - chat.unread)).compactMap { timelineIds[$0.id] }.max() ?? 0
+                transaction.resetIncomingReadStates([id: [Namespaces.Message.Cloud: .idBased(maxIncomingReadId: chat.unread == 0 ? maxId : readIncoming, maxOutgoingReadId: maxRead, maxKnownId: maxId, count: Int32(chat.unread), markedUnread: chat.unread > 0)]])
             }
         }
     }
@@ -161,7 +173,9 @@ public enum TelegramSimulator {
     }
     public static func receipt(for id: MessageId) -> Bool? {
         let document = TelegramSimulatorWorkspace.shared.snapshot()
-        return document.messages.first(where: { messageId($0, in: document) == id }).map { $0.receipt == .read }
+        guard let chat = document.chats.first(where: { peerId($0.profileId) == id.peerId }) else { return nil }
+        let timeline = document.timelineIds()
+        return document.messages.first(where: { $0.chatId == chat.id && timeline[$0.id] == id.id }).map { $0.receipt == .read }
     }
     public static func isTyping(peerId: PeerId) -> Bool {
         return TelegramSimulatorWorkspace.shared.snapshot().chats.contains { self.peerId($0.profileId) == peerId && $0.presence == .typing }

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Seed only the data container of a newly created, dedicated CI simulator."""
 import argparse
+import base64
 from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
@@ -19,12 +20,20 @@ def fixture():
         ("outgoing", "Да, это оригинальные компоненты Telegram для iOS.\nМожно писать и в несколько строк 🙂", -6),
         ("incoming", "Отлично, покажи ещё профиль и редактор", -5),
     ]
-    return dict(version=1, self=profile("self", "Даниил", bio="Демонстрационный профиль"),
+    document = dict(version=1, self=profile("self", "Даниил", bio="Демонстрационный профиль"),
         profiles=[profile("demo-anna", "Анна", "Миронова", "Виртуальный собеседник для демонстрации"), profile("demo-mikhail", "Михаил")],
         chats=[dict(id="demo-chat", profileId="demo-anna", presence="online", unread=1, createdAt=stamp(-60)),
                dict(id="demo-chat-2", profileId="demo-mikhail", presence="recently", unread=0, createdAt=stamp(-60))],
         messages=[dict(id=f"demo-{i}", chatId="demo-chat", text=text, direction=side, sentAt=stamp(minutes), receipt="read", edited=False)
                   for i, (side, text, minutes) in enumerate(messages)] + [dict(id="demo-other", chatId="demo-chat-2", text="Договорились, до завтра!", direction="incoming", sentAt=stamp(-40), receipt="read", edited=False)])
+    anna = document["profiles"][0]
+    anna["username"] = "demo_anna"
+    anna["phone"] = "+70000000001"
+    avatar = Path(__file__).resolve().parents[1] / "fixtures/avatar.png"
+    anna["avatar"] = "data:image/png;base64," + base64.b64encode(avatar.read_bytes()).decode()
+    document["messages"][3]["receipt"] = "sent"
+    document["messages"].insert(0, dict(id="demo-yesterday", chatId="demo-chat", text="Сообщение за прошлый день", direction="incoming", sentAt=stamp(-24*60), receipt="read", edited=False))
+    return document
 
 
 if __name__ == "__main__":

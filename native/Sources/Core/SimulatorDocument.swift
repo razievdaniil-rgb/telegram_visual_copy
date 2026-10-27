@@ -107,6 +107,23 @@ public struct SimulatorDocument: Codable, Equatable {
     public static func messageId(_ value: String) -> Int32 {
         return Int32(numericId(value) % Int64(Int32.max - 1)) + 1
     }
+    // Cloud message IDs must increase with timeline order. Hashes are suitable
+    // for stable identity, but Telegram history/read-state code orders by ID.
+    // This derived mapping leaves the saved version-1 document unchanged.
+    public func timelineIds() -> [String: Int32] {
+        var result: [String: Int32] = [:]
+        for chat in chats {
+            let ordered = messages.filter { $0.chatId == chat.id }.sorted {
+                let lhs = Self.date($0.sentAt) ?? .distantPast
+                let rhs = Self.date($1.sentAt) ?? .distantPast
+                return lhs == rhs ? $0.id < $1.id : lhs < rhs
+            }
+            for (index, message) in ordered.enumerated() {
+                result[message.id] = Int32(clamping: index + 1)
+            }
+        }
+        return result
+    }
     public func validated() throws -> SimulatorDocument {
         func require(_ condition: Bool, _ reason: String) throws {
             if !condition { throw SimulatorDataError.invalid(reason) }
