@@ -14,7 +14,7 @@
 | Статус и «печатает» | `submodules/TelegramUI/Components/ChatTitleView`, `TelegramCore/Sources/Account/Account.swift` | Нативные потоки activity получают ручной статус, обновляются при сохранении документа |
 | Профиль и настройки | `submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen` | Оригинальные представления получают `TelegramUser`, `CachedUserData`, локальные avatar resources |
 | Аккаунт и хранилище | `submodules/TelegramCore/Sources/Account/Account.swift`, Postbox | Локальное `AuthorizedAccountState`, без настоящего SMS-входа; JSON → транзакционная проекция Postbox |
-| Отправка/изменение/удаление | `PendingMessages/EnqueueMessage.swift`, `RequestEditMessage.swift`, `TelegramEngine/Messages/DeleteMessagesInteractively.swift` | В локальном режиме изменяется документ и перестраивается проекция, сетевой метод не вызывается |
+| Отправка/изменение/удаление | `PendingMessages/EnqueueMessage.swift`, `RequestEditMessage.swift`, `TelegramEngine/Messages/DeleteMessagesInteractively.swift`, `TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift` | Локальный документ и проекция; публичное редактирование перехватывается также перед PendingUpdateMessageManager. Correlation ID исходящего сохраняется для штатной анимации отправки и очистки поля |
 | Сетевой транспорт | `submodules/TelegramCore/Sources/Network/Network.swift` | Основная сессия приостановлена, network access выключен, worker не создаётся, запросы не отправляются; нужны проверки трафика на реальном запуске |
 | Сборка | `build-system/Make/Make.py` | Флаг локального режима отключает расширения, для симулятора — provisioning; APNs-профиль не требуется |
 
