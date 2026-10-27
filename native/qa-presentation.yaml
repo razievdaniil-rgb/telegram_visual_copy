@@ -213,3 +213,14 @@ appId: org.chatstudio.localsimulator
     timeout: 15000
 - assertNotVisible: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
 - takeScreenshot: artifacts/native-demo/film-19-public-edit-persisted
+# Technical acceptance after the presentation's final public frame:
+# read the document-backed editor, independently of Postbox's edit overlay.
+- tapOn:
+    point: '8%, 9%'
+- longPressOn:
+    point: '27%, 6%'
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- assertVisible: '[\s\S]*Привет! Прототип уже работает\.[\s\S]*'
+- assertNotVisible: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
+- takeScreenshot: artifacts/native-demo/acceptance-public-edit-document
