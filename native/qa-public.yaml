@@ -1,0 +1,16 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 60000
+- takeScreenshot: artifacts/native-demo/chats
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*Отлично, покажи[\s\S]*'
+    timeout: 20000
+- takeScreenshot: artifacts/native-demo/dialogue
+- tapOn:
+    point: '50%, 9%'
+- takeScreenshot: artifacts/native-demo/profile

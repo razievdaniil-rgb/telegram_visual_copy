@@ -1,0 +1,17 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 30000
+- longPressOn:
+    point: '27%, 6.5%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- takeScreenshot: artifacts/native-demo/editor
+- tapOn:
+    text: '[\s\S]*Анна[\s\S]*'
+    index: 0
+- takeScreenshot: artifacts/native-demo/editor-profile
