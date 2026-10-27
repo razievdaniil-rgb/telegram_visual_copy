@@ -16,4 +16,5 @@ appId: org.chatstudio.localsimulator
 - extendedWaitUntil:
     visible: '[\s\S]*demo_anna[\s\S]*'
     timeout: 10000
+- assertVisible: '[\s\S]*\+70000000001[\s\S]*'
 - takeScreenshot: artifacts/native-demo/profile

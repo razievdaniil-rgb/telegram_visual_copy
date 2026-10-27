@@ -422,3 +422,16 @@ index 6ae1b60..348cf7e 100644
              didSet {
                  if self.currentIsUpdatingValue != oldValue {
                      self.isUpdatingValue.set(self.currentIsUpdatingValue)
+diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
+index 34f2377..4cfc9c1 100644
+--- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
++++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
+@@ -174,7 +174,7 @@ func infoItems(
+         }
+         
+         if let phone = user.phone {
+-            let formattedPhone = formatPhoneNumber(context: context, number: phone)
++            let formattedPhone = TelegramSimulator.enabled ? phone : formatPhoneNumber(context: context, number: phone)
+             let label: String
+             if formattedPhone.hasPrefix("+888 ") {
+                 label = presentationData.strings.UserInfo_AnonymousNumberLabel
