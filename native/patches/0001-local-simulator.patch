@@ -295,9 +295,45 @@ index 852384b..2f8d0fa 100644
              case let .message(_, read, _, _, _):
                  return read
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
-index 1ceb46b..733777f 100644
+index 1ceb46b..e7e5d64 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
+@@ -688,7 +688,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             autolockDeadine: autolockDeadine,
+             encryptionProvider: OpenSSLEncryptionProvider(),
+             deviceModelName: nil,
+-            useBetaFeatures: !buildConfig.isAppStoreBuild,
++            useBetaFeatures: !TelegramSimulator.enabled && !buildConfig.isAppStoreBuild,
+             isICloudEnabled: buildConfig.isICloudEnabled,
+             // Only the main app passes a factory: extensions stay on MtProtoKit. Whether the Rust
+             // engine runs is decided per account by resolveNetworkEngine (Debug Settings switch,
+@@ -829,7 +829,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             UNUserNotificationCenter.current().delegate = self
+         }
+         
+-        GlobalExperimentalSettings.isAppStoreBuild = buildConfig.isAppStoreBuild
++        GlobalExperimentalSettings.isAppStoreBuild = TelegramSimulator.enabled || buildConfig.isAppStoreBuild
+         GlobalExperimentalSettings.enableFeed = false
+         
+         var hasActiveCalls: Signal<Bool, NoError> = .single(false)
+@@ -847,7 +847,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             |> distinctUntilChanged
+         )
+         
+-        let applicationBindings = TelegramApplicationBindings(isMainApp: true, appBundleId: baseAppBundleId, appBuildType: buildConfig.isAppStoreBuild ? .public : .internal, containerPath: appGroupUrl.path, appSpecificScheme: buildConfig.appSpecificUrlScheme, openUrl: { url in
++        let applicationBindings = TelegramApplicationBindings(isMainApp: true, appBundleId: baseAppBundleId, appBuildType: (TelegramSimulator.enabled || buildConfig.isAppStoreBuild) ? .public : .internal, containerPath: appGroupUrl.path, appSpecificScheme: buildConfig.appSpecificUrlScheme, openUrl: { url in
+             var parsedUrl = URL(string: url)
+             if let parsed = parsedUrl {
+                 if parsed.scheme == nil || parsed.scheme!.isEmpty {
+@@ -1002,7 +1002,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         }, getAvailableAlternateIcons: {
+             if #available(iOS 10.3, *) {
+                 var icons = [
+-                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: buildConfig.isAppStoreBuild),
++                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: TelegramSimulator.enabled || buildConfig.isAppStoreBuild),
+                     PresentationAppIcon(name: "New2", imageName: "New2"),
+                     PresentationAppIcon(name: "New1", imageName: "New1"),
+                     PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
 @@ -1105,12 +1105,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              return true
          }
@@ -345,14 +381,25 @@ index fe34b99..a8030b6 100644
              self.permissionsDisposable.set((combineLatest(queue: .mainQueue(), requiredPermissions(context: context), permissionUISplitTest(postbox: context.account.postbox), permissionsPosition.get(), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .notifications)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .cellularData)!))
              |> deliverOnMainQueue).start(next: { [weak self] required, splitTest, position, contactsPermissionWarningNotice, notificationsPermissionWarningNotice, cellularDataPermissionWarningNotice in
 diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
-index 22ecc71..59e5489 100644
+index 22ecc71..5a11df6 100644
 --- a/submodules/TelegramUI/Sources/TelegramRootController.swift
 +++ b/submodules/TelegramUI/Sources/TelegramRootController.swift
-@@ -72,6 +72,35 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
+@@ -71,7 +71,47 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
+     }
  }
  
++private final class SimulatorEditorGestureDelegate: NSObject, UIGestureRecognizerDelegate {
++    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
++        guard let view = gestureRecognizer.view else { return false }
++        let point = touch.location(in: view)
++        let top = view.window?.safeAreaInsets.top ?? view.safeAreaInsets.top
++        return point.y >= top && point.y <= top + 64 && point.x > view.bounds.width * 0.25 && point.x < view.bounds.width * 0.75
++    }
++}
++
  public final class TelegramRootController: NavigationController, TelegramRootControllerInterface {
 +    private var simulatorEditorGesture: UILongPressGestureRecognizer?
++    private let simulatorEditorGestureDelegate = SimulatorEditorGestureDelegate()
 +    private var simulatorErrorDisposable: Disposable?
 +    private weak var simulatorEditorController: UIViewController?
 +
@@ -361,7 +408,8 @@ index 22ecc71..59e5489 100644
 +        if TelegramSimulator.enabled && simulatorEditorGesture == nil {
 +            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(openSimulatorEditor(_:)))
 +            gesture.minimumPressDuration = 1.2
-+            gesture.cancelsTouchesInView = false
++            gesture.delegate = simulatorEditorGestureDelegate
++            gesture.cancelsTouchesInView = true
 +            view.addGestureRecognizer(gesture)
 +            simulatorEditorGesture = gesture
 +        }
@@ -384,7 +432,7 @@ index 22ecc71..59e5489 100644
      private let context: AccountContext
      
      public var rootTabController: TabBarController?
-@@ -106,6 +135,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -106,6 +146,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
          self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
          
          super.init(mode: .automaticMasterDetail, theme: NavigationControllerTheme(presentationTheme: self.presentationData.theme))
@@ -399,7 +447,7 @@ index 22ecc71..59e5489 100644
          
          self.presentationDataDisposable = (context.sharedContext.presentationData
          |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
-@@ -144,6 +181,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -144,6 +192,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
      }
      
      deinit {
