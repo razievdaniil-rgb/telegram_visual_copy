@@ -78,8 +78,9 @@ appId: org.chatstudio.localsimulator
     point: '16%, 28%'
 - takeScreenshot: artifacts/native-demo/film-08-avatar-crop
 - tapOn:
-    text: 'Choose|Выбрать|Done|Готово'
-    optional: true
+    # UIImagePicker's crop actions are drawn but absent from the AX tree on
+    # this simulator. Confirm the visible bottom-right Choose button.
+    point: '90%, 92%'
 - extendedWaitUntil:
     visible: 'Сохранить'
     timeout: 10000
