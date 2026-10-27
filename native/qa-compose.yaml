@@ -1,0 +1,21 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 60000
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: 'Сообщение'
+- inputText: 'QA public composer send'
+- takeScreenshot: artifacts/native-demo/public-keyboard
+- tapOn: 'Отправить'
+- extendedWaitUntil:
+    visible: '[\s\S]*QA public composer send[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/public-sent-message
+- stopApp
+- launchApp
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- assertVisible: '[\s\S]*QA public composer send[\s\S]*'
+- takeScreenshot: artifacts/native-demo/public-send-after-restart

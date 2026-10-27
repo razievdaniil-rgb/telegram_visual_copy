@@ -37,7 +37,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY
@@ -45,9 +45,9 @@ jobs:
     needs: plan
     concurrency:
       group: native-qa-${{ matrix.scenario }}
-      cancel-in-progress: true
+      cancel-in-progress: false
     runs-on: xcode-27
-    timeout-minutes: 24
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -103,8 +103,11 @@ jobs:
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
-        timeout-minutes: 9
-        run: python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout 420
+        timeout-minutes: 15
+        run: |
+          LIMIT=420
+          if [ '${{ matrix.scenario }}' = suite ]; then LIMIT=780; fi
+          python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Collect native crash reports
         if: always()
         run: |
