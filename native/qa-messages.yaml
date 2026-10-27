@@ -1,10 +1,6 @@
 appId: org.chatstudio.localsimulator
 ---
-- stopApp
-- launchApp
-- extendedWaitUntil:
-    visible: '[\s\S]*Анна[\s\S]*'
-    timeout: 30000
+- runFlow: qa-root.yaml
 - longPressOn:
     point: '27%, 6%'
 - extendedWaitUntil:
@@ -42,8 +38,7 @@ appId: org.chatstudio.localsimulator
     timeout: 15000
 - assertVisible: '[\s\S]*QA edited outgoing message[\s\S]*'
 - takeScreenshot: artifacts/native-demo/local-message-results
-- stopApp
-- launchApp
+- runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
 - assertVisible: '[\s\S]*QA edited outgoing message[\s\S]*'
 - takeScreenshot: artifacts/native-demo/messages-after-restart

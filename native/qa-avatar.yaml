@@ -1,9 +1,6 @@
 appId: org.chatstudio.localsimulator
 ---
-- launchApp
-- extendedWaitUntil:
-    visible: '[\s\S]*Анна[\s\S]*'
-    timeout: 60000
+- runFlow: qa-root.yaml
 - longPressOn:
     point: '27%, 6%'
 - extendedWaitUntil:

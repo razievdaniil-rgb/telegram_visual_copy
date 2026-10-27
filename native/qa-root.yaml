@@ -1,0 +1,12 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Поиск[\s\S]*'
+    timeout: 60000
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000

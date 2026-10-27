@@ -113,10 +113,13 @@ public struct SimulatorDocument: Codable, Equatable {
     public func timelineIds() -> [String: Int32] {
         var result: [String: Int32] = [:]
         for chat in chats {
-            let ordered = messages.filter { $0.chatId == chat.id }.map {
-                (message: $0, date: Self.date($0.sentAt) ?? .distantPast)
-            }.sorted {
-                $0.date == $1.date ? $0.message.id < $1.message.id : $0.date < $1.date
+            let chatMessages = messages.filter { $0.chatId == chat.id }
+            let datedMessages: [(message: SimulatorMessage, date: Date)] = chatMessages.map { message in
+                return (message: message, date: Self.date(message.sentAt) ?? Date.distantPast)
+            }
+            let ordered = datedMessages.sorted { lhs, rhs -> Bool in
+                if lhs.date == rhs.date { return lhs.message.id < rhs.message.id }
+                return lhs.date < rhs.date
             }
             for (index, entry) in ordered.enumerated() {
                 result[entry.message.id] = Int32(clamping: index + 1)
