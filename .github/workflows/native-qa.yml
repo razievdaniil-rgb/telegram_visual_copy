@@ -29,6 +29,7 @@ jobs:
           INPUT_RUN: ${{ inputs.app_run_id }}
           INPUT_SCENARIOS: ${{ inputs.scenarios }}
         run: |
+          python3 native/scripts/validate_qa.py
           python3 - <<'PY'
           import json, os
           from pathlib import Path
@@ -46,9 +47,10 @@ jobs:
       group: native-qa-${{ matrix.scenario }}
       cancel-in-progress: true
     runs-on: xcode-27
-    timeout-minutes: 17
+    timeout-minutes: 24
     strategy:
       fail-fast: false
+      max-parallel: 2
       matrix:
         scenario: ${{ fromJSON(needs.plan.outputs.scenarios) }}
     env:
@@ -80,8 +82,9 @@ jobs:
           chmod +x "$MAESTRO_BIN"
           dirname "$MAESTRO_BIN" >> "$GITHUB_PATH"
       - name: Install on a fresh dedicated iPhone with synthetic data
-        timeout-minutes: 7
+        timeout-minutes: 12
         run: |
+          set -x
           mkdir -p artifacts/native-demo
           sw_vers > artifacts/native-demo/environment.txt
           xcodebuild -version >> artifacts/native-demo/environment.txt
