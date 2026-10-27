@@ -1,6 +1,6 @@
 {
-  "attempt": 8,
+  "attempt": 9,
   "app_run_id": "40526563306",
-  "scenarios": ["status"],
+  "scenarios": ["compose"],
   "purpose": "Verify every supported requirement on isolated fresh iPhone simulators"
 }

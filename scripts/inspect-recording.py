@@ -43,7 +43,7 @@ selected = sorted(set(min(timestamps, key=lambda pair: abs(pair[1] - (args.start
 expression = '+'.join(f'eq(n\\,{index})' for index, _ in selected)
 subprocess.run([
     'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(source),
-    '-vf', 'select=' + expression, '-fps_mode', 'vfr', '-start_number', '0', str(target / 'frame-%02d.png')
+    '-vf', 'select=' + expression, '-fps_mode', 'passthrough', '-frames:v', str(len(selected)), '-start_number', '0', str(target / 'frame-%02d.png')
 ], check=True)
 for index, (original_index, at) in enumerate(selected):
     frame = target / f'frame-{index:02}.png'

@@ -16,10 +16,10 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/public-sent-message
 - longPressOn: '[\s\S]*QA public composer send[\s\S]*'
 - extendedWaitUntil:
-    visible: 'Копировать|Copy'
+    visible: 'Скопировать|Копировать|Copy'
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/public-message-menu
-- tapOn: 'Копировать|Copy'
+- tapOn: 'Скопировать|Копировать|Copy'
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
 - extendedWaitUntil:
