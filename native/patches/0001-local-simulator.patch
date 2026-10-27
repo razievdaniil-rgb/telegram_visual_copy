@@ -345,15 +345,16 @@ index fe34b99..a8030b6 100644
              self.permissionsDisposable.set((combineLatest(queue: .mainQueue(), requiredPermissions(context: context), permissionUISplitTest(postbox: context.account.postbox), permissionsPosition.get(), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .notifications)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .cellularData)!))
              |> deliverOnMainQueue).start(next: { [weak self] required, splitTest, position, contactsPermissionWarningNotice, notificationsPermissionWarningNotice, cellularDataPermissionWarningNotice in
 diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
-index 22ecc71..3c25d55 100644
+index 22ecc71..59e5489 100644
 --- a/submodules/TelegramUI/Sources/TelegramRootController.swift
 +++ b/submodules/TelegramUI/Sources/TelegramRootController.swift
-@@ -72,6 +72,31 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
+@@ -72,6 +72,35 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
  }
  
  public final class TelegramRootController: NavigationController, TelegramRootControllerInterface {
 +    private var simulatorEditorGesture: UILongPressGestureRecognizer?
 +    private var simulatorErrorDisposable: Disposable?
++    private weak var simulatorEditorController: UIViewController?
 +
 +    override public func viewDidAppear(_ animated: Bool) {
 +        super.viewDidAppear(animated)
@@ -367,35 +368,38 @@ index 22ecc71..3c25d55 100644
 +    }
 +
 +    @objc private func openSimulatorEditor(_ gesture: UILongPressGestureRecognizer) {
-+        guard gesture.state == .began, presentedViewController == nil else { return }
++        guard gesture.state == .began, simulatorEditorController == nil else { return }
 +        let point = gesture.location(in: view)
-+        let top = view.safeAreaInsets.top
++        let top = view.window?.safeAreaInsets.top ?? view.safeAreaInsets.top
 +        guard point.y >= top, point.y <= top + 64,
 +              point.x > view.bounds.width * 0.25, point.x < view.bounds.width * 0.75 else { return }
 +        view.endEditing(true)
 +        let editor = UINavigationController(rootViewController: SimulatorEditorController(account: context.account))
 +        editor.overrideUserInterfaceStyle = .light
-+        present(editor, animated: true)
++        simulatorEditorController = editor
++        // Display.NavigationController.present(_:animated:) deliberately traps.
++        // Route UIKit controllers through Telegram's native window host.
++        context.sharedContext.applicationBindings.presentNativeController(editor)
 +    }
      private let context: AccountContext
      
      public var rootTabController: TabBarController?
-@@ -106,6 +131,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -106,6 +135,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
          self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
          
          super.init(mode: .automaticMasterDetail, theme: NavigationControllerTheme(presentationTheme: self.presentationData.theme))
 +        if TelegramSimulator.enabled {
 +            simulatorErrorDisposable = (TelegramSimulatorWorkspace.shared.errors |> deliverOnMainQueue).start(next: { [weak self] message in
-+                guard let self = self, self.presentedViewController == nil else { return }
++                guard let self = self, self.simulatorEditorController == nil else { return }
 +                let alert = UIAlertController(title: "Не удалось сохранить", message: message, preferredStyle: .alert)
 +                alert.addAction(UIAlertAction(title: "OK", style: .default))
-+                self.present(alert, animated: true)
++                self.context.sharedContext.applicationBindings.presentNativeController(alert)
 +            })
 +        }
          
          self.presentationDataDisposable = (context.sharedContext.presentationData
          |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
-@@ -144,6 +177,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -144,6 +181,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
      }
      
      deinit {

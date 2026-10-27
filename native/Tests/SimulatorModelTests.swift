@@ -82,4 +82,54 @@ final class SimulatorModelTests: XCTestCase {
         XCTAssertThrowsError(try SimulatorRepository(url: url))
         XCTAssertEqual(try Data(contentsOf: url), original)
     }
+
+    func testEditorChangesPersistAllRequiredFieldsAcrossRestart() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appendingPathComponent("document.json")
+        let repository = try SimulatorRepository(url: url)
+        try repository.change { $0 = example() }
+        for presence in [SimulatorPresence.online, .recently, .typing] {
+            try repository.change {
+                $0.profiles[0].firstName = "Изменённое имя"
+                $0.profiles[0].lastName = "Новая фамилия"
+                $0.profiles[0].username = "local_example"
+                $0.profiles[0].phone = "+123456789012345"
+                $0.profiles[0].bio = "Новое описание\nВторая строка"
+                $0.chats[0].presence = presence
+                $0.chats[0].unread = 7
+                $0.messages[0].text = "Исправленный входящий текст 🙂"
+                $0.messages[0].sentAt = "2024-02-29T23:59:42.123Z"
+                $0.messages[1].receipt = .sent
+            }
+            let restored = try SimulatorRepository(url: url).snapshot()
+            XCTAssertEqual(restored, repository.snapshot())
+            XCTAssertEqual(restored.chats[0].presence, presence)
+            XCTAssertEqual(restored.messages[0].sentAt, "2024-02-29T23:59:42.123Z")
+            XCTAssertEqual(restored.messages[1].receipt, .sent)
+            XCTAssertEqual(restored.profiles[0].phone, "+123456789012345")
+        }
+        try repository.change {
+            $0.profiles[0].avatar = nil
+            $0.messages.remove(at: 0)
+            $0.messages[0].receipt = .read
+        }
+        let restored = try SimulatorRepository(url: url).snapshot()
+        XCTAssertNil(restored.profiles[0].avatar)
+        XCTAssertEqual(restored.messages.count, 1)
+        XCTAssertEqual(restored.messages[0].receipt, .read)
+    }
+
+    func testInvalidEditorMutationLeavesLastSavedBytesIntact() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appendingPathComponent("document.json")
+        let repository = try SimulatorRepository(url: url)
+        try repository.change { $0 = example() }
+        let before = try Data(contentsOf: url)
+        XCTAssertThrowsError(try repository.change { $0.messages[0].sentAt = "invalid" })
+        XCTAssertThrowsError(try repository.change { $0.profiles.removeAll() })
+        XCTAssertEqual(try Data(contentsOf: url), before)
+        XCTAssertEqual(try SimulatorRepository(url: url).snapshot(), example())
+    }
 }

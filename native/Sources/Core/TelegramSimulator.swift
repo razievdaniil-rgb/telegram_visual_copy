@@ -50,10 +50,24 @@ public enum TelegramSimulator {
             let previousContacts = transaction.getContactPeerIds()
             let currentContacts = Set(document.profiles.map { peerId($0.id) })
             let previousInclusions = Dictionary(uniqueKeysWithValues: previousContacts.map { ($0, transaction.getPeerChatListInclusion($0)) })
-            // Remove old projection, including deleted profiles/chats, inside the same transaction.
+            // Preserve message rows/stable IDs during edits and sends so the original
+            // list transition animates only the changed content, not the entire history.
+            let wantedMessages = Set(document.messages.compactMap { messageId($0, in: document) })
+            let wantedChats = Set(document.chats.map { peerId($0.profileId) })
             for id in previousContacts.union(currentContacts) {
-                transaction.deleteMessagesInRange(peerId: id, namespace: Namespaces.Message.Cloud, minId: 1, maxId: Int32.max - 1, forEachMedia: nil)
-                transaction.updatePeerChatListInclusion(id, inclusion: .notIncluded)
+                var from = MessageIndex.upperBound(peerId: id, namespace: Namespaces.Message.Cloud)
+                let to = MessageIndex.lowerBound(peerId: id, namespace: Namespaces.Message.Cloud)
+                var obsolete: [MessageId] = []
+                while true {
+                    let batch = transaction.getMessages(peerId: id, namespace: Namespaces.Message.Cloud, from: from, includeFrom: false, to: to, limit: 100)
+                    obsolete.append(contentsOf: batch.filter { !wantedMessages.contains($0.id) }.map(\.id))
+                    guard let oldest = batch.min(by: { $0.index < $1.index }) else { break }
+                    from = oldest.index
+                }
+                transaction.deleteMessages(obsolete, forEachMedia: nil)
+                if !wantedChats.contains(id) {
+                    transaction.updatePeerChatListInclusion(id, inclusion: .notIncluded)
+                }
                 transaction.removeHole(peerId: id, threadId: nil, namespace: Namespaces.Message.Cloud, space: .everywhere, range: 1 ... (Int32.max - 1))
             }
             for group in [PeerGroupId.root, Namespaces.PeerGroup.archive] {
@@ -87,7 +101,16 @@ public enum TelegramSimulator {
                     let attributes: [MessageAttribute] = message.edited ? [EditedMessageAttribute(date: Int32(date.timeIntervalSince1970), isHidden: false)] : []
                     return StoreMessage(id: messageId, customStableId: nil, globallyUniqueId: nil, groupingKey: nil, threadId: nil, timestamp: Int32(date.timeIntervalSince1970), flags: message.direction == .incoming ? [.Incoming] : [], tags: [], globalTags: [], localTags: [], forwardInfo: nil, authorId: message.direction == .incoming ? id : ownerPeerId, text: message.text, attributes: attributes, media: [])
                 }
-                let _ = transaction.addMessages(stored, location: .Random)
+                var added: [StoreMessage] = []
+                for message in stored {
+                    guard case let .Id(messageId) = message.id else { continue }
+                    if transaction.messageExists(id: messageId) {
+                        transaction.updateMessage(messageId, update: { _ in .update(message) })
+                    } else {
+                        added.append(message)
+                    }
+                }
+                let _ = transaction.addMessages(added, location: .Random)
                 let maxId = messages.map { SimulatorDocument.messageId($0.id) }.max() ?? 0
                 let maxRead = messages.filter { $0.direction == .outgoing && $0.receipt == .read }.map { SimulatorDocument.messageId($0.id) }.max() ?? 0
                 transaction.resetIncomingReadStates([id: [Namespaces.Message.Cloud: .idBased(maxIncomingReadId: 0, maxOutgoingReadId: maxRead, maxKnownId: maxId, count: Int32(chat.unread), markedUnread: chat.unread > 0)]])

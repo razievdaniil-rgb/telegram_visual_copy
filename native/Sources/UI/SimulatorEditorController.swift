@@ -52,6 +52,7 @@ final class SimulatorEditorController: UITableViewController, UIDocumentPickerDe
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
         cell.accessoryType = .disclosureIndicator
+        cell.accessibilityIdentifier = "simulator.section.\(indexPath.section).row.\(indexPath.row)"
         switch indexPath.section {
         case 0: cell.textLabel?.text = document.owner.displayName
         case 1:
@@ -175,6 +176,7 @@ private final class SimulatorProfileForm: UITableViewController, UIImagePickerCo
         for (index, label) in ["Имя", "Фамилия", "Username", "Произвольный телефон", "О себе"].enumerated() {
             let field = UITextField(); field.placeholder = label; field.text = values[index]
             field.autocorrectionType = .no; field.accessibilityLabel = label
+            field.accessibilityIdentifier = "simulator.profile.field.\(index)"
             fields.append(field)
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(commit))
@@ -305,7 +307,12 @@ private final class SimulatorMessageForm: UITableViewController {
         text.text = message.text; text.font = .systemFont(ofSize: 17); text.accessibilityLabel = "Текст сообщения"
         direction.selectedSegmentIndex = message.direction == .incoming ? 0 : 1
         receipt.selectedSegmentIndex = message.receipt == .sent ? 0 : 1
+        direction.accessibilityIdentifier = "simulator.message.direction"
+        receipt.accessibilityIdentifier = "simulator.message.receipt"
+        date.accessibilityIdentifier = "simulator.message.date"
         date.datePickerMode = .dateAndTime; date.preferredDatePickerStyle = .compact
+        date.minimumDate = Date(timeIntervalSince1970: 1)
+        date.maximumDate = Date(timeIntervalSince1970: Double(Int32.max) - 1)
         date.date = SimulatorDocument.date(message.sentAt) ?? Date()
         date.addTarget(self, action: #selector(didChangeDate), for: .valueChanged)
         edited.isOn = message.edited
