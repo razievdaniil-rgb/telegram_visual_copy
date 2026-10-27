@@ -1,0 +1,6 @@
+{
+  "attempt": 1,
+  "app_run_id": "40510126465",
+  "scenarios": ["public", "editor", "messages", "status"],
+  "purpose": "Verify every supported requirement on isolated fresh iPhone simulators"
+}

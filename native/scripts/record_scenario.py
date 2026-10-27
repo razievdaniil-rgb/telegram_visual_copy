@@ -42,6 +42,12 @@ def main():
                         os.killpg(process.pid, signal.SIGKILL)
                         process.wait()
                     result = 124
+                # XCTest children can outlive a successful CLI and hold its ports.
+                # Only this explicitly created process group belongs to the test.
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
                 reader.join(timeout=5)
                 time.sleep(2)
         finally:
