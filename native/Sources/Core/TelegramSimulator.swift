@@ -47,7 +47,7 @@ public enum TelegramSimulator {
         transaction.setState(AuthorizedAccountState(isTestingEnvironment: false, masterDatacenterId: 2, peerId: ownerPeerId, state: AuthorizedAccountState.State(pts: 0, qts: 0, date: 1, seq: 0), invalidatedChannels: []))
         transaction.updatePeersInternal([profile(document.owner)], update: { _, next in next })
     }
-    public static func project(account: Account) -> Signal<Void, NoError> {
+    public static func project(account: Account, outgoingInfo: [String: OutgoingMessageInfoAttribute] = [:]) -> Signal<Void, NoError> {
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
         let document = indexed.document
         let timelineIds = indexed.timeline
@@ -112,7 +112,15 @@ public enum TelegramSimulator {
                 let stored: [StoreMessage] = messages.compactMap { message in
                     guard let localId = timelineIds[message.id], let date = SimulatorDocument.date(message.sentAt) else { return nil }
                     let messageId = MessageId(peerId: id, namespace: Namespaces.Message.Cloud, id: localId)
-                    let attributes: [MessageAttribute] = message.edited ? [EditedMessageAttribute(date: Int32(date.timeIntervalSince1970), isHidden: false)] : []
+                    var attributes: [MessageAttribute] = message.edited ? [EditedMessageAttribute(date: Int32(date.timeIntervalSince1970), isHidden: false)] : []
+                    if message.direction == .outgoing {
+                        // The original history transition waits for this correlation ID
+                        // before animating the new bubble and clearing the composer.
+                        let previousInfo = transaction.getMessage(messageId)?.attributes.compactMap { $0 as? OutgoingMessageInfoAttribute }.first
+                        if let info = outgoingInfo[message.id] ?? previousInfo {
+                            attributes.append(info)
+                        }
+                    }
                     return StoreMessage(id: messageId, customStableId: UInt32(SimulatorDocument.messageId(message.id)), globallyUniqueId: nil, groupingKey: nil, threadId: nil, timestamp: Int32(date.timeIntervalSince1970), flags: message.direction == .incoming ? [.Incoming] : [], tags: [], globalTags: [], localTags: [], forwardInfo: nil, authorId: message.direction == .incoming ? id : ownerPeerId, text: message.text, attributes: attributes, media: [])
                 }
                 var added: [StoreMessage] = []
@@ -135,13 +143,15 @@ public enum TelegramSimulator {
     }
     public static func send(account: Account, peerId: PeerId, messages: [EnqueueMessage]) -> Signal<[MessageId?], NoError> {
         var added: [SimulatorMessage] = []
+        var outgoingInfo: [String: OutgoingMessageInfoAttribute] = [:]
         do {
             try TelegramSimulatorWorkspace.shared.change { document in
                 guard let chat = document.chats.first(where: { self.peerId($0.profileId) == peerId }) else { throw SimulatorDataError.invalid("Создайте личный чат в редакторе") }
                 for message in messages {
-                    guard case let .message(text, _, _, media, _, _, _, _, _, _) = message, media == nil, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw SimulatorDataError.invalid("Симулятор поддерживает только текстовые сообщения") }
+                    guard case let .message(text, _, _, media, _, _, _, _, correlationId, _) = message, media == nil, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw SimulatorDataError.invalid("Симулятор поддерживает только текстовые сообщения") }
                     let local = SimulatorMessage(chatId: chat.id, text: text, receipt: .sent)
                     document.messages.append(local); added.append(local)
+                    outgoingInfo[local.id] = OutgoingMessageInfoAttribute(uniqueId: SimulatorDocument.numericId(local.id), flags: [], acknowledged: true, correlationId: correlationId, bubbleUpEmojiOrStickersets: [], partialReference: nil)
                 }
             }
         } catch {
@@ -150,7 +160,7 @@ public enum TelegramSimulator {
         }
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
         let ids = added.map { resolveMessageId($0, in: indexed.document, timeline: indexed.timeline) }
-        return project(account: account) |> map { ids }
+        return project(account: account, outgoingInfo: outgoingInfo) |> map { ids }
     }
     public static func edit(account: Account, id: MessageId, text: String) -> Signal<RequestEditMessageResult, RequestEditMessageError> {
         do {
