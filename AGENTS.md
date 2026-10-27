@@ -1,4 +1,4 @@
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+The active implementation is the native Telegram iOS fork in `native/`, pinned to upstream 13.1.1. Read `native/README.md` and `docs/STATUS.md` first. Keep original public UIKit/Texture components; React Native/Expo/PWA below is an archived prototype and its checks do not verify the native app. Read the prepared upstream's AGENTS.md/CLAUDE.md before changing its sources. Native visual changes require actual simulator recordings and frame inspection; a successful compile alone is not visual acceptance.
 
 ## Git history — user requirement
 
