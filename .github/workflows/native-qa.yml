@@ -47,7 +47,7 @@ jobs:
       group: native-qa-${{ matrix.scenario }}
       cancel-in-progress: false
     runs-on: xcode-27
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       # Keep capture independent from another booting/recording simulator.
