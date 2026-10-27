@@ -43,6 +43,7 @@ def main():
                         process.wait()
                     result = 124
                 reader.join(timeout=5)
+                time.sleep(2)
         finally:
             recorder.send_signal(signal.SIGINT)
             try:

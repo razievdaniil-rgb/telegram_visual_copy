@@ -3,6 +3,7 @@
 Usage: python scripts/inspect-recording.py input.mp4 output-directory
 Requires ffmpeg/ffprobe on PATH and Pillow.
 """
+import argparse
 import json
 from pathlib import Path
 import subprocess
@@ -10,8 +11,14 @@ import sys
 
 from PIL import Image, ImageDraw
 
-source = Path(sys.argv[1]).resolve()
-target = Path(sys.argv[2]).resolve()
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('source', type=Path)
+parser.add_argument('target', type=Path)
+parser.add_argument('--start', type=float, default=0)
+parser.add_argument('--end', type=float)
+args = parser.parse_args()
+source = args.source.resolve()
+target = args.target.resolve()
 target.mkdir(parents=True, exist_ok=True)
 probe = json.loads(subprocess.check_output([
     'ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', str(source)
@@ -29,7 +36,10 @@ frame_probe = json.loads(subprocess.check_output([
 ], encoding='utf-8'))
 timestamps = [(index, float(frame['pts_time'])) for index, frame in enumerate(frame_probe['frames']) if 'pts_time' in frame]
 assert timestamps, 'No presentation timestamps in the recording'
-selected = sorted(set(min(timestamps, key=lambda pair: abs(pair[1] - duration * (index + .5) / 10)) for index in range(10)))
+end = duration if args.end is None else min(duration, args.end)
+assert 0 <= args.start < end, 'Invalid inspection interval'
+# Include endpoints: long device/driver startup must not hide the final screen.
+selected = sorted(set(min(timestamps, key=lambda pair: abs(pair[1] - (args.start + (end - args.start) * index / 9))) for index in range(10)))
 expression = '+'.join(f'eq(n\\,{index})' for index, _ in selected)
 subprocess.run([
     'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(source),
