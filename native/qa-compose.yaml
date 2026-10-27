@@ -4,6 +4,9 @@ appId: org.chatstudio.localsimulator
 - tapOn: '[\s\S]*Анна[\s\S]*'
 - tapOn:
     point: '45%, 95%'
+- tapOn:
+    text: 'Continue|Продолжить'
+    optional: true
 - inputText: 'QA public composer send'
 - takeScreenshot: artifacts/native-demo/public-keyboard
 - tapOn: 'Отправить'

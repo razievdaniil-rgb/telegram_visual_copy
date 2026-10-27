@@ -17,6 +17,8 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/calendar-date-selected
 - tapOn:
     point: '3%, 20%'
+- copyTextFrom: '[0-9]{1,2}:[0-9]{2}[\s\S]*(AM|PM)'
+- evalScript: '${output.previousHour = ("0" + ((Number(maestro.copiedText.split(":")[0]) % 12 + (maestro.copiedText.indexOf("PM") >= 0 ? 12 : 0) + 23) % 24)).slice(-2)}'
 - tapOn: '[0-9]{1,2}:[0-9]{2}[\s\S]*(AM|PM)'
 - takeScreenshot: artifacts/native-demo/time-picker
 - tapOn:
@@ -24,9 +26,10 @@ appId: org.chatstudio.localsimulator
 - eraseText: 2
 - inputText: '45'
 - tapOn:
-    point: '48%, 38%'
-- eraseText: 2
-- inputText: '11'
+    point: '3%, 20%'
+- tapOn: '[0-9]{1,2}:[0-9]{2}[\s\S]*(AM|PM)'
+- tapOn:
+    point: '48%, 35%'
 - takeScreenshot: artifacts/native-demo/time-values-entered
 - tapOn:
     point: '3%, 20%'
@@ -34,5 +37,13 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Сохранить'
 - assertVisible: '[\s\S]*QA manual date and time[\s\S]*'
 - assertVisible: '[\s\S]*2026-10-15T[\s\S]*'
-- assertVisible: '[\s\S]*T23:45:[\s\S]*'
+- assertVisible: '${"[\\s\\S]*T" + output.previousHour + ":45:[\\s\\S]*"}'
 - takeScreenshot: artifacts/native-demo/saved-manual-date
+- tapOn: '[\s\S]*QA manual date and time[\s\S]*'
+- tapOn: 'Текст сообщения'
+- eraseText
+- inputText: 'QA edited manual date and time'
+- tapOn: 'Сохранить'
+- assertVisible: '[\s\S]*QA edited manual date and time[\s\S]*'
+- assertVisible: '${"[\\s\\S]*T" + output.previousHour + ":45:[\\s\\S]*"}'
+- takeScreenshot: artifacts/native-demo/manual-time-preserved-after-edit
