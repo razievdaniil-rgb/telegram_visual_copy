@@ -1,0 +1,33 @@
+{
+  "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+  "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+  "output": "artifacts\\native-qa-final\\Telegram-native-short-preview.mp4",
+  "sha256": "6863fafca294d997d41a2c851cf60535add3a781c7f92b8b8aaaf80e30250841",
+  "ranges_seconds": [
+    [
+      75.0,
+      86.5
+    ],
+    [
+      177.0,
+      186.5
+    ],
+    [
+      395.0,
+      398.0
+    ]
+  ],
+  "source_frames": 439,
+  "output_frames": 560,
+  "fps": 30,
+  "duration_seconds": 18.666666666666668,
+  "bytes": 741290,
+  "shortened_idle_seconds": 4.533334000000002,
+  "section_starts_seconds": [
+    0.0,
+    8.475000000000003,
+    14.486665999999987
+  ],
+  "moving_sections_sped_up": false,
+  "edited_overview_not_raw_animation_evidence": true
+}
