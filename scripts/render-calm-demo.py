@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 import subprocess
 
-from PIL import Image, ImageChops, ImageDraw, ImageFont, ImageStat
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 
 def merged(intervals):
@@ -75,18 +75,23 @@ def main():
         '-frames:v', str(last - first + 1), '-f', 'rawvideo', '-'
     ], stdout=subprocess.PIPE)
     motions = [[] for _ in ranges]
+    motion_events = []
     previous = None
     previous_at = None
     for index in range(first, last + 1):
         data = analysis.stdout.read(180 * 390)
         assert len(data) == 180 * 390, f'Missing analysis frame {index}'
+        # Ignore the system clock, tiny caret flashes and low-contrast codec /
+        # wallpaper changes when finding technical waits between UI actions.
         image = Image.frombytes('L', (180, 390), data).crop((0, 23, 180, 386))
         at = times[index]
         if previous is not None:
             difference = ImageChops.difference(image, previous)
             histogram = difference.histogram()
-            changed = sum(histogram[12:]) / (180 * 363)
-            moving = changed > 0.00012 or ImageStat.Stat(difference).mean[0] > 0.08
+            changed = sum(histogram[20:]) / (180 * 363)
+            moving = changed > 0.00015
+            if moving:
+                motion_events.append(dict(index=index, at=at, changed=changed))
             if moving:
                 for section, entries in zip(ranges, motions):
                     # A long capture gap repeats a still frame; protect the onset
@@ -98,6 +103,12 @@ def main():
         previous, previous_at = image, at
     analysis.stdout.close()
     assert analysis.wait() == 0
+    args.output.with_suffix('.motion.json').write_text(json.dumps(motion_events, indent=2) + '\n')
+    for section, entries in zip(ranges, motions):
+        for start, end in plan.get('protect', []):
+            left, right = max(section['start'], start), min(section['end'], end)
+            if left < right:
+                entries.append([left, right])
 
     def edit(keep):
         result = []
