@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Bound each UI scenario and finalize its recording even when Maestro stalls."""
 import argparse
+from datetime import datetime, timezone
+import json
 import os
 from pathlib import Path
 import signal
@@ -18,10 +20,12 @@ def main():
     name = Path(args.scenario).stem
     output = Path("artifacts/native-demo") / name
     output.mkdir(parents=True, exist_ok=True)
+    timing = {"record_requested_utc": datetime.now(timezone.utc).isoformat(), "scenario": args.scenario}
     with (output / "recording.log").open("w") as log:
         recorder = subprocess.Popen(["xcrun", "simctl", "io", device, "recordVideo", "--codec=h264", "--force", str(output / "recording.mp4")], stdout=log, stderr=subprocess.STDOUT)
         try:
             time.sleep(2)
+            timing["maestro_requested_utc"] = datetime.now(timezone.utc).isoformat()
             with (output / "maestro.log").open("w") as ui_log:
                 process = subprocess.Popen(["maestro", "--device", device, "test", "--test-output-dir", str(output / "maestro"), args.scenario], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
                 def forward_output():
@@ -51,6 +55,7 @@ def main():
                 reader.join(timeout=5)
                 time.sleep(2)
         finally:
+            timing["stop_requested_utc"] = datetime.now(timezone.utc).isoformat()
             recorder.send_signal(signal.SIGINT)
             try:
                 recorder.wait(timeout=20)
@@ -61,6 +66,7 @@ def main():
                 subprocess.run(["xcrun", "simctl", "io", device, "screenshot", str(output / "last-screen.png")], timeout=20, check=False)
             except subprocess.TimeoutExpired:
                 print("Last-screen capture timed out", flush=True)
+            (output / "recording-timing.json").write_text(json.dumps(timing, indent=2) + "\n")
     print((output / "maestro.log").read_text(), flush=True)
     return result
 
