@@ -2,7 +2,8 @@ appId: org.chatstudio.localsimulator
 ---
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
-- tapOn: 'Сообщение'
+- tapOn:
+    point: '45%, 95%'
 - inputText: 'QA public composer send'
 - takeScreenshot: artifacts/native-demo/public-keyboard
 - tapOn: 'Отправить[\s\S]*'

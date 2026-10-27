@@ -20,9 +20,19 @@ appId: org.chatstudio.localsimulator
 - tapOn: '[0-9]{1,2}:[0-9]{2}[\s\S]*(AM|PM)'
 - takeScreenshot: artifacts/native-demo/time-picker
 - tapOn:
+    point: '63%, 38%'
+- eraseText: 2
+- inputText: '45'
+- tapOn:
+    point: '48%, 38%'
+- eraseText: 2
+- inputText: '11'
+- takeScreenshot: artifacts/native-demo/time-values-entered
+- tapOn:
     point: '3%, 20%'
 - takeScreenshot: artifacts/native-demo/date-form-result
 - tapOn: 'Сохранить'
 - assertVisible: '[\s\S]*QA manual date and time[\s\S]*'
 - assertVisible: '[\s\S]*2026-10-15T[\s\S]*'
+- assertVisible: '[\s\S]*T23:45:[\s\S]*'
 - takeScreenshot: artifacts/native-demo/saved-manual-date
