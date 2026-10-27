@@ -1,4 +1,4 @@
 {
-  "attempt": 3,
-  "purpose": "Verify public Telegram presentation and header-only hidden editor gesture with all requirements fixes"
+  "attempt": 4,
+  "purpose": "Verify ordinary message menu without first-use selection tutorial in local simulator"
 }

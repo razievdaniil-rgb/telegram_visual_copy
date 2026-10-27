@@ -483,3 +483,17 @@ index 34f2377..4cfc9c1 100644
              let label: String
              if formattedPhone.hasPrefix("+888 ") {
                  label = presentationData.strings.UserInfo_AnonymousNumberLabel
+diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
+--- a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
++++ b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
+@@ -109,7 +109,9 @@ extension ChatControllerImpl {
+                         }
+                     } else {
+                         let numberOfComponents = message.text.components(separatedBy: CharacterSet.whitespacesAndNewlines).count
+-                        let displayTextSelectionTip = numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
++                        // A fresh local account should show the ordinary menu, without the
++                        // first-use selection tutorial. Keep actual text selection unchanged.
++                        let displayTextSelectionTip = !TelegramSimulator.enabled && numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
+                         if displayTextSelectionTip {
+                             let _ = ApplicationSpecificNotice.incrementChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
+                             tip = .textSelection

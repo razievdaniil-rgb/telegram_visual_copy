@@ -19,6 +19,8 @@ appId: org.chatstudio.localsimulator
     visible: 'Скопировать|Копировать|Copy'
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/public-message-menu
+- assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
+- assertNotVisible: '[\s\S]*Hold a word[\s\S]*'
 - tapOn: 'Скопировать|Копировать|Copy'
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
