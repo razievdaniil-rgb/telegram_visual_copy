@@ -1,0 +1,52 @@
+{
+  "app_source_sha": "9fc62ed958e66346b60e588e01d5f40de0604974",
+  "qa_source_sha": "b32b715f312da8bd837f1871480ddadffb0a9606",
+  "compile_run": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40545686091",
+  "qa_run": "https://github.com/razievdaniil-rgb/telegram_visual_copy/actions/runs/40550860005",
+  "compile_conclusion": "success",
+  "qa_conclusion": "success",
+  "device": "iPhone 13 Pro Max Simulator",
+  "os": "iOS 27.0",
+  "ipa_sha256": "29c79604d5bd9bb02d08428105868f600397207a6db65cb5c0dea5b13031e149",
+  "qa_artifact_id": 12756346232,
+  "qa_archive_sha256": "57adebb3b2db92580572184bde8af42273fe351b46f91a21e2f0d613ad416d90",
+  "raw_video_sha256": "9b0174ea719598b8283de15cd7110e4dd4ba200a983050ef37bdd07d5028f1e2",
+  "checks": [
+    "public text send",
+    "menu tip absent on fresh account",
+    "copy action",
+    "Select action and selected-message screen",
+    "message survives restart"
+  ],
+  "visual_review": {
+    "menu": "No tutorial text or demonstration selection handles in either menu opening or selection mode; rounded menu ends after Select.",
+    "open_range_seconds": [
+      140,
+      145
+    ],
+    "open_source_frames": [
+      642,
+      703
+    ],
+    "selection_range_seconds": [
+      174,
+      179.5
+    ],
+    "selection_source_frames": [
+      1077,
+      1159
+    ],
+    "reviewed_frames": 145,
+    "remaining": "Recording has 123 ms gap on menu appearance, and 412 ms gap plus transient keyboard overlap during selection dismissal (177.237-177.428 s). Smooth animation not accepted from this cloud simulator recording; physical iPhone untested. Composer also visibly retains the entered text after sending; separate follow-up needed."
+  },
+  "next_demo_requirements": {
+    "duration_seconds": [
+      120,
+      180
+    ],
+    "speed": 1,
+    "readable_pauses": true,
+    "no_abrupt_montage": true,
+    "exclude_only_startup_and_technical_waits": true
+  }
+}
