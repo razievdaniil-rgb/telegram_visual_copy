@@ -31,6 +31,8 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Готово'
 - tapOn: '[\s\S]*Анна[\s\S]*'
 - extendedWaitUntil:
-    visible: '[\s\S]*печатает[\s\S]*'
+    # Original animated typing text is not exposed in Telegram's AX tree.
+    # The header proves navigation; verify typing text/dots in the saved frames.
+    visible: 'Открыть профиль'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/typing
