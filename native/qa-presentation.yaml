@@ -19,7 +19,6 @@ appId: org.chatstudio.localsimulator
     timeout: 10000
 - assertVisible: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
 - takeScreenshot: artifacts/native-demo/film-03-sent
-- hideKeyboard
 - longPressOn: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
 - assertVisible: 'Скопировать|Копировать|Copy'
 - assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
@@ -43,7 +42,6 @@ appId: org.chatstudio.localsimulator
     visible: '[\s\S]*Привет! Прототип уже работает\.[\s\S]*'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/film-05-public-edit
-- hideKeyboard
 - tapOn:
     point: '8%, 9%'
 - longPressOn:
