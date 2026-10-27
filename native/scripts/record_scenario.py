@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import signal
 import subprocess
+import threading
 import time
 
 
@@ -22,7 +23,14 @@ def main():
         try:
             time.sleep(2)
             with (output / "maestro.log").open("w") as ui_log:
-                process = subprocess.Popen(["maestro", "--device", device, "test", "--test-output-dir", str(output / "maestro"), args.scenario], stdout=ui_log, stderr=subprocess.STDOUT, start_new_session=True)
+                process = subprocess.Popen(["maestro", "--device", device, "test", "--test-output-dir", str(output / "maestro"), args.scenario], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
+                def forward_output():
+                    for line in process.stdout:
+                        ui_log.write(line)
+                        ui_log.flush()
+                        print(line, end="", flush=True)
+                reader = threading.Thread(target=forward_output, daemon=True)
+                reader.start()
                 try:
                     result = process.wait(timeout=args.timeout)
                 except subprocess.TimeoutExpired:
@@ -34,6 +42,7 @@ def main():
                         os.killpg(process.pid, signal.SIGKILL)
                         process.wait()
                     result = 124
+                reader.join(timeout=5)
         finally:
             recorder.send_signal(signal.SIGINT)
             try:
