@@ -3,7 +3,7 @@ appId: org.chatstudio.localsimulator
 - stopApp
 - launchApp
 - extendedWaitUntil:
-    visible: '[\s\S]*Контакты[\s\S]*'
+    visible: '[\s\S]*Михаил[\s\S]*'
     timeout: 60000
 - extendedWaitUntil:
     visible: '[\s\S]*Анна[\s\S]*'
