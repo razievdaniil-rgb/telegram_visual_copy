@@ -1,6 +1,8 @@
 {
-  "attempt": 9,
-  "app_run_id": "40526563306",
-  "scenarios": ["compose"],
-  "purpose": "Verify every supported requirement on isolated fresh iPhone simulators"
+  "attempt": 10,
+  "app_run_id": "40545686091",
+  "scenarios": [
+    "compose"
+  ],
+  "purpose": "Verify message context menu and selection without first-use tutorial on fresh native simulator"
 }

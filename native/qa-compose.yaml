@@ -22,6 +22,15 @@ appId: org.chatstudio.localsimulator
 - assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
 - assertNotVisible: '[\s\S]*Hold a word[\s\S]*'
 - tapOn: 'Скопировать|Копировать|Copy'
+- longPressOn: '[\s\S]*QA public composer send[\s\S]*'
+- extendedWaitUntil:
+    visible: 'Выбрать|Select'
+    timeout: 10000
+- assertNotVisible: '[\s\S]*Чтобы копировать[\s\S]*'
+- tapOn: 'Выбрать|Select'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/public-message-selected
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
 - extendedWaitUntil:
