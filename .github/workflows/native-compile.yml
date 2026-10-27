@@ -1,0 +1,63 @@
+name: Native Telegram - compile simulator
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['native/compile-request.json']
+permissions:
+  contents: read
+jobs:
+  compile:
+    runs-on: xcode-27
+    timeout-minutes: 100
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_27.1.app/Contents/Developer
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare pinned original and local patches
+        run: |
+          mkdir -p artifacts/native-build
+          python3 native/scripts/prepare.py --full 2>&1 | tee artifacts/native-build/prepare.log
+      - uses: actions/cache/restore@v4
+        id: native-cache
+        with:
+          path: ~/telegram-bazel-cache
+          key: telegram-native-xcode27.1-arm64-simulator-${{ hashFiles('native/upstream.json', 'native/patches/*.patch', 'native/Sources/**/*.swift') }}-${{ github.run_id }}
+          restore-keys: |
+            telegram-native-xcode27.1-arm64-simulator-
+            telegram-native-xcode27.1-arm64-
+      - name: Compile original full application target
+        timeout-minutes: 60
+        run: |
+          set -o pipefail
+          for ATTEMPT in 1 2 3; do
+            if python3 native/scripts/build.py build-simulator --build-number '${{ github.run_number }}' 2>&1 | tee "artifacts/native-build/compile-$ATTEMPT.log"; then break; fi
+            if [ "$ATTEMPT" = 3 ] || ! grep -Eq 'Error downloading|GET returned 50[234]|Connection reset|Read timed out' "artifacts/native-build/compile-$ATTEMPT.log"; then exit 1; fi
+            sleep 5
+          done
+          python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --platform simulator --output artifacts/native-build/verification.json
+          git rev-parse HEAD > artifacts/native-build/app-source-sha.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Native-Telegram-simulator-app
+          path: |
+            artifacts/native-build/Telegram.ipa
+            artifacts/native-build/verification.json
+            artifacts/native-build/app-source-sha.txt
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/cache/save@v4
+        if: success()
+        with:
+          path: ~/telegram-bazel-cache
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Native-Telegram-compilation-diagnostics
+          path: artifacts/native-build/*.log
+          retention-days: 7

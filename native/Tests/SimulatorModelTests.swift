@@ -62,6 +62,13 @@ final class SimulatorModelTests: XCTestCase {
         XCTAssertEqual(document.messages.map(\.id), original.messages.map(\.id))
         XCTAssertEqual(try SimulatorDocument.decode(document.encoded()).timelineIds(), document.timelineIds())
     }
+    func testTimelineUsesInstantsAndStableTieBreakAcrossTimeZones() {
+        var document = example()
+        document.messages[0].sentAt = "2026-10-26T13:00:00+03:00"
+        document.messages[1].sentAt = "2026-10-26T10:00:00Z"
+        document.messages.reverse()
+        XCTAssertEqual(document.timelineIds(), ["one": 1, "two": 2])
+    }
     func testSaveRestartAndInvalidImportPreservePreviousDocument() throws {
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: directory) }

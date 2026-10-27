@@ -11,8 +11,11 @@ public enum TelegramSimulator {
         return PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(SimulatorDocument.numericId(id)))
     }
     public static func messageId(_ message: SimulatorMessage, in document: SimulatorDocument) -> MessageId? {
+        return resolveMessageId(message, in: document, timeline: document.timelineIds())
+    }
+    private static func resolveMessageId(_ message: SimulatorMessage, in document: SimulatorDocument, timeline: [String: Int32]) -> MessageId? {
         guard let chat = document.chats.first(where: { $0.id == message.chatId }) else { return nil }
-        guard let id = document.timelineIds()[message.id] else { return nil }
+        guard let id = timeline[message.id] else { return nil }
         return MessageId(peerId: peerId(chat.profileId), namespace: Namespaces.Message.Cloud, id: id)
     }
     public static func profile(_ profile: SimulatorProfile) -> TelegramUser {
@@ -45,14 +48,15 @@ public enum TelegramSimulator {
         transaction.updatePeersInternal([profile(document.owner)], update: { _, next in next })
     }
     public static func project(account: Account) -> Signal<Void, NoError> {
-        let document = TelegramSimulatorWorkspace.shared.snapshot()
+        let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
+        let document = indexed.document
+        let timelineIds = indexed.timeline
         for profile in [document.owner] + document.profiles {
             if let avatar = profile.avatar, let part = avatar.split(separator: ",", maxSplits: 1).last, let data = Data(base64Encoded: String(part)) {
                 account.postbox.mediaBox.storeResourceData(LocalFileMediaResource(fileId: SimulatorDocument.numericId(avatar)).id, data: data, synchronous: true)
             }
         }
         return account.postbox.transaction { transaction -> Void in
-            let timelineIds = document.timelineIds()
             let previousContacts = transaction.getContactPeerIds()
             let currentContacts = Set(document.profiles.map { peerId($0.id) })
             let previousInclusions = Dictionary(uniqueKeysWithValues: previousContacts.map { ($0, transaction.getPeerChatListInclusion($0)) })
@@ -144,13 +148,15 @@ public enum TelegramSimulator {
             TelegramSimulatorWorkspace.shared.report(error)
             return .single([])
         }
-        let document = TelegramSimulatorWorkspace.shared.snapshot()
-        return project(account: account) |> map { added.map { messageId($0, in: document) } }
+        let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
+        let ids = added.map { resolveMessageId($0, in: indexed.document, timeline: indexed.timeline) }
+        return project(account: account) |> map { ids }
     }
     public static func edit(account: Account, id: MessageId, text: String) -> Signal<RequestEditMessageResult, RequestEditMessageError> {
         do {
             try TelegramSimulatorWorkspace.shared.change { document in
-                guard let index = document.messages.firstIndex(where: { messageId($0, in: document) == id }), document.messages[index].direction == .outgoing else { throw SimulatorDataError.invalid("Недоступно") }
+                let timeline = document.timelineIds()
+                guard let index = document.messages.firstIndex(where: { resolveMessageId($0, in: document, timeline: timeline) == id }), document.messages[index].direction == .outgoing else { throw SimulatorDataError.invalid("Недоступно") }
                 document.messages[index].text = text; document.messages[index].edited = true
             }
         } catch {
@@ -163,7 +169,8 @@ public enum TelegramSimulator {
         do {
             try TelegramSimulatorWorkspace.shared.change { document in
                 let original = document
-                document.messages.removeAll { message in messageId(message, in: original).map { ids.contains($0) } ?? false }
+                let timeline = original.timelineIds()
+                document.messages.removeAll { message in resolveMessageId(message, in: original, timeline: timeline).map { ids.contains($0) } ?? false }
             }
         } catch {
             TelegramSimulatorWorkspace.shared.report(error)
@@ -172,10 +179,10 @@ public enum TelegramSimulator {
         return project(account: account)
     }
     public static func receipt(for id: MessageId) -> Bool? {
-        let document = TelegramSimulatorWorkspace.shared.snapshot()
+        let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
+        let document = indexed.document
         guard let chat = document.chats.first(where: { peerId($0.profileId) == id.peerId }) else { return nil }
-        let timeline = document.timelineIds()
-        return document.messages.first(where: { $0.chatId == chat.id && timeline[$0.id] == id.id }).map { $0.receipt == .read }
+        return document.messages.first(where: { $0.chatId == chat.id && indexed.timeline[$0.id] == id.id }).map { $0.receipt == .read }
     }
     public static func isTyping(peerId: PeerId) -> Bool {
         return TelegramSimulatorWorkspace.shared.snapshot().chats.contains { self.peerId($0.profileId) == peerId && $0.presence == .typing }
@@ -195,6 +202,7 @@ public final class TelegramSimulatorWorkspace {
     public static let shared = TelegramSimulatorWorkspace()
     private let lock = NSRecursiveLock()
     private var repository: SimulatorRepository?
+    private var timelineCache: [String: Int32]?
     public private(set) var loadError: String?
     public let fileURL: URL
     public let changed = ValuePromise<Int>(0, ignoreRepeated: false)
@@ -210,10 +218,17 @@ public final class TelegramSimulatorWorkspace {
         lock.lock(); defer { lock.unlock() }
         return repository?.snapshot() ?? SimulatorDocument()
     }
+    fileprivate func indexedSnapshot() -> (document: SimulatorDocument, timeline: [String: Int32]) {
+        lock.lock(); defer { lock.unlock() }
+        let document = repository?.snapshot() ?? SimulatorDocument()
+        if timelineCache == nil { timelineCache = document.timelineIds() }
+        return (document, timelineCache!)
+    }
     public func change(_ update: (inout SimulatorDocument) throws -> Void) throws {
         lock.lock(); defer { lock.unlock() }
         guard let repository = repository else { throw SimulatorDataError.invalid(loadError ?? "Хранилище недоступно") }
         try repository.change(update)
+        timelineCache = nil
         changed.set(0)
     }
     public func restore(_ data: Data) throws {
@@ -227,6 +242,7 @@ public final class TelegramSimulatorWorkspace {
         try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try document.encoded().write(to: fileURL, options: .atomic)
         repository = try SimulatorRepository(url: fileURL); loadError = nil
+        timelineCache = nil
         changed.set(0)
     }
 }
