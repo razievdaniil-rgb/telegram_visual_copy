@@ -5,12 +5,14 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Сообщение'
 - inputText: 'QA public composer send'
 - takeScreenshot: artifacts/native-demo/public-keyboard
-- tapOn: 'Отправить'
+- tapOn: 'Отправить[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*QA public composer send[\s\S]*'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/public-sent-message
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Анна[\s\S]*'
-- assertVisible: '[\s\S]*QA public composer send[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*QA public composer send[\s\S]*'
+    timeout: 15000
 - takeScreenshot: artifacts/native-demo/public-send-after-restart

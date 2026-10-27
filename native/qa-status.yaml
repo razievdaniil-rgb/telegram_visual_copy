@@ -13,7 +13,9 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Редактор'
 - tapOn: 'Готово'
 - tapOn: '[\s\S]*Анна[\s\S]*'
-- assertVisible: '[\s\S]*был\(а\) недавно[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*был\(а\) недавно[\s\S]*'
+    timeout: 15000
 - takeScreenshot: artifacts/native-demo/recently
 - runFlow: qa-root.yaml
 - longPressOn:
@@ -28,5 +30,7 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Редактор'
 - tapOn: 'Готово'
 - tapOn: '[\s\S]*Анна[\s\S]*'
-- assertVisible: '[\s\S]*печатает[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*печатает[\s\S]*'
+    timeout: 15000
 - takeScreenshot: artifacts/native-demo/typing

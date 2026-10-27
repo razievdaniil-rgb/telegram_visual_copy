@@ -11,12 +11,16 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Сообщение'
 - tapOn: 'Текст сообщения'
 - inputText: 'QA manual date and time'
-- tapOn:
-    id: 'simulator.message.date'
+- tapOn: 'Oct [0-9]{1,2}, 2026'
 - takeScreenshot: artifacts/native-demo/calendar-picker
-- tapOn: '15'
+- tapOn: '15|[\s\S]*October 15[\s\S]*'
 - takeScreenshot: artifacts/native-demo/calendar-date-selected
-- tapOn: 'Текст сообщения'
+- tapOn:
+    point: '10%, 20%'
+- tapOn: '[0-9]{1,2}:[0-9]{2}[\s\S]*(AM|PM)'
+- takeScreenshot: artifacts/native-demo/time-picker
+- tapOn:
+    point: '10%, 20%'
 - takeScreenshot: artifacts/native-demo/date-form-result
 - tapOn: 'Сохранить'
 - assertVisible: '[\s\S]*QA manual date and time[\s\S]*'
