@@ -1,0 +1,6 @@
+appId: org.chatstudio.localsimulator
+---
+- runFlow: qa-public.yaml
+- runFlow: qa-editor.yaml
+- runFlow: qa-messages.yaml
+- runFlow: qa-status.yaml
