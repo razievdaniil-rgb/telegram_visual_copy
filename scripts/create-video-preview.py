@@ -1,6 +1,6 @@
 """Make a short CFR overview from actual simulator frames and their original PTS.
 
-Only idle holds are shortened; moving sections are sampled at their original pace.
+Idle holds are shortened; optional --speed is explicitly recorded for edited demos.
 This edited preview is not the raw evidence used to accept animation timing.
 """
 import argparse
@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import subprocess
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 
 def main():
@@ -19,7 +19,11 @@ def main():
     parser.add_argument('timestamps', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--ranges', nargs='+', required=True)
+    parser.add_argument('--max-idle', type=float, default=1.2)
+    parser.add_argument('--speed', type=float, default=1.0)
+    parser.add_argument('--label')
     args = parser.parse_args()
+    assert args.max_idle > 0 and args.speed > 0
     ranges = [tuple(map(float, item.split(':'))) for item in args.ranges]
     frames = json.loads(args.timestamps.read_text(encoding='utf-8'))['frames']
     assert all('pts_time' in item for item in frames)
@@ -56,14 +60,16 @@ def main():
             starts.append(duration)
             if i + 1 < len(section):
                 original = section[i + 1][1] - at
-                hold = min(original, 1.2)
+                hold = min(original, args.max_idle)
                 shortened_idle += original - hold
             else:
                 hold = 1.2
-            duration += max(hold, 1 / 600)
+            duration += max(hold, 1 / 600) / args.speed
+    band = 80 if args.label else 0
+    font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 25) if args.label else None
     encoder = subprocess.Popen([
         'ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-f', 'rawvideo',
-        '-pixel_format', 'rgb24', '-video_size', '720x1558', '-framerate', '30', '-i', '-',
+        '-pixel_format', 'rgb24', '-video_size', f'720x{1558 + band}', '-framerate', '30', '-i', '-',
         '-an', '-c:v', 'libx264', '-profile:v', 'main', '-level:v', '4.0',
         '-pix_fmt', 'yuv420p', '-preset', 'veryfast', '-crf', '22',
         '-movflags', '+faststart', str(args.output),
@@ -75,7 +81,14 @@ def main():
         for tick in range(count):
             index = max(0, bisect.bisect_right(starts, tick / 30) - 1)
             if index != previous:
-                pixels = Image.open(paths[index]).convert('RGB').tobytes()
+                with Image.open(paths[index]) as source_image:
+                    picture = source_image.convert('RGB')
+                if band:
+                    canvas = Image.new('RGB', (720, 1558 + band), '#161b22')
+                    canvas.paste(picture, (0, band))
+                    ImageDraw.Draw(canvas).text((22, 24), args.label, font=font, fill='white')
+                    picture = canvas
+                pixels = picture.tobytes()
                 previous = index
             encoder.stdin.write(pixels)
     finally:
@@ -87,7 +100,9 @@ def main():
         'ranges_seconds': ranges, 'source_frames': len(selected), 'output_frames': count,
         'fps': 30, 'duration_seconds': count / 30, 'bytes': args.output.stat().st_size,
         'shortened_idle_seconds': shortened_idle, 'section_starts_seconds': boundaries,
-        'moving_sections_sped_up': False, 'edited_overview_not_raw_animation_evidence': True,
+        'moving_sections_sped_up': args.speed != 1.0, 'speed': args.speed,
+        'label': args.label, 'max_idle_seconds': args.max_idle,
+        'edited_overview_not_raw_animation_evidence': True,
     }
     args.output.with_suffix('.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, indent=2))

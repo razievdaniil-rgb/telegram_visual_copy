@@ -1,0 +1,384 @@
+{
+  "application_source": "649829f92d80fcaca682315bc38c0a8a4ca03d05",
+  "duration_seconds": 180.3,
+  "bytes": 6008996,
+  "frames": 5409,
+  "fps": 30,
+  "sha256": "3f9513a728efb19f5847b5d4c556da656d5b9f13f028afa92a421ff23546403f",
+  "chapters": [
+    {
+      "title": "О демонстрации",
+      "start": 0.0,
+      "end": 3.0
+    },
+    {
+      "title": "01  Список чатов, диалог и профиль",
+      "start": 3.0,
+      "end": 10.933333333333334
+    },
+    {
+      "title": "02  Скрытый редактор: профиль и телефон  [x2]",
+      "start": 10.933333333333334,
+      "end": 36.06666666666666
+    },
+    {
+      "title": "03  Создание личного чата и его профиль",
+      "start": 36.06666666666666,
+      "end": 48.93333333333333
+    },
+    {
+      "title": "04  Загрузка аватара и результат  [x2]",
+      "start": 48.93333333333333,
+      "end": 62.93333333333333
+    },
+    {
+      "title": "05  Набор, отправка и меню сообщения",
+      "start": 62.93333333333333,
+      "end": 84.96666666666667
+    },
+    {
+      "title": "06  Обе стороны, правка текста и галочек  [x2]",
+      "start": 84.96666666666667,
+      "end": 117.4
+    },
+    {
+      "title": "07  Дата, час, минуты и повторная правка  [x2]",
+      "start": 117.4,
+      "end": 148.13333333333333
+    },
+    {
+      "title": "08  Переключение статусов в редакторе  [x2]",
+      "start": 148.13333333333333,
+      "end": 167.0
+    },
+    {
+      "title": "09  Статус «печатает» и анимация",
+      "start": 167.0,
+      "end": 171.2
+    },
+    {
+      "title": "10  Перезапуск: сообщение сохранилось",
+      "start": 171.2,
+      "end": 180.29999999999998
+    }
+  ],
+  "segments": [
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\01-public.mp4",
+      "sha256": "e845bc708498c0e37862f21a83b07037a9ca55c8e36cd9c0fd04490bd08f6cd7",
+      "ranges_seconds": [
+        [
+          75.0,
+          86.5
+        ]
+      ],
+      "source_frames": 125,
+      "output_frames": 238,
+      "fps": 30,
+      "duration_seconds": 7.933333333333334,
+      "bytes": 304424,
+      "shortened_idle_seconds": 4.3216669999999855,
+      "section_starts_seconds": [
+        0.0
+      ],
+      "moving_sections_sped_up": false,
+      "speed": 1.0,
+      "label": "01  Список чатов, диалог и профиль",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\02-profile.mp4",
+      "sha256": "00acf4d653eeddcd888c05a9efb849f6165a4b88241afccbba508ca3e1e81d89",
+      "ranges_seconds": [
+        [
+          94.0,
+          104.0
+        ],
+        [
+          110.0,
+          117.0
+        ],
+        [
+          124.0,
+          146.0
+        ],
+        [
+          153.0,
+          167.0
+        ]
+      ],
+      "source_frames": 864,
+      "output_frames": 754,
+      "fps": 30,
+      "duration_seconds": 25.133333333333333,
+      "bytes": 604194,
+      "shortened_idle_seconds": 6.096667000000017,
+      "section_starts_seconds": [
+        0.0,
+        4.104167,
+        7.916667000000006,
+        18.0633335
+      ],
+      "moving_sections_sped_up": true,
+      "speed": 2.0,
+      "label": "02  Скрытый редактор: профиль и телефон  [x2]",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\03-chat-v2.mp4",
+      "sha256": "f1348958674d53202e8f6953c129b4c44cfaee580ec6c985a26510c380d28684",
+      "ranges_seconds": [
+        [
+          169.0,
+          183.0
+        ]
+      ],
+      "source_frames": 284,
+      "output_frames": 386,
+      "fps": 30,
+      "duration_seconds": 12.866666666666667,
+      "bytes": 514396,
+      "shortened_idle_seconds": 0.6383329999999943,
+      "section_starts_seconds": [
+        0.0
+      ],
+      "moving_sections_sped_up": false,
+      "speed": 1.0,
+      "label": "03  Создание личного чата и его профиль",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-avatar7\\qa-avatar\\recording.mp4",
+      "source_sha256": "f912d584f7a65075d005056e6e166d75da14631fb28343b186add2356c772591",
+      "output": "artifacts\\native-feature-demo\\04-avatar.mp4",
+      "sha256": "9315ec8e792a9e9faa6eb4e1d635fcbfda528507e468254c8a50cc66ccc81986",
+      "ranges_seconds": [
+        [
+          158.0,
+          203.0
+        ],
+        [
+          226.0,
+          232.7
+        ]
+      ],
+      "source_frames": 316,
+      "output_frames": 420,
+      "fps": 30,
+      "duration_seconds": 14.0,
+      "bytes": 732175,
+      "shortened_idle_seconds": 23.273332999999987,
+      "section_starts_seconds": [
+        0.0,
+        10.818333500000001
+      ],
+      "moving_sections_sped_up": true,
+      "speed": 2.0,
+      "label": "04  Загрузка аватара и результат  [x2]",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-compose9\\qa-compose\\recording.mp4",
+      "source_sha256": "1733c51b6bfec8a54b56c5b2c069a705b4929dad74e02601ec406989b1848854",
+      "output": "artifacts\\native-feature-demo\\05-send-v2.mp4",
+      "sha256": "8651990ef3dd7619d9fc404c1e57e3b8f0cbb6b26a1537c9d73998053751e723",
+      "ranges_seconds": [
+        [
+          167.0,
+          185.0
+        ],
+        [
+          189.0,
+          191.5
+        ]
+      ],
+      "source_frames": 296,
+      "output_frames": 661,
+      "fps": 30,
+      "duration_seconds": 22.033333333333335,
+      "bytes": 629082,
+      "shortened_idle_seconds": 0.0,
+      "section_starts_seconds": [
+        0.0,
+        19.18166833333335
+      ],
+      "moving_sections_sped_up": false,
+      "speed": 1.0,
+      "label": "05  Набор, отправка и меню сообщения",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\06-messages-v2.mp4",
+      "sha256": "87597e85771688080e4eac4bace2e2457bda407676b78dcb199c68d44c523f34",
+      "ranges_seconds": [
+        [
+          204.0,
+          271.0
+        ]
+      ],
+      "source_frames": 1601,
+      "output_frames": 973,
+      "fps": 30,
+      "duration_seconds": 32.43333333333333,
+      "bytes": 1326545,
+      "shortened_idle_seconds": 2.4433340000000268,
+      "section_starts_seconds": [
+        0.0
+      ],
+      "moving_sections_sped_up": true,
+      "speed": 2.0,
+      "label": "06  Обе стороны, правка текста и галочек  [x2]",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-time7\\qa-time\\recording.mp4",
+      "source_sha256": "2aa1147c782ae3b9c37b65df5a3999bb981bf4d24c9d3ed457ce3d3a278fd8d6",
+      "output": "artifacts\\native-feature-demo\\07-time-v2.mp4",
+      "sha256": "8270cf80ac5986d9db67d1ea298b7148b9ff6dc29d7ad7aa4cf26a7d5fee979a",
+      "ranges_seconds": [
+        [
+          145.0,
+          175.0
+        ],
+        [
+          198.0,
+          220.0
+        ],
+        [
+          230.0,
+          239.0
+        ],
+        [
+          278.0,
+          290.0
+        ],
+        [
+          311.0,
+          325.0
+        ],
+        [
+          344.0,
+          358.9
+        ]
+      ],
+      "source_frames": 723,
+      "output_frames": 922,
+      "fps": 30,
+      "duration_seconds": 30.733333333333334,
+      "bytes": 648171,
+      "shortened_idle_seconds": 28.45833199999999,
+      "section_starts_seconds": [
+        0.0,
+        11.76416766666667,
+        19.46083816666666,
+        21.783338166666674,
+        23.740838499999995,
+        29.714171999999984
+      ],
+      "moving_sections_sped_up": true,
+      "speed": 2.0,
+      "label": "07  Дата, час, минуты и повторная правка  [x2]",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\08-status-v2.mp4",
+      "sha256": "511738ad3d014e361a4959e457a8376994ac79abe23159e9ce095d50742c98da",
+      "ranges_seconds": [
+        [
+          300.0,
+          317.0
+        ],
+        [
+          334.0,
+          355.0
+        ]
+      ],
+      "source_frames": 1156,
+      "output_frames": 566,
+      "fps": 30,
+      "duration_seconds": 18.866666666666667,
+      "bytes": 886758,
+      "shortened_idle_seconds": 1.8933330000001316,
+      "section_starts_seconds": [
+        0.0,
+        8.510000333333297
+      ],
+      "moving_sections_sped_up": true,
+      "speed": 2.0,
+      "label": "08  Переключение статусов в редакторе  [x2]",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-suite7\\qa-suite\\recording.mp4",
+      "source_sha256": "0b24eb9fa5d8f9cf1f384a886a235ff62ffabf0caed4b09d03ba4bf6802131dc",
+      "output": "artifacts\\native-feature-demo\\09-typing.mp4",
+      "sha256": "0d01436bf7f28d29edc34e44906719e09fb00ee5eb9bb2911822ae417ef0507f",
+      "ranges_seconds": [
+        [
+          395.0,
+          398.0
+        ]
+      ],
+      "source_frames": 180,
+      "output_frames": 126,
+      "fps": 30,
+      "duration_seconds": 4.2,
+      "bytes": 110888,
+      "shortened_idle_seconds": 0.0,
+      "section_starts_seconds": [
+        0.0
+      ],
+      "moving_sections_sped_up": false,
+      "speed": 1.0,
+      "label": "09  Статус «печатает» и анимация",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    },
+    {
+      "source": "artifacts\\native-qa-compose9\\qa-compose\\recording.mp4",
+      "source_sha256": "1733c51b6bfec8a54b56c5b2c069a705b4929dad74e02601ec406989b1848854",
+      "output": "artifacts\\native-feature-demo\\10-restart.mp4",
+      "sha256": "e0e9637da41593c082ddbce54967effff72635e02eb6e3579eeb5abd0540e5fe",
+      "ranges_seconds": [
+        [
+          205.0,
+          236.6
+        ]
+      ],
+      "source_frames": 114,
+      "output_frames": 273,
+      "fps": 30,
+      "duration_seconds": 9.1,
+      "bytes": 233351,
+      "shortened_idle_seconds": 18.368332999999975,
+      "section_starts_seconds": [
+        0.0
+      ],
+      "moving_sections_sped_up": false,
+      "speed": 1.0,
+      "label": "10  Перезапуск: сообщение сохранилось",
+      "max_idle_seconds": 0.8,
+      "edited_overview_not_raw_animation_evidence": true
+    }
+  ],
+  "edited_demonstration_not_raw_animation_evidence": true,
+  "full_decode_verified": true
+}
