@@ -137,7 +137,7 @@ jobs:
           xcrun simctl install "$DEVICE" artifacts/native-demo-app/Payload/Telegram.app
           CONTAINER=$(xcrun simctl get_app_container "$DEVICE" org.chatstudio.localsimulator data)
           python3 native/scripts/seed_demo.py "$CONTAINER"
-      - name: Check public screens before corrections
+      - name: Check public screens after corrections
         timeout-minutes: 5
         run: python3 native/scripts/record_scenario.py native/qa-public.yaml --timeout 180
       - uses: actions/upload-artifact@v4
@@ -149,7 +149,15 @@ jobs:
       - name: Check hidden editor independently
         if: always() && env.DEVICE != ''
         timeout-minutes: 5
-        run: python3 native/scripts/record_scenario.py native/qa-editor.yaml --timeout 180
+        run: python3 native/scripts/record_scenario.py native/qa-editor.yaml --timeout 240
+      - name: Check both message sides, editing and restart
+        if: always() && env.DEVICE != ''
+        timeout-minutes: 7
+        run: python3 native/scripts/record_scenario.py native/qa-messages.yaml --timeout 300
+      - name: Check manual presence and original typing animation
+        if: always() && env.DEVICE != ''
+        timeout-minutes: 6
+        run: python3 native/scripts/record_scenario.py native/qa-status.yaml --timeout 240
       - name: Collect last screen and native crash reports
         if: always() && env.DEVICE != ''
         timeout-minutes: 2

@@ -12,6 +12,33 @@ appId: org.chatstudio.localsimulator
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/editor
 - tapOn:
-    text: '[\s\S]*Анна[\s\S]*'
-    index: 0
+    id: 'simulator.section.1.row.0'
 - takeScreenshot: artifacts/native-demo/editor-profile
+- tapOn:
+    id: 'simulator.profile.field.3'
+- eraseText
+- inputText: '+70000000002'
+- tapOn: 'Сохранить'
+- assertVisible: 'Редактор'
+- tapOn: 'Добавить собеседника'
+- tapOn:
+    id: 'simulator.profile.field.0'
+- inputText: 'QA Alex'
+- tapOn:
+    id: 'simulator.profile.field.1'
+- inputText: 'Example'
+- tapOn:
+    id: 'simulator.profile.field.2'
+- inputText: 'qa_example'
+- tapOn:
+    id: 'simulator.profile.field.3'
+- inputText: '+70000000003'
+- tapOn:
+    id: 'simulator.profile.field.4'
+- inputText: 'Local test profile'
+- tapOn: 'Сохранить'
+- assertVisible: '[\s\S]*QA Alex[\s\S]*'
+- tapOn: 'Создать чат'
+- tapOn: '[\s\S]*QA Alex[\s\S]*'
+- takeScreenshot: artifacts/native-demo/editor-created-chat
+- tapOn: 'Готово'

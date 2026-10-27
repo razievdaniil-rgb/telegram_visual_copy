@@ -1,0 +1,49 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 30000
+- longPressOn:
+    point: '27%, 6.5%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- tapOn: 'Сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'QA outgoing message'
+- tapOn: 'Исходящее'
+- tapOn: 'Одна галочка'
+- takeScreenshot: artifacts/native-demo/message-form
+- tapOn: 'Сохранить'
+- assertVisible: 'QA outgoing message'
+- tapOn: 'Сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'QA incoming message'
+- tapOn: 'Входящее'
+- tapOn: 'Сохранить'
+- assertVisible: 'QA incoming message'
+- tapOn: 'QA outgoing message'
+- tapOn: 'Текст сообщения'
+- eraseText
+- inputText: 'QA edited outgoing message'
+- tapOn: 'Две галочки'
+- tapOn: 'Сохранить'
+- assertVisible: 'QA edited outgoing message'
+- takeScreenshot: artifacts/native-demo/editor-messages
+- tapOn: 'Редактор'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*QA incoming message[\s\S]*'
+    timeout: 15000
+- assertVisible: '[\s\S]*QA edited outgoing message[\s\S]*'
+- takeScreenshot: artifacts/native-demo/local-message-results
+- stopApp
+- launchApp
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- assertVisible: '[\s\S]*QA edited outgoing message[\s\S]*'
+- takeScreenshot: artifacts/native-demo/messages-after-restart

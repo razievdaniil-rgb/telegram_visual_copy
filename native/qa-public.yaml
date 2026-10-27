@@ -13,4 +13,7 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/dialogue
 - tapOn:
     point: '50%, 9%'
+- extendedWaitUntil:
+    visible: '[\s\S]*demo_anna[\s\S]*'
+    timeout: 10000
 - takeScreenshot: artifacts/native-demo/profile

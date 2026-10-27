@@ -1,0 +1,34 @@
+appId: org.chatstudio.localsimulator
+---
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 30000
+- longPressOn:
+    point: '27%, 6.5%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- tapOn: 'Статус собеседника'
+- tapOn: 'Был.*недавно'
+- tapOn: 'Редактор'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- assertVisible: '[\s\S]*был\(а\) недавно[\s\S]*'
+- takeScreenshot: artifacts/native-demo/recently
+- stopApp
+- launchApp
+- longPressOn:
+    point: '27%, 6.5%'
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- tapOn: 'Статус собеседника'
+- tapOn: 'Печатает…'
+- tapOn: 'Редактор'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- assertVisible: '[\s\S]*печатает[\s\S]*'
+- takeScreenshot: artifacts/native-demo/typing
