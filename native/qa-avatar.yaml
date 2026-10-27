@@ -32,3 +32,11 @@ appId: org.chatstudio.localsimulator
     point: '50%, 9%'
 - assertVisible: '[\s\S]*demo_anna[\s\S]*'
 - takeScreenshot: artifacts/native-demo/uploaded-avatar-profile
+- runFlow: qa-root.yaml
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn:
+    point: '50%, 9%'
+- extendedWaitUntil:
+    visible: '[\s\S]*demo_anna[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/uploaded-avatar-after-restart

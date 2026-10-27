@@ -37,4 +37,23 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Создать чат'
 - tapOn: '[\s\S]*QA Alex[\s\S]*'
 - takeScreenshot: artifacts/native-demo/editor-created-chat
+- tapOn:
+    id: 'simulator.section.2.row.2'
+- tapOn: 'Сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'QA new contact'
+- tapOn: 'Сохранить'
+- tapOn: 'Редактор'
 - tapOn: 'Готово'
+- tapOn: '[\s\S]*QA Alex[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*QA new contact[\s\S]*'
+    timeout: 15000
+- tapOn:
+    point: '50%, 9%'
+- extendedWaitUntil:
+    visible: '[\s\S]*qa_example[\s\S]*'
+    timeout: 15000
+- assertVisible: '[\s\S]*\+70000000003[\s\S]*'
+- assertVisible: '[\s\S]*Local test profile[\s\S]*'
+- takeScreenshot: artifacts/native-demo/created-public-profile
