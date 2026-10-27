@@ -1,6 +1,6 @@
 {
-  "attempt": 1,
+  "attempt": 2,
   "app_run_id": "40510126465",
-  "scenarios": ["public", "editor", "messages", "status"],
+  "scenarios": ["avatar", "time"],
   "purpose": "Verify every supported requirement on isolated fresh iPhone simulators"
 }

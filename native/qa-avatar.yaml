@@ -1,0 +1,37 @@
+appId: org.chatstudio.localsimulator
+---
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 60000
+- longPressOn:
+    point: '27%, 6.5%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.1.row.0'
+- tapOn: 'Выбрать аватар'
+- tapOn:
+    text: 'Allow Full Access|Allow Access to All Photos|Разрешить полный доступ|Разрешить доступ ко всем фото'
+    optional: true
+- tapOn:
+    text: 'Recents|Недавние'
+    optional: true
+- takeScreenshot: artifacts/native-demo/photo-library
+- tapOn:
+    point: '16%, 28%'
+- takeScreenshot: artifacts/native-demo/photo-crop
+- tapOn:
+    text: 'Choose|Выбрать|Done|Готово'
+    optional: true
+- extendedWaitUntil:
+    visible: 'Сохранить'
+    timeout: 10000
+- tapOn: 'Сохранить'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn:
+    point: '50%, 9%'
+- assertVisible: '[\s\S]*demo_anna[\s\S]*'
+- takeScreenshot: artifacts/native-demo/uploaded-avatar-profile

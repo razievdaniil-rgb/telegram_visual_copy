@@ -1,0 +1,27 @@
+appId: org.chatstudio.localsimulator
+---
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 60000
+- longPressOn:
+    point: '27%, 6.5%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- tapOn: 'Сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'QA manual date and time'
+- tapOn:
+    id: 'simulator.message.date'
+- takeScreenshot: artifacts/native-demo/calendar-picker
+- tapOn: '15'
+- takeScreenshot: artifacts/native-demo/calendar-date-selected
+- tapOn: 'Текст сообщения'
+- takeScreenshot: artifacts/native-demo/date-form-result
+- tapOn: 'Сохранить'
+- assertVisible: '[\s\S]*QA manual date and time[\s\S]*'
+- assertVisible: '[\s\S]*2026-10-15T[\s\S]*'
+- takeScreenshot: artifacts/native-demo/saved-manual-date
