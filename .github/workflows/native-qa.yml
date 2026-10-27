@@ -50,7 +50,8 @@ jobs:
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      max-parallel: 2
+      # Keep capture independent from another booting/recording simulator.
+      max-parallel: 1
       matrix:
         scenario: ${{ fromJSON(needs.plan.outputs.scenarios) }}
     env:
