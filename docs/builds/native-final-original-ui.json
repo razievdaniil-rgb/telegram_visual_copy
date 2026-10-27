@@ -1,0 +1,71 @@
+{
+  "upstream": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "verification": "source identity only; not a pixel or runtime animation comparison",
+  "files": [
+    {
+      "path": "submodules/Display/Source/Font.swift",
+      "sha256": "12ff2af7525693aee3b792631387bfee6980898eb507117c9e021e77c26cd99c",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/Display/Source/Navigation/NavigationController.swift",
+      "sha256": "50201ef844b3650993acc4cdc2f85395825a2750134feb7c1cd361a788821a74",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TabBarUI/Sources/TabBarController.swift",
+      "sha256": "44bf4628deca3d14b5d879beeb7b96cd324bc5652eb23a90e031ecf77e85ec14",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/ChatListController.swift",
+      "sha256": "0e81ccec2eb2a0899a23c653377823e42b014cadb8bc4df19ccdf219bea79c0f",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Sources/ChatController.swift",
+      "sha256": "76746e5dc6bf50b7760e0ffd71eb023874d914dd502347be94daacbb50e0f7a9",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/ChatTitleView/Sources/ChatTitleView.swift",
+      "sha256": "9f4eb275e292ddec37f30f200bfb356d765c55df83b7f7b50a032c5f18b29a1e",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageTextBubbleContentNode/Sources/ChatMessageTextBubbleContentNode.swift",
+      "sha256": "de1b656c1f7e0f079ccc68a4820caf825a6a1d6b3a225c22f0bbbba18da22905",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageBubbleItemNode/Sources/ChatMessageBubbleItemNode.swift",
+      "sha256": "797efc6655a04f204a6e57156f3eb98f236a4dbdfdb2f9381a7cce2eac1496ed",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageDateAndStatusNode/Sources/ChatMessageDateAndStatusNode.swift",
+      "sha256": "2a11aedff209ad65ca1cef208eefbfeb1af8ade7ac0b441cfecdb6c669db0ff2",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode/Sources/ChatTextInputPanelNode.swift",
+      "sha256": "5ea7772bf0888bc71f90b79ad5df90187e9bcd22157dc69c80d02f1f1123ce12",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift",
+      "sha256": "61e3f0b279bedd0e0d30db56be668e59a5b80191d471c70f2d37f0aa73dc5d96",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramPresentationData/Sources/PresentationTheme.swift",
+      "sha256": "e0df884681e586f848df68b939c4c53d0ed6e1dec53472a54f65f9037884dcd5",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramPresentationData/Sources/DefaultDayPresentationTheme.swift",
+      "sha256": "7bf8e82dc967216b70654f04e5a9bf54866af7ce9c2dd4711770dc06c0533a00",
+      "matches_upstream": true
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "application_source": "4ae3913c0be19fc3bbfc320f0f4c6a2c0e1f6182",
+  "upstream": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "build_run": 40560245454,
+  "qa_run": 40571442399,
+  "qa_conclusion": "success",
+  "qa_artifact": 12766982425,
+  "qa_archive_sha256": "2cbee9b16ebf8247d13cb6fe31b723fe922f878533e2f31c0c6a7ce7ecd9d821",
+  "ipa_sha256": "8d4b4583de6188a666b1c36ee8c0c5227aac4fd87be6808eec8d4382da9f38f6",
+  "raw_recording_sha256": "095fa13ef01f341601b211656a97c8d98fd670e88d21d01e02b091934980c54c",
+  "raw_duration_seconds": 911.071667,
+  "device": "iPhone 13 Pro Max Simulator",
+  "runtime": "iOS 27.0",
+  "binary_build": "6",
+  "public_video": "docs/videos/Telegram-native-demo.mp4",
+  "duration_seconds": 162.83333333333334,
+  "frames": 4885,
+  "bytes": 4278721,
+  "sha256": "035d716470d3af1c7741db596b2e21bb38c7f589faf80fae9146ad988ab0e4ac",
+  "codec": "H.264 Main Level 4.0",
+  "pixel_format": "yuv420p",
+  "resolution": [
+    720,
+    1622
+  ],
+  "fps": 30,
+  "faststart": true,
+  "full_decode_passed": true,
+  "action_speed": 1,
+  "frame_interpolation": false,
+  "chapters": [
+    {
+      "title": "01  Отправка сообщения",
+      "start": 0.0,
+      "end": 19.5
+    },
+    {
+      "title": "02  Меню и редактирование",
+      "start": 19.5,
+      "end": 41.333333333333336
+    },
+    {
+      "title": "03  Профиль и аватар",
+      "start": 41.333333333333336,
+      "end": 64.83333333333333
+    },
+    {
+      "title": "04  Дата и время сообщения",
+      "start": 64.83333333333333,
+      "end": 97.96666666666667
+    },
+    {
+      "title": "05  Входящие и правка сообщений",
+      "start": 97.96666666666667,
+      "end": 130.53333333333333
+    },
+    {
+      "title": "06  Изменение телефона",
+      "start": 130.53333333333333,
+      "end": 138.53333333333333
+    },
+    {
+      "title": "07  Статусы собеседника",
+      "start": 138.53333333333333,
+      "end": 152.33333333333334
+    },
+    {
+      "title": "08  После перезапуска",
+      "start": 152.33333333333334,
+      "end": 162.83333333333334
+    }
+  ],
+  "review": {
+    "all_21_scenario_screenshots": true,
+    "edited_movie_50_scene_frames": true,
+    "reviewed_trim_boundary_frames": true,
+    "public_edit_document_after_restart": true
+  },
+  "checks": {
+    "native_swift": "success: 12 tests and 17-file patch preparation",
+    "ci_checks": "success",
+    "local_typescript": "passed",
+    "local_lint": "passed",
+    "source_identity": "13 checked original UI files unchanged"
+  },
+  "limitations": [
+    "Physical iPhone installation, signing and runtime not verified.",
+    "An edited Simulator demo does not establish exact App Store pixel identity or physical-device animation performance.",
+    "Some repeated navigation and field filling omitted; motion kept at 1x; raw capture retained in QA artifact."
+  ]
+}

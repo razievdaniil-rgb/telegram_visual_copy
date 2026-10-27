@@ -143,7 +143,10 @@ def main():
             for tick in range(round((end - start) * 30)):
                 at = min(end, start + tick / 30)
                 mapping.append((max(0, bisect.bisect_right(times, at) - 1), chapter))
-        chapters.append(dict(title=section['title'], start=begin, end=len(mapping) / 30))
+        if chapters and chapters[-1]['title'] == section['title']:
+            chapters[-1]['end'] = len(mapping) / 30
+        else:
+            chapters.append(dict(title=section['title'], start=begin, end=len(mapping) / 30))
     assert all(a[0] <= b[0] for a, b in zip(mapping, mapping[1:]))
     args.output.with_suffix('.edit.json').write_text(json.dumps(dict(
         plan=plan, sections=sections, chapters=chapters, output_frames=len(mapping),

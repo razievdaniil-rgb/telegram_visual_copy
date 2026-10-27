@@ -1,0 +1,14 @@
+{
+  "sha256": "8d4b4583de6188a666b1c36ee8c0c5227aac4fd87be6808eec8d4382da9f38f6",
+  "size_bytes": 610989489,
+  "bundle_id": "org.chatstudio.localsimulator",
+  "version": "13.1.1",
+  "build": "6",
+  "architectures": "arm64",
+  "platforms": [
+    "IOSSIMULATOR"
+  ],
+  "requires_installation_signing": false,
+  "runtime_verified": false,
+  "installation_verified": false
+}

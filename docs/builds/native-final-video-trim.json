@@ -1,0 +1,66 @@
+{
+  "source": "artifacts/final-video/Telegram-native-demo.mp4",
+  "source_sha256": "623a254e45043359da7bf1a0ef4e69285f2fdec1f5b305e6ecffd0f20a3431e1",
+  "source_frames": 5245,
+  "cuts": [
+    [
+      16,
+      18
+    ],
+    [
+      72,
+      76
+    ],
+    [
+      107,
+      110
+    ],
+    [
+      113,
+      116
+    ]
+  ],
+  "chapters": [
+    {
+      "title": "01  Отправка сообщения",
+      "start": 0.0,
+      "end": 21.5
+    },
+    {
+      "title": "02  Меню и редактирование",
+      "start": 21.5,
+      "end": 43.333333333333336
+    },
+    {
+      "title": "03  Профиль и аватар",
+      "start": 43.333333333333336,
+      "end": 66.83333333333333
+    },
+    {
+      "title": "04  Дата и время сообщения",
+      "start": 66.83333333333333,
+      "end": 103.96666666666667
+    },
+    {
+      "title": "05  Входящие и правка сообщений",
+      "start": 103.96666666666667,
+      "end": 142.53333333333333
+    },
+    {
+      "title": "06  Изменение телефона",
+      "start": 142.53333333333333,
+      "end": 150.53333333333333
+    },
+    {
+      "title": "07  Статусы собеседника",
+      "start": 150.53333333333333,
+      "end": 164.33333333333334
+    },
+    {
+      "title": "08  После перезапуска",
+      "start": 164.33333333333334,
+      "end": 174.83333333333334
+    }
+  ],
+  "reason": "Reviewed stationary centres only; text entry, visible control changes, original transitions and typing animation remain at 1x."
+}
