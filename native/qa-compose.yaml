@@ -6,7 +6,7 @@ appId: org.chatstudio.localsimulator
     point: '45%, 95%'
 - inputText: 'QA public composer send'
 - takeScreenshot: artifacts/native-demo/public-keyboard
-- tapOn: 'Отправить[\s\S]*'
+- tapOn: 'Отправить'
 - extendedWaitUntil:
     visible: '[\s\S]*QA public composer send[\s\S]*'
     timeout: 15000

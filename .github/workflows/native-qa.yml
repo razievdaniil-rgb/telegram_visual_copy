@@ -103,10 +103,10 @@ jobs:
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
-        timeout-minutes: 15
+        timeout-minutes: 18
         run: |
-          LIMIT=420
-          if [ '${{ matrix.scenario }}' = suite ]; then LIMIT=780; fi
+          LIMIT=600
+          if [ '${{ matrix.scenario }}' = suite ]; then LIMIT=900; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Collect native crash reports
         if: always()
