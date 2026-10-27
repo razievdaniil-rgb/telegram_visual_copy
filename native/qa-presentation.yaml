@@ -14,8 +14,10 @@ appId: org.chatstudio.localsimulator
 - inputText: 'Привет! Показываю прототип.'
 - tapOn: 'Отправить'
 - extendedWaitUntil:
-    notVisible: 'Отправить'
+    # Telegram keeps a 1x1 Send accessibility node after hiding its button.
+    visible: 'Голосовое сообщение'
     timeout: 10000
+- assertVisible: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
 - takeScreenshot: artifacts/native-demo/film-03-sent
 - hideKeyboard
 - longPressOn: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'

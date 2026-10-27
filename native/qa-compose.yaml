@@ -14,8 +14,8 @@ appId: org.chatstudio.localsimulator
     visible: '[\s\S]*QA public composer send[\s\S]*'
     timeout: 15000
 - extendedWaitUntil:
-    # A sent bubble must not leave its text (or send action) in the composer.
-    notVisible: 'Отправить'
+    # The hidden Send node stays in AX at 1x1; check the restored voice action.
+    visible: 'Голосовое сообщение'
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/public-sent-message
 - longPressOn: '[\s\S]*QA public composer send[\s\S]*'
