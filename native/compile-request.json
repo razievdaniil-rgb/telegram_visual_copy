@@ -1,4 +1,4 @@
 {
-  "attempt": 2,
-  "purpose": "Final native requirements fixes: editor, timeline, phone display and cached timeline layout"
+  "attempt": 3,
+  "purpose": "Verify public Telegram presentation and header-only hidden editor gesture with all requirements fixes"
 }
