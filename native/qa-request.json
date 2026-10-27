@@ -1,8 +1,8 @@
 {
-  "attempt": 10,
-  "app_run_id": "40545686091",
+  "attempt": 11,
+  "app_run_id": "40560245454",
   "scenarios": [
-    "compose"
+    "presentation"
   ],
-  "purpose": "Verify message context menu and selection without first-use tutorial on fresh native simulator"
+  "purpose": "Final continuous native walkthrough: composer clearing, persistent public edit, profiles, avatar, messages, date/time, receipts, statuses and restart"
 }
