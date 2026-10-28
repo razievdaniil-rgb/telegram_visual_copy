@@ -49,7 +49,7 @@ appId: org.chatstudio.localsimulator
 # Verify the original gear path in the exact same binary, then restore default avatar.
 - launchApp:
     arguments:
-      TelegramSimulator.settingsTabAvatar: false
+      TelegramSimulator.settingsTabAvatar: 'NO'
 - extendedWaitUntil:
     visible: '[\s\S]*Михаил[\s\S]*'
     timeout: 60000
@@ -62,7 +62,7 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/settings-gear-fallback
 - launchApp:
     arguments:
-      TelegramSimulator.settingsTabAvatar: true
+      TelegramSimulator.settingsTabAvatar: 'YES'
 - extendedWaitUntil:
     visible: '[\s\S]*Михаил[\s\S]*'
     timeout: 60000

@@ -1,8 +1,8 @@
 {
-  "attempt": 22,
+  "attempt": 23,
   "app_run_id": "40683642811",
   "scenarios": [
-    "handoff"
+    "gear"
   ],
-  "purpose": "Use observed My Profile settings row for readiness; drawn owner title is not exposed in AX. Verify same IPA avatar/gear, owner photo, settings and composer"
+  "purpose": "Verify real icon change using string NSArgumentDomain values; reject identical avatar/gear screenshots; same delivered IPA"
 }

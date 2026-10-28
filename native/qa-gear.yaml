@@ -1,0 +1,37 @@
+appId: org.chatstudio.localsimulator
+---
+# String values are intentional: Maestro 2.11 prefixes non-Boolean keys with '-'.
+# Foundation then reads the standard NSArgumentDomain preference.
+- launchApp:
+    arguments:
+      TelegramSimulator.settingsTabAvatar: 'YES'
+- extendedWaitUntil:
+    visible: '[\s\S]*Михаил[\s\S]*'
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/settings-icon-avatar
+- launchApp:
+    arguments:
+      TelegramSimulator.settingsTabAvatar: 'NO'
+- extendedWaitUntil:
+    visible: '[\s\S]*Михаил[\s\S]*'
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/settings-icon-gear
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: 'Мой профиль'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/settings-screen-gear
+- launchApp:
+    arguments:
+      TelegramSimulator.settingsTabAvatar: 'YES'
+- extendedWaitUntil:
+    visible: '[\s\S]*Михаил[\s\S]*'
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/settings-icon-avatar-restored

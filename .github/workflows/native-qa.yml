@@ -37,7 +37,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'handoff', 'fresh'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'handoff', 'fresh', 'gear'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY
@@ -76,7 +76,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Install pinned screenshot verifier dependency
-        if: matrix.scenario == 'release' || matrix.scenario == 'handoff'
+        if: matrix.scenario == 'release' || matrix.scenario == 'handoff' || matrix.scenario == 'gear'
         run: python3 -m pip install Pillow==11.3.0
       - name: Install official pinned Maestro CLI
         run: |
@@ -118,6 +118,9 @@ jobs:
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
           if [ '${{ matrix.scenario }}' = handoff ]; then LIMIT=1020; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
+      - name: Verify actual avatar to gear mode changes
+        if: matrix.scenario == 'gear' && steps.scenario_capture.outcome == 'success'
+        run: python3 native/scripts/verify_settings_icons.py artifacts/native-demo/qa-gear
       - name: Verify handoff short-list positions from actual screenshots
         if: matrix.scenario == 'handoff' && steps.scenario_capture.outcome == 'success'
         run: python3 native/scripts/verify_menu_frames.py artifacts/native-demo/qa-handoff
