@@ -211,7 +211,7 @@ index 9c466c5..3ce7f92 100644
              } else if case .savedMessagesChats = location {
                  foundRemoteMessages = .single(([FoundRemoteMessages(messages: [], readCounters: [:], threadsData: [:], totalCount: 0)], false))
 diff --git a/submodules/ChatListUI/Sources/Node/ChatListItem.swift b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
-index e41738b..0e00fb6 100644
+index e41738b..cb229f3 100644
 --- a/submodules/ChatListUI/Sources/Node/ChatListItem.swift
 +++ b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
 @@ -1592,7 +1592,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
@@ -223,7 +223,27 @@ index e41738b..0e00fb6 100644
                              result += "\n\(item.presentationData.strings.VoiceOver_ChatList_MessageRead)"
                          }
                          result += "\n\(messageText)"
-@@ -3384,7 +3384,9 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
+@@ -1887,6 +1887,10 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
+             enablePreview = false
+         }
+         
++        let hasLocalStoryPreview = TelegramSimulator.enabled && (peer.map { candidate in
++            TelegramSimulatorWorkspace.shared.snapshot().profiles.contains { TelegramSimulator.peerId($0.id) == candidate.id }
++        } ?? false)
++        let localStoryPreview: AvatarNode.StoryStats? = hasLocalStoryPreview ? AvatarNode.StoryStats(totalCount: 1, unseenCount: 1, hasUnseenCloseFriendsItems: false, hasLiveItems: false) : nil
+         self.avatarNode.setStoryStats(storyStats: storyState.flatMap { storyState in
+             return AvatarNode.StoryStats(
+                 totalCount: storyState.stats.totalCount,
+@@ -1894,7 +1898,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
+                 hasUnseenCloseFriendsItems: storyState.hasUnseenCloseFriends,
+                 hasLiveItems: storyState.stats.hasLiveItems
+             )
+-        }, presentationParams: AvatarNode.StoryPresentationParams(
++        } ?? localStoryPreview, presentationParams: AvatarNode.StoryPresentationParams(
+             colors: AvatarNode.Colors(theme: item.presentationData.theme),
+             lineWidth: 2.33,
+             inactiveLineWidth: 1.33
+@@ -3384,7 +3388,9 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                      if hasFailedMessages {
                          statusState = .failed(item.presentationData.theme.chatList.failedFillColor, item.presentationData.theme.chatList.failedForegroundColor)
                      } else {

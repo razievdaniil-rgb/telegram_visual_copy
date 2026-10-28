@@ -50,6 +50,8 @@ jobs:
             artifacts/native-build/app-source-sha.txt
           retention-days: 7
           if-no-files-found: error
+      - name: Free disposable build outputs before cache archive
+        run: python3 native/scripts/reclaim_ci_build_space.py
       - uses: actions/cache/save@v4
         if: success()
         with:
