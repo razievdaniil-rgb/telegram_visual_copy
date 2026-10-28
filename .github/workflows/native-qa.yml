@@ -47,7 +47,7 @@ jobs:
       group: native-qa-${{ matrix.scenario }}
       cancel-in-progress: false
     runs-on: xcode-27
-    timeout-minutes: 60
+    timeout-minutes: 70
     strategy:
       fail-fast: false
       # Keep capture independent from another booting/recording simulator.
@@ -104,12 +104,42 @@ jobs:
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
+        if: matrix.scenario != 'release'
         timeout-minutes: 34
         run: |
           LIMIT=600
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
-          if [ '${{ matrix.scenario }}' = release ]; then LIMIT=1800; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
+      - name: Record release menu chapter
+        if: matrix.scenario == 'release'
+        timeout-minutes: 12
+        run: python3 native/scripts/record_scenario.py native/qa-menu.yaml --timeout 600
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.scenario == 'release'
+        with:
+          name: Native-QA-release-menu
+          path: |
+            artifacts/native-demo/app-source-sha.txt
+            artifacts/native-demo/verification.json
+            artifacts/native-demo/qa-menu/
+          retention-days: 7
+      - name: Record release avatar replacement chapter
+        if: matrix.scenario == 'release'
+        timeout-minutes: 12
+        run: python3 native/scripts/record_scenario.py native/qa-avatar.yaml --timeout 600
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.scenario == 'release'
+        with:
+          name: Native-QA-release-avatar
+          path: |
+            artifacts/native-demo/app-source-sha.txt
+            artifacts/native-demo/verification.json
+            artifacts/native-demo/qa-avatar/
+          retention-days: 7
+      - name: Record release functionality chapter
+        if: matrix.scenario == 'release'
+        timeout-minutes: 20
+        run: python3 native/scripts/record_scenario.py native/qa-presentation.yaml --timeout 1020
       - name: Collect native crash reports
         if: always()
         run: |

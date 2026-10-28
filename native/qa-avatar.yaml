@@ -2,7 +2,7 @@ appId: org.chatstudio.localsimulator
 ---
 - runFlow: qa-root.yaml
 - takeScreenshot: artifacts/native-demo/avatar-before-chats
-- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
 - tapOn:
     point: '50%, 9%'
 - extendedWaitUntil:
@@ -37,14 +37,14 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Сохранить'
 - tapOn: 'Готово'
 - takeScreenshot: artifacts/native-demo/avatar-replaced-chats
-- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
 - tapOn:
     point: '50%, 9%'
 - assertVisible: '[\s\S]*demo_anna[\s\S]*'
 - takeScreenshot: artifacts/native-demo/uploaded-avatar-profile
 - runFlow: qa-root.yaml
 - takeScreenshot: artifacts/native-demo/avatar-replaced-chats-after-restart
-- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
 - tapOn:
     point: '50%, 9%'
 - extendedWaitUntil:

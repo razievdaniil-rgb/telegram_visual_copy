@@ -4,7 +4,7 @@ appId: org.chatstudio.localsimulator
 # Chapter screenshots identify edit boundaries; gestures and typing stay at 1x.
 - runFlow: qa-root.yaml
 - takeScreenshot: artifacts/native-demo/film-01-chats
-- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
 - takeScreenshot: artifacts/native-demo/film-02-dialogue
 - tapOn:
     point: '45%, 95%'
@@ -86,7 +86,7 @@ appId: org.chatstudio.localsimulator
     timeout: 10000
 - tapOn: 'Сохранить'
 - tapOn: 'Создать чат'
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - tapOn:
     id: 'simulator.section.2.row.2'
 - tapOn: 'Сообщение'
@@ -136,7 +136,7 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Сохранить'
 - tapOn: 'Редактор'
 - tapOn: 'Готово'
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*Встречаемся в 18:30\?[\s\S]*'
     timeout: 15000
@@ -161,7 +161,7 @@ appId: org.chatstudio.localsimulator
 - inputText: '+79990000004'
 - tapOn: 'Сохранить'
 - tapOn: 'Готово'
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - tapOn:
     point: '50%, 9%'
 - assertVisible: '[\s\S]*\+79990000004[\s\S]*'
@@ -178,7 +178,7 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Был.*недавно'
 - tapOn: 'Редактор'
 - tapOn: 'Готово'
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*был\(а\) недавно[\s\S]*'
     timeout: 10000
@@ -193,14 +193,14 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Печатает…'
 - tapOn: 'Редактор'
 - tapOn: 'Готово'
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - extendedWaitUntil:
     visible: 'Открыть профиль'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/film-16-typing
 - takeScreenshot: artifacts/native-demo/film-17-typing-motion
 - runFlow: qa-root.yaml
-- tapOn: '[\s\S]*Елена[\s\S]*'
+- tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*Встречаемся в 18:30\?[\s\S]*'
     timeout: 15000
@@ -208,7 +208,7 @@ appId: org.chatstudio.localsimulator
 - takeScreenshot: artifacts/native-demo/film-18-after-restart
 - tapOn:
     point: '8%, 9%'
-- tapOn: '[\s\S]*Анна[\s\S]*'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*Привет! Прототип уже работает\.[\s\S]*'
     timeout: 15000
