@@ -37,7 +37,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY
@@ -47,7 +47,7 @@ jobs:
       group: native-qa-${{ matrix.scenario }}
       cancel-in-progress: false
     runs-on: xcode-27
-    timeout-minutes: 40
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       # Keep capture independent from another booting/recording simulator.
@@ -100,14 +100,15 @@ jobs:
           xcrun simctl install "$DEVICE" artifacts/native-demo-app/Payload/Telegram.app
           CONTAINER=$(xcrun simctl get_app_container "$DEVICE" org.chatstudio.localsimulator data)
           python3 native/scripts/seed_demo.py "$CONTAINER"
-          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ]; then
+          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = release ]; then
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
-        timeout-minutes: 18
+        timeout-minutes: 34
         run: |
           LIMIT=600
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
+          if [ '${{ matrix.scenario }}' = release ]; then LIMIT=1800; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Collect native crash reports
         if: always()

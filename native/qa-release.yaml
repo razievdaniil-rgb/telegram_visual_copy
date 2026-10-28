@@ -1,0 +1,7 @@
+appId: org.chatstudio.localsimulator
+---
+# A single installed binary/document and one recording. Avoid installing and
+# booting three simulators just to film adjacent chapters of the walkthrough.
+- runFlow: qa-menu.yaml
+- runFlow: qa-avatar.yaml
+- runFlow: qa-presentation.yaml
