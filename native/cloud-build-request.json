@@ -1,5 +1,5 @@
 {
-  "attempt": 8,
+  "attempt": 9,
   "target": "build-unsigned-device",
-  "purpose": "Client iPhone IPA with original settings gear by default; same tested application and bundle as build 7, only defaultSettingsTabAvatar changes to false"
+  "purpose": "Single client IPA with original settings gear, bundled offline doodle pattern, native global wallpaper chooser and local per-chat color/photo persistence"
 }

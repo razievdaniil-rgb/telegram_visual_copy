@@ -26,6 +26,9 @@ def sources():
         yield source, Path("submodules/TelegramCore/Sources/LocalSimulator") / source.name
     for source in sorted((NATIVE / "Sources" / "UI").glob("*.swift")):
         yield source, Path("submodules/TelegramUI/Sources/LocalSimulator") / source.name
+    for source in sorted((NATIVE / "Resources").glob("*")):
+        if source.suffix in (".tgv", ".png"):
+            yield source, Path("submodules/TelegramUI/Resources") / source.name
 
 
 def prepare_rules(checkout, check_only=False):

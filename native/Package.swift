@@ -7,7 +7,7 @@ let package = Package(
     platforms: [.macOS(.v13), .iOS(.v15)],
     products: [.library(name: "SimulatorModel", targets: ["SimulatorModel"])],
     targets: [
-        .target(name: "SimulatorModel", path: "Sources/Core", exclude: ["TelegramSimulator.swift", "SimulatorLocalization.swift"], sources: ["SimulatorDocument.swift", "SimulatorUIConfiguration.swift"]),
+        .target(name: "SimulatorModel", path: "Sources/Core", exclude: ["TelegramSimulator.swift", "SimulatorLocalization.swift", "SimulatorWallpapers.swift"], sources: ["SimulatorDocument.swift", "SimulatorUIConfiguration.swift"]),
         .testTarget(name: "SimulatorModelTests", dependencies: ["SimulatorModel"], path: "Tests")
     ],
     swiftLanguageModes: [.v5]

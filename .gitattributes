@@ -1,2 +1,2 @@
 # Patch context preserves upstream whitespace; validate application with test_preparation.py.
-native/patches/*.patch whitespace=-blank-at-eol
+native/patches/*.patch whitespace=-blank-at-eol,-blank-at-eof

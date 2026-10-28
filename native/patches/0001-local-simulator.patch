@@ -546,6 +546,87 @@ index fe15eed..b27e9e1 100644
              return `deferred` { () -> Signal<EngineStorySubscriptions, NoError> in
                  let debugTimerSignal: Signal<Bool, NoError>
  #if DEBUG && false
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Themes/ChatThemes.swift b/submodules/TelegramCore/Sources/TelegramEngine/Themes/ChatThemes.swift
+index ecd96fe..e0ab279 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Themes/ChatThemes.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Themes/ChatThemes.swift
+@@ -312,6 +312,15 @@ public enum SetChatWallpaperError {
+ }
+ 
+ func _internal_setChatWallpaper(postbox: Postbox, network: Network, stateManager: AccountStateManager, peerId: PeerId, wallpaper: TelegramWallpaper?, forBoth: Bool, applyUpdates: Bool = true) -> Signal<Api.Updates, SetChatWallpaperError> {
++    if TelegramSimulator.enabled {
++        return postbox.transaction { transaction -> Void in
++            transaction.updatePeerCachedData(peerIds: Set([peerId]), update: { _, current in
++                (current as? CachedUserData ?? CachedUserData()).withUpdatedWallpaper(wallpaper)
++            })
++        }
++        |> castError(SetChatWallpaperError.self)
++        |> mapToSignal { _ -> Signal<Api.Updates, SetChatWallpaperError> in .complete() }
++    }
+     return postbox.loadedPeerWithId(peerId)
+     |> castError(SetChatWallpaperError.self)
+     |> mapToSignal { peer in
+@@ -366,6 +375,13 @@ public enum RevertChatWallpaperError {
+ }
+ 
+ func _internal_revertChatWallpaper(account: Account, peerId: EnginePeer.Id) -> Signal<Void, RevertChatWallpaperError> {
++    if TelegramSimulator.enabled {
++        return account.postbox.transaction { transaction -> Void in
++            transaction.updatePeerCachedData(peerIds: Set([peerId]), update: { _, current in
++                (current as? CachedUserData ?? CachedUserData()).withUpdatedWallpaper(nil)
++            })
++        } |> castError(RevertChatWallpaperError.self)
++    }
+     return account.postbox.loadedPeerWithId(peerId)
+     |> castError(RevertChatWallpaperError.self)
+     |> mapToSignal { peer in
+diff --git a/submodules/TelegramCore/Sources/Wallpapers.swift b/submodules/TelegramCore/Sources/Wallpapers.swift
+index 3c25376..6d93959 100644
+--- a/submodules/TelegramCore/Sources/Wallpapers.swift
++++ b/submodules/TelegramCore/Sources/Wallpapers.swift
+@@ -5,6 +5,7 @@ internal import TelegramApi
+ 
+ 
+ func _internal_telegramWallpapers(postbox: Postbox, network: Network, forceUpdate: Bool = false) -> Signal<[TelegramWallpaper], NoError> {
++    if TelegramSimulator.enabled { return .single(SimulatorWallpapers.catalog()) }
+     let fetch: ([TelegramWallpaper]?, Int64?) -> Signal<[TelegramWallpaper], NoError> = { current, hash in
+         network.request(Api.functions.account.getWallPapers(hash: hash ?? 0))
+         |> retryRequestIfNotFrozen
+@@ -178,6 +179,7 @@ public func deleteWallpaper(account: Account, wallpaper: TelegramWallpaper) -> S
+ }
+ 
+ private func saveUnsaveWallpaper(account: Account, wallpaper: TelegramWallpaper, unsave: Bool) -> Signal<Void, NoError> {
++    if TelegramSimulator.enabled { return .complete() }
+     guard case let .file(file) = wallpaper else {
+         return .complete()
+     }
+@@ -191,6 +193,7 @@ private func saveUnsaveWallpaper(account: Account, wallpaper: TelegramWallpaper,
+ }
+ 
+ public func installWallpaper(account: Account, wallpaper: TelegramWallpaper) -> Signal<Void, NoError> {
++    if TelegramSimulator.enabled { return .complete() }
+     guard case let .file(file) = wallpaper else {
+         return .complete()
+     }
+@@ -210,6 +213,18 @@ public func installWallpaper(account: Account, wallpaper: TelegramWallpaper) ->
+ }
+ 
+ public func resetWallpapers(account: Account) -> Signal<Void, NoError> {
++    if TelegramSimulator.enabled {
++        return account.postbox.transaction { transaction -> Void in
++            for person in TelegramSimulatorWorkspace.shared.snapshot().profiles {
++                transaction.updatePeerCachedData(peerIds: Set([TelegramSimulator.peerId(person.id)]), update: { _, current in
++                    if let user = current as? CachedUserData {
++                        return user.withUpdatedWallpaper(nil)
++                    }
++                    return current
++                })
++            }
++        }
++    }
+     return account.network.request(Api.functions.account.resetWallPapers())
+     |> `catch` { _ -> Signal<Api.Bool, NoError> in
+         return .complete()
 diff --git a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift b/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
 index 65b156f..719ec6d 100644
 --- a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
@@ -590,47 +671,98 @@ diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/Pe
 index 8c4a24b..45bab8d 100644
 --- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
 +++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
-@@ -6751,3 +6751,4 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+@@ -6749,7 +6749,8 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+             
+             let accountTabBarAvatar: Signal<(UIImage, UIImage)?, NoError> = combineLatest(self.accountsAndPeers.get(), context.sharedContext.presentationData)
              |> map { primaryAndOther, presentationData -> (Account, EnginePeer, PresentationTheme)? in
 -                if let primary = primaryAndOther.0, !primaryAndOther.1.isEmpty {
 +                // The local app has one owner; reuse the original live avatar and selection ring.
 +                if let primary = primaryAndOther.0, SimulatorUIConfiguration.usesSettingsTabAvatar(localMode: TelegramSimulator.enabled, hasOtherAccounts: !primaryAndOther.1.isEmpty) {
                      return (primary.0.account, primary.1, presentationData.theme)
-@@ -6853,3 +6854,3 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+                 } else {
+                     return nil
+@@ -6851,7 +6852,7 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+                 if accountTabBarAvatarBadge > 0 {
+                     otherAccountsBadge = compactNumericCountString(Int(accountTabBarAvatarBadge), decimalSeparator: presentationData.dateTimeFormat.decimalSeparator)
                  }
 -                return (presentationData.strings.Settings_Title, accountTabBarAvatar?.0 ?? icon, accountTabBarAvatar?.1 ?? icon, notificationsWarning || phoneNumberWarning || passwordWarning ? "!" : otherAccountsBadge, accountTabBarAvatar != nil, presentationData.reduceMotion)
 +                return (presentationData.strings.Settings_Title, accountTabBarAvatar?.0 ?? icon, accountTabBarAvatar?.1 ?? icon, TelegramSimulator.enabled ? nil : (notificationsWarning || phoneNumberWarning || passwordWarning ? "!" : otherAccountsBadge), accountTabBarAvatar != nil, presentationData.reduceMotion)
              }
+             
+             self.tabBarItemDisposable = (tabBarItem |> deliverOnMainQueue).startStrict(next: { [weak self] title, image, selectedImage, badgeValue, isAvatar, reduceMotion in
+diff --git a/submodules/TelegramUI/Components/Settings/WallpaperGridScreen/Sources/WallpaperUtils.swift b/submodules/TelegramUI/Components/Settings/WallpaperGridScreen/Sources/WallpaperUtils.swift
+index ede90e0..529a438 100644
+--- a/submodules/TelegramUI/Components/Settings/WallpaperGridScreen/Sources/WallpaperUtils.swift
++++ b/submodules/TelegramUI/Components/Settings/WallpaperGridScreen/Sources/WallpaperUtils.swift
+@@ -257,6 +257,16 @@ public func getTemporaryCustomPeerWallpaper(context: AccountContext, wallpaper:
+ }
+ 
+ public func uploadCustomPeerWallpaper(context: AccountContext, wallpaper: WallpaperGalleryEntry, mode: WallpaperPresentationOptions, editedImage: UIImage?, cropRect: CGRect?, brightness: CGFloat?, peerId: EnginePeer.Id, forBoth: Bool, completion: @escaping () -> Void) {
++    if TelegramSimulator.enabled {
++        let _ = (getTemporaryCustomPeerWallpaper(context: context, wallpaper: wallpaper, mode: mode, editedImage: editedImage, cropRect: cropRect, brightness: brightness)
++        |> take(1)
++        |> deliverOnMainQueue).start(next: { result in
++            guard let result else { completion(); return }
++            let _ = (context.engine.themes.setChatWallpaper(peerId: peerId, wallpaper: result, forBoth: false)
++            |> deliverOnMainQueue).start(error: { _ in completion() }, completed: completion)
++        })
++        return
++    }
+     var imageSignal: Signal<UIImage, NoError>
+     switch wallpaper {
+         case let .wallpaper(wallpaper, _):
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
 index 1ceb46b..074a164 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
-@@ -575,3 +575,3 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -573,7 +573,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
+             BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
          })
 -        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
 +        let maybeAppGroupUrl = SimulatorUIConfiguration.applicationContainer(appGroupURL: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName), localMode: TelegramSimulator.enabled)
          
-@@ -690,3 +690,3 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
+         self.buildConfig = buildConfig
+@@ -688,7 +688,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             autolockDeadine: autolockDeadine,
+             encryptionProvider: OpenSSLEncryptionProvider(),
              deviceModelName: nil,
 -            useBetaFeatures: !buildConfig.isAppStoreBuild,
 +            useBetaFeatures: !TelegramSimulator.enabled && !buildConfig.isAppStoreBuild,
              isICloudEnabled: buildConfig.isICloudEnabled,
-@@ -831,3 +831,3 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             // Only the main app passes a factory: extensions stay on MtProtoKit. Whether the Rust
+             // engine runs is decided per account by resolveNetworkEngine (Debug Settings switch,
+@@ -829,7 +829,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             UNUserNotificationCenter.current().delegate = self
+         }
          
 -        GlobalExperimentalSettings.isAppStoreBuild = buildConfig.isAppStoreBuild
 +        GlobalExperimentalSettings.isAppStoreBuild = TelegramSimulator.enabled || buildConfig.isAppStoreBuild
          GlobalExperimentalSettings.enableFeed = false
-@@ -849,3 +849,3 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         
+         var hasActiveCalls: Signal<Bool, NoError> = .single(false)
+@@ -847,7 +847,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             |> distinctUntilChanged
+         )
          
 -        let applicationBindings = TelegramApplicationBindings(isMainApp: true, appBundleId: baseAppBundleId, appBuildType: buildConfig.isAppStoreBuild ? .public : .internal, containerPath: appGroupUrl.path, appSpecificScheme: buildConfig.appSpecificUrlScheme, openUrl: { url in
 +        let applicationBindings = TelegramApplicationBindings(isMainApp: true, appBundleId: baseAppBundleId, appBuildType: (TelegramSimulator.enabled || buildConfig.isAppStoreBuild) ? .public : .internal, containerPath: appGroupUrl.path, appSpecificScheme: buildConfig.appSpecificUrlScheme, openUrl: { url in
              var parsedUrl = URL(string: url)
-@@ -1004,3 +1004,3 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             if let parsed = parsedUrl {
+                 if parsed.scheme == nil || parsed.scheme!.isEmpty {
+@@ -1002,7 +1002,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         }, getAvailableAlternateIcons: {
+             if #available(iOS 10.3, *) {
                  var icons = [
 -                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: buildConfig.isAppStoreBuild),
 +                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: TelegramSimulator.enabled || buildConfig.isAppStoreBuild),
                      PresentationAppIcon(name: "New2", imageName: "New2"),
-@@ -1107,8 +1107,10 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+                     PresentationAppIcon(name: "New1", imageName: "New1"),
+                     PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
+@@ -1105,12 +1105,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             return true
+         }
  
 -        let pushRegistry = PKPushRegistry(queue: .main)
 -        if #available(iOS 9.0, *) {
@@ -646,7 +778,11 @@ index 1ceb46b..074a164 100644
 -        self.pushRegistry = pushRegistry
 -        pushRegistry.delegate = self
  
-@@ -1127,3 +1129,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         self.accountManagerState = extractAccountManagerState(records: accountManager._internalAccountRecordsSync())
+         let _ = (accountManager.accountRecords()
+@@ -1125,7 +1127,11 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             }
+         }
          
 -        let sharedContextSignal = currentPresentationDataAndSettings(accountManager: accountManager, systemUserInterfaceStyle: systemUserInterfaceStyle)
 +        let simulatorAccountReady: Signal<Void, NoError> = TelegramSimulator.enabled ? TelegramSimulator.prepareAccount(accountManager) : .single(())
@@ -655,6 +791,8 @@ index 1ceb46b..074a164 100644
 +            currentPresentationDataAndSettings(accountManager: accountManager, systemUserInterfaceStyle: TelegramSimulator.enabled ? .light : systemUserInterfaceStyle)
 +        }
          |> map { initialPresentationDataAndSettings -> (AccountManager, InitialPresentationDataAndSettings) in
+             return (accountManager, initialPresentationDataAndSettings)
+         }
 diff --git a/submodules/TelegramUI/Sources/ApplicationContext.swift b/submodules/TelegramUI/Sources/ApplicationContext.swift
 index fe34b99..a8030b6 100644
 --- a/submodules/TelegramUI/Sources/ApplicationContext.swift
@@ -775,3 +913,16 @@ index 22ecc71..5a11df6 100644
          self.permissionsDisposable?.dispose()
          self.presentationDataDisposable?.dispose()
          self.applicationInFocusDisposable?.dispose()
+diff --git a/submodules/TelegramUI/Sources/WallpaperUploadManager.swift b/submodules/TelegramUI/Sources/WallpaperUploadManager.swift
+index 9f689b2..83d0f5a 100644
+--- a/submodules/TelegramUI/Sources/WallpaperUploadManager.swift
++++ b/submodules/TelegramUI/Sources/WallpaperUploadManager.swift
+@@ -71,6 +71,8 @@ final class WallpaperUploadManagerImpl: WallpaperUploadManager {
+     }
+     
+     func presentationDataUpdated(_ presentationData: PresentationData) {
++        // Native photo wallpapers have already been stored by WallpaperUtils.
++        if TelegramSimulator.enabled { return }
+         let previousPresentationData = self.currentPresentationData
+         self.currentPresentationData = presentationData
+         
