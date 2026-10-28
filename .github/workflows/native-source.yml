@@ -65,7 +65,13 @@ jobs:
           PY
           SVG=artifacts/native-ci-upstream/submodules/Svg/LegacyImpl/Sources
           cc -O2 -I "$SVG" native/scripts/check_pattern.c "$SVG/nanosvg.c" -lm -o /tmp/check-pattern
-          timeout 20s /tmp/check-pattern /tmp/simulator-pattern.svg
+          mkdir -p artifacts/native-pattern
+          timeout 20s /tmp/check-pattern /tmp/simulator-pattern.svg artifacts/native-pattern/SimulatorDefaultPattern.bin
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Native-Prepared-Wallpaper
+          path: artifacts/native-pattern/SimulatorDefaultPattern.bin
+          retention-days: 7
       - name: Apply the native patch and verify reproducibility
         run: |
           python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream
