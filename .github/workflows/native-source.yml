@@ -22,6 +22,8 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /build-system/Make/Make.py
+            /submodules/Svg/LegacyImpl/Sources/nanosvg.c
+            /submodules/Svg/LegacyImpl/Sources/nanosvg.h
             /submodules/TelegramCore/Sources/Account/Account.swift
             /submodules/TelegramCore/Sources/State/AccountStateManager.swift
             /submodules/TelegramCore/Sources/Network/Network.swift
@@ -54,6 +56,16 @@ jobs:
           path: artifacts/native-ci-upstream/build-system/bazel-rules/rules_apple
           sparse-checkout-cone-mode: false
           sparse-checkout: /apple/internal/ios_rules.bzl
+      - name: Check the bundled vector with the pinned native NanoSVG parser
+        run: |
+          python3 - <<'PY'
+          import gzip
+          from pathlib import Path
+          Path('/tmp/simulator-pattern.svg').write_bytes(gzip.decompress(Path('native/Resources/SimulatorDefaultPattern.tgv').read_bytes()))
+          PY
+          SVG=artifacts/native-ci-upstream/submodules/Svg/LegacyImpl/Sources
+          cc -O2 -I "$SVG" native/scripts/check_pattern.c "$SVG/nanosvg.c" -lm -o /tmp/check-pattern
+          timeout 20s /tmp/check-pattern /tmp/simulator-pattern.svg
       - name: Apply the native patch and verify reproducibility
         run: |
           python3 native/scripts/prepare.py --checkout artifacts/native-ci-upstream

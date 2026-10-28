@@ -6,13 +6,16 @@
 int main(int argc, char **argv) {
     @autoreleasepool {
         if (argc != 4) return 2;
+        fprintf(stderr, "Loading the compiled decoder framework\n");
         void *handle = dlopen(argv[1], RTLD_NOW | RTLD_GLOBAL);
         if (!handle) { fprintf(stderr, "%s\n", dlerror()); return 3; }
         NSData *(*prepare)(NSData *, BOOL) = dlsym(handle, "prepareSvgImage");
         UIImage *(*render)(NSData *, CGSize, UIColor *, CGFloat, bool) = dlsym(handle, "renderPreparedImage");
         if (!prepare || !render) return 4;
+        fprintf(stderr, "Decoder symbols loaded\n");
         NSData *svg = [NSData dataWithContentsOfFile:[NSString stringWithUTF8String:argv[2]]];
         NSData *prepared = prepare(svg, YES);
+        fprintf(stderr, "Native preparation returned %lu bytes\n", (unsigned long)prepared.length);
         if (!prepared.length) return 5;
         NSString *output = [NSString stringWithUTF8String:argv[3]];
         if (![prepared writeToFile:[output stringByAppendingPathComponent:@"prepared.bin"] atomically:YES]) return 6;
