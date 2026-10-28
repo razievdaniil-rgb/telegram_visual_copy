@@ -38,7 +38,7 @@ index 4c3a641..8c8fc6e 100644
          '--buildNumber',
          required=True,
 diff --git a/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift b/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
-index fb87496..4c70585 100644
+index fb87496..67c306e 100644
 --- a/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
 +++ b/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
 @@ -74,7 +74,11 @@ final class ChatListContainerItemNode: ASDisplayNode {
@@ -50,36 +50,27 @@ index fb87496..4c70585 100644
 +            // row. Stories expand via tempTopInset in the negative direction.
 +            // Artificial minimum content height otherwise lets short lists
 +            // scroll completely under this fixed header.
-+            self.listNode.scrollHeightTopInset = controller.simulatorUsesBottomSearch ? 0.0 : ChatListNavigationBar.searchScrollHeight + ChatListNavigationBar.storiesScrollHeight
++            self.listNode.scrollHeightTopInset = controller.simulatorUsesCompactHeader ? 0.0 : ChatListNavigationBar.searchScrollHeight + ChatListNavigationBar.storiesScrollHeight
          }
          
          self.edgeEffectView = EdgeEffectView()
 diff --git a/submodules/ChatListUI/Sources/ChatListController.swift b/submodules/ChatListUI/Sources/ChatListController.swift
-index 5bdff8a..7ea2fb6 100644
+index 5bdff8a..b92f51c 100644
 --- a/submodules/ChatListUI/Sources/ChatListController.swift
 +++ b/submodules/ChatListUI/Sources/ChatListController.swift
-@@ -199,6 +199,10 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -199,6 +199,11 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
      private var activeDownloadsDisposable: Disposable?
      private var clearUnseenDownloadsTimer: SwiftSignalKit.Timer?
      
-+    var simulatorUsesBottomSearch: Bool {
++    // Preserve the compact local header geometry without adding a bottom search button.
++    var simulatorUsesCompactHeader: Bool {
 +        return TelegramSimulator.enabled && !self.previewing && self.location == .chatList(groupId: .root)
 +    }
 +
      private(set) var isPremium: Bool = false
      private(set) var storyPostingAvailability: StoriesConfiguration.PostingAvailability = .disabled
      private var storiesPostingAvailabilityDisposable: Disposable?
-@@ -298,6 +302,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
-         super.init(context: context, navigationBarPresentationData: nil)
-         
-         self.accessoryPanelContainer = ASDisplayNode()
-+        if self.simulatorUsesBottomSearch {
-+            self.updateTabBarSearchState(.init(isActive: false), transition: .immediate)
-+        }
-         
-         self.tabBarItemContextActionType = .always
-         self.automaticallyControlPresentationContextLayout = false
-@@ -368,7 +375,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -368,7 +373,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
                      
                      self.primaryContext?.rightButton = NavigationBarComponent.Button(id: "compose",
                          content: .icon(imageName: "Chat List/ComposeIcon"),
@@ -88,7 +79,7 @@ index 5bdff8a..7ea2fb6 100644
                          action: { [weak self] _ in
                              self?.composePressed()
                          }
-@@ -781,8 +788,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -781,8 +786,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
          |> deliverOnMainQueue
          ).startStrict(next: { [weak self] postingAvailability in
              if let self {
@@ -100,7 +91,7 @@ index 5bdff8a..7ea2fb6 100644
              }
          })
          
-@@ -2026,6 +2034,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -2026,6 +2032,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
                  storyPeerListView.cancelLoadingItem()
              }
              
@@ -108,7 +99,7 @@ index 5bdff8a..7ea2fb6 100644
              switch subject {
              case .archive:
                  StoryContainerScreen.openArchivedStories(context: self.context, parentController: self, avatarNode: itemNode.avatarNode, sharedProgressDisposable: self.sharedOpenStoryProgressDisposable)
-@@ -2301,6 +2310,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -2301,6 +2308,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
      
      private weak var storyTooltip: TooltipScreen?
      fileprivate func maybeDisplayStoryTooltip() {
@@ -116,7 +107,7 @@ index 5bdff8a..7ea2fb6 100644
          let content = self.updateHeaderContent()
          if content.secondaryContent != nil {
              return
-@@ -2970,6 +2980,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -2970,6 +2978,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
      
      private weak var storyCameraTooltip: TooltipScreen?
      fileprivate func openStoryCamera(fromList: Bool, gesturePullOffset: CGFloat? = nil, sourceView: UIView? = nil) {
@@ -124,7 +115,7 @@ index 5bdff8a..7ea2fb6 100644
          guard !self.context.isFrozen else {
              let controller = self.context.sharedContext.makeAccountFreezeInfoScreen(context: self.context)
              self.push(controller)
-@@ -4375,7 +4386,12 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -4375,7 +4384,12 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
          self.openStories(peerId: peerId, completion: { _ in })
      }
      
@@ -137,7 +128,7 @@ index 5bdff8a..7ea2fb6 100644
          if let navigationBarView = self.chatListDisplayNode.navigationBarView.view as? ChatListNavigationBar.View {
              if navigationBarView.storiesUnlocked {
                  self.shouldFixStorySubscriptionOrder = true
-@@ -6647,6 +6663,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -6647,6 +6661,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
          return self.storyCameraTransitionInCoordinator != nil
      }
      func storyCameraPanGestureChanged(transitionFraction: CGFloat) {
@@ -145,7 +136,7 @@ index 5bdff8a..7ea2fb6 100644
          guard let rootController = self.context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface else {
              return
          }
-@@ -7288,7 +7305,7 @@ private final class ChatListLocationContext {
+@@ -7288,7 +7303,7 @@ private final class ChatListLocationContext {
                  } else {
                      self.rightButton = NavigationBarComponent.Button(id: "compose",
                          content: .icon(imageName: "Chat List/ComposeIcon"),
@@ -155,7 +146,7 @@ index 5bdff8a..7ea2fb6 100644
                              self?.parentController?.composePressed()
                          }
 diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
-index 594f370..bad1620 100644
+index 594f370..3b1d273 100644
 --- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 +++ b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 @@ -1721,7 +1721,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
@@ -163,7 +154,7 @@ index 594f370..bad1620 100644
                  rightInset: layout.safeInsets.right,
                  trailingButtonsInset: layout.navigationBarTrailingButtonsInset,
 -                search: ChatListNavigationBar.Search(isEnabled: true),
-+                search: self.controller?.simulatorUsesBottomSearch == true ? nil : ChatListNavigationBar.Search(isEnabled: true),
++                search: self.controller?.simulatorUsesCompactHeader == true ? nil : ChatListNavigationBar.Search(isEnabled: true),
                  activeSearch: self.isSearchDisplayControllerActive,
                  primaryContent: headerContent?.primaryContent,
                  secondaryContent: headerContent?.secondaryContent,
@@ -174,7 +165,7 @@ index 594f370..bad1620 100644
 +    // The root's bottom search has no collapsible search row. Keep the list's
 +    // initial offset and snapping range in sync with the actual header content.
 +    private var navigationSearchScrollHeight: CGFloat {
-+        return self.controller?.simulatorUsesBottomSearch == true ? 0.0 : ChatListNavigationBar.searchScrollHeight
++        return self.controller?.simulatorUsesCompactHeader == true ? 0.0 : ChatListNavigationBar.searchScrollHeight
 +    }
 +
      private func updateNavigationScrolling(navigationHeight: CGFloat, transition: ContainedViewLayoutTransition) {
@@ -203,7 +194,7 @@ index 594f370..bad1620 100644
                  
                  if isSearchBar {
 -                    if let navigationBarComponentView = self.navigationBarView.view as? ChatListNavigationBar.View {
-+                    if self.controller?.simulatorUsesBottomSearch == true {
++                    if self.controller?.simulatorUsesCompactHeader == true {
 +                        // No inactive header placeholder in bottom-search mode.
 +                        // SearchDisplayController owns the original field's root
 +                        // frame, opening/closing animation and keyboard handling.
@@ -595,6 +586,21 @@ index 34f2377..4cfc9c1 100644
              let label: String
              if formattedPhone.hasPrefix("+888 ") {
                  label = presentationData.strings.UserInfo_AnonymousNumberLabel
+diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
+index 8c4a24b..45bab8d 100644
+--- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
++++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
+@@ -6751,3 +6751,4 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+             |> map { primaryAndOther, presentationData -> (Account, EnginePeer, PresentationTheme)? in
+-                if let primary = primaryAndOther.0, !primaryAndOther.1.isEmpty {
++                // The local app has one owner; reuse the original live avatar and selection ring.
++                if let primary = primaryAndOther.0, SimulatorUIConfiguration.usesSettingsTabAvatar(localMode: TelegramSimulator.enabled, hasOtherAccounts: !primaryAndOther.1.isEmpty) {
+                     return (primary.0.account, primary.1, presentationData.theme)
+@@ -6853,3 +6854,3 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
+                 }
+-                return (presentationData.strings.Settings_Title, accountTabBarAvatar?.0 ?? icon, accountTabBarAvatar?.1 ?? icon, notificationsWarning || phoneNumberWarning || passwordWarning ? "!" : otherAccountsBadge, accountTabBarAvatar != nil, presentationData.reduceMotion)
++                return (presentationData.strings.Settings_Title, accountTabBarAvatar?.0 ?? icon, accountTabBarAvatar?.1 ?? icon, TelegramSimulator.enabled ? nil : (notificationsWarning || phoneNumberWarning || passwordWarning ? "!" : otherAccountsBadge), accountTabBarAvatar != nil, presentationData.reduceMotion)
+             }
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
 index 1ceb46b..e7e5d64 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift

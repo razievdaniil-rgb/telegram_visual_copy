@@ -36,6 +36,7 @@ jobs:
             /submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
             /submodules/TelegramUI/Components/Chat/ChatMessageItemImpl/Sources/ChatMessageItemImpl.swift
             /submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
+            /submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift
             /submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
             /submodules/ChatListUI/Sources/Node/ChatListItem.swift
             /submodules/ChatListUI/Sources/ChatListController.swift

@@ -43,7 +43,9 @@ jobs:
           set -o pipefail
           python3 native/scripts/build.py build-unsigned-device --build-number "${{ github.run_number }}" 2>&1 | tee artifacts/cloud-build/compile.log
       - name: Verify device architecture and package integrity
-        run: python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --output artifacts/native-build/verification.json
+        run: |
+          python3 native/scripts/verify_ipa.py artifacts/native-build/Telegram.ipa --output artifacts/native-build/verification.json
+          git rev-parse HEAD > artifacts/native-build/app-source-sha.txt
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -51,6 +53,7 @@ jobs:
           path: |
             artifacts/native-build/Telegram.ipa
             artifacts/native-build/verification.json
+            artifacts/native-build/app-source-sha.txt
           if-no-files-found: error
           retention-days: 7
       - uses: actions/upload-artifact@v4

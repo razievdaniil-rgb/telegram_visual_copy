@@ -16,12 +16,12 @@ FILES = [
     "submodules/TelegramUI/Components/Chat/ChatMessageBubbleItemNode/Sources/ChatMessageBubbleItemNode.swift",
     "submodules/TelegramUI/Components/Chat/ChatMessageDateAndStatusNode/Sources/ChatMessageDateAndStatusNode.swift",
     "submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode/Sources/ChatTextInputPanelNode.swift",
-    "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift",
     "submodules/TelegramPresentationData/Sources/PresentationTheme.swift",
     "submodules/TelegramPresentationData/Sources/DefaultDayPresentationTheme.swift",
 ]
 
 CONFIGURATION_FILES = [
+    "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift",
     "submodules/ChatListUI/Sources/ChatListController.swift",
     "submodules/ChatListUI/Sources/ChatListControllerNode.swift",
     "submodules/ChatListUI/Sources/ChatListContainerItemNode.swift",
@@ -48,7 +48,7 @@ def main():
         current = (args.checkout / relative).read_bytes().replace(b"\r\n", b"\n")
         original = subprocess.check_output(["git", "-C", str(args.checkout), "show", f"{pin}:{relative}"]).replace(b"\r\n", b"\n")
         configured.append(dict(path=relative, sha256=hashlib.sha256(current).hexdigest(), matches_upstream=current == original,
-                               reason="Local interface data, header/search configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"))
+                               reason="Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"))
     report = dict(upstream=pin, verification="source identity only; configured controllers separately reported; not a pixel or runtime animation comparison", files=records, configured_files=configured)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

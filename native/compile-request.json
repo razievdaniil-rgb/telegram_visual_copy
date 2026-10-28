@@ -1,4 +1,4 @@
 {
-  "attempt": 14,
-  "purpose": "Fix proven pre-search short-list overscroll: disable artificial minimum scroll height for the bottom-search header; retain original search layout and remove offset-restoration workaround"
+  "attempt": 15,
+  "purpose": "Client corrections: no bottom loupe; original live owner avatar in settings tab; preserve compact header scroll bounds"
 }
