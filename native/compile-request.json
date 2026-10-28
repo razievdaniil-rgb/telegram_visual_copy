@@ -1,4 +1,4 @@
 {
-  "attempt": 10,
-  "purpose": "Fix first chat row overlap observed in simulator: remove absent top search row from initial scrolling offset and snap range; retain native story/header animation"
+  "attempt": 11,
+  "purpose": "Fix search dismissal observed in native frames: retain root list/header insets under the full-screen bottom-search overlay and fade the original header; verify restored rows and folder switching"
 }

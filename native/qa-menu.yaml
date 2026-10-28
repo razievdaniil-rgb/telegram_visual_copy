@@ -29,12 +29,19 @@ appId: org.chatstudio.localsimulator
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/menu-search-results
 - tapOn: 'Отмена'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/menu-search-closed
 - tapOn:
     point: '65%, 13%'
+- waitForAnimationToEnd:
+    timeout: 5000
 - extendedWaitUntil:
     visible: '[\s\S]*Миронова[\s\S]*'
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/menu-work-folder
 - tapOn:
     point: '15%, 13%'
+- waitForAnimationToEnd:
+    timeout: 5000
 - takeScreenshot: artifacts/native-demo/menu-restored
