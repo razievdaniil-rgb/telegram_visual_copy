@@ -1,0 +1,17 @@
+{
+  "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+  "clips": [
+    {
+      "movie": "artifacts/current-video/menu-v2.mp4",
+      "edit": "docs/builds/native-build7-menu-video-edit.json"
+    },
+    {
+      "movie": "artifacts/current-video/avatar-v2.mp4",
+      "edit": "docs/builds/native-build7-avatar-video-edit.json"
+    },
+    {
+      "movie": "artifacts/current-video/body-v2.mp4",
+      "edit": "docs/builds/native-build7-body-video-edit.json"
+    }
+  ]
+}

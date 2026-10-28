@@ -1,0 +1,288 @@
+{
+  "plan": {
+    "source": "artifacts\\current-video\\avatar24\\qa-avatar\\recording.mp4",
+    "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+    "app_source_file": "artifacts\\current-video\\avatar24\\app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 105.611,
+        "end": 107.191,
+        "title": "02  Замена аватара собеседника"
+      },
+      {
+        "start": 127.235,
+        "end": 131.142,
+        "title": "02  Замена аватара собеседника"
+      },
+      {
+        "start": 146.664,
+        "end": 165.835,
+        "title": "02  Замена аватара собеседника"
+      },
+      {
+        "start": 204.44,
+        "end": 209.816,
+        "title": "03  Свой аватар и настройки"
+      },
+      {
+        "start": 223.457,
+        "end": 245.02,
+        "title": "03  Свой аватар и настройки"
+      },
+      {
+        "start": 291.072,
+        "end": 292.472,
+        "title": "03  Свой аватар и настройки"
+      }
+    ],
+    "target_seconds": 38,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 3.040881118774422,
+      "valid_ticks": 4,
+      "maximum_tick_deviation_seconds": 0.07083299999999326,
+      "creation_time": "2026-10-28T20:20:34.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-28T20:22:00+00:00",
+          "frame": 28,
+          "pts": 85.781667,
+          "clock_mask_error": 0.0,
+          "offset_from_request": 3.1117141187744153,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\current-video\\avatar24\\qa-avatar\\maestro\\2026-10-28_202050\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\avatar-before-chats.png"
+        },
+        {
+          "minute_utc": "2026-10-28T20:23:00+00:00",
+          "frame": 423,
+          "pts": 145.858333,
+          "clock_mask_error": 0.00019813750743015652,
+          "offset_from_request": 3.0350481187744265,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\current-video\\avatar24\\qa-avatar\\maestro\\2026-10-28_202050\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\photo-library.png"
+        },
+        {
+          "minute_utc": "2026-10-28T20:24:00+00:00",
+          "frame": 1045,
+          "pts": 205.846667,
+          "clock_mask_error": 0.002674856350307113,
+          "offset_from_request": 3.0467141187744176,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\current-video\\avatar24\\qa-avatar\\maestro\\2026-10-28_202050\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\owner-avatar-settings-updated.png"
+        },
+        {
+          "minute_utc": "2026-10-28T20:25:00+00:00",
+          "frame": 1398,
+          "pts": 265.913333,
+          "clock_mask_error": 0.00014860313057261742,
+          "offset_from_request": 2.9800481187743912,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\current-video\\avatar24\\qa-avatar\\maestro\\2026-10-28_202050\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\owner-avatar-tab-after-restart.png"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "start": 105.611,
+      "end": 107.191,
+      "title": "02  Замена аватара собеседника",
+      "cuts": [],
+      "kept": [
+        [
+          105.611,
+          107.191
+        ]
+      ]
+    },
+    {
+      "start": 127.235,
+      "end": 131.142,
+      "title": "02  Замена аватара собеседника",
+      "cuts": [],
+      "kept": [
+        [
+          127.235,
+          131.142
+        ]
+      ]
+    },
+    {
+      "start": 146.664,
+      "end": 165.835,
+      "title": "02  Замена аватара собеседника",
+      "cuts": [
+        [
+          147.27947700326888,
+          148.26468199782076
+        ],
+        [
+          150.3604770032689,
+          151.28134899782077
+        ],
+        [
+          153.4904770032689,
+          154.61968199782075
+        ],
+        [
+          157.3121440032689,
+          157.68801499782077
+        ],
+        [
+          159.6738100032689,
+          160.16634899782076
+        ]
+      ],
+      "kept": [
+        [
+          146.664,
+          147.27947700326888
+        ],
+        [
+          148.26468199782076,
+          150.3604770032689
+        ],
+        [
+          151.28134899782077,
+          153.4904770032689
+        ],
+        [
+          154.61968199782075,
+          157.3121440032689
+        ],
+        [
+          157.68801499782077,
+          159.6738100032689
+        ],
+        [
+          160.16634899782076,
+          165.835
+        ]
+      ]
+    },
+    {
+      "start": 204.44,
+      "end": 209.816,
+      "title": "03  Свой аватар и настройки",
+      "cuts": [
+        [
+          206.3188100032689,
+          207.74301499782075
+        ]
+      ],
+      "kept": [
+        [
+          204.44,
+          206.3188100032689
+        ],
+        [
+          207.74301499782075,
+          209.816
+        ]
+      ]
+    },
+    {
+      "start": 223.457,
+      "end": 245.02,
+      "title": "03  Свой аватар и настройки",
+      "cuts": [
+        [
+          224.0724770032689,
+          225.78634899782077
+        ],
+        [
+          227.9254770032689,
+          229.96634899782075
+        ],
+        [
+          232.1138100032689,
+          232.88634899782076
+        ],
+        [
+          235.5821440032689,
+          236.84134899782075
+        ],
+        [
+          238.8021440032689,
+          241.77634899782075
+        ],
+        [
+          244.0754770032689,
+          244.60968199782076
+        ]
+      ],
+      "kept": [
+        [
+          223.457,
+          224.0724770032689
+        ],
+        [
+          225.78634899782077,
+          227.9254770032689
+        ],
+        [
+          229.96634899782075,
+          232.1138100032689
+        ],
+        [
+          232.88634899782076,
+          235.5821440032689
+        ],
+        [
+          236.84134899782075,
+          238.8021440032689
+        ],
+        [
+          241.77634899782075,
+          244.0754770032689
+        ],
+        [
+          244.60968199782076,
+          245.02
+        ]
+      ]
+    },
+    {
+      "start": 291.072,
+      "end": 292.472,
+      "title": "03  Свой аватар и настройки",
+      "cuts": [
+        [
+          291.6874770032689,
+          292.0616819978207
+        ]
+      ],
+      "kept": [
+        [
+          291.072,
+          291.6874770032689
+        ],
+        [
+          292.0616819978207,
+          292.472
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "02  Замена аватара собеседника",
+      "start": 0.0,
+      "end": 20.733333333333334
+    },
+    {
+      "title": "03  Свой аватар и настройки",
+      "start": 20.733333333333334,
+      "end": 37.9
+    }
+  ],
+  "output_frames": 1137,
+  "source_sha256": "cf38e0ea13bdc3b1e9fdbaeecde5b59a792799e0a4066455d733133781bcb313",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 37.9
+}

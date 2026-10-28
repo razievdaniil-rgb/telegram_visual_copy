@@ -1,0 +1,179 @@
+{
+  "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+  "duration_seconds": 173.7,
+  "frames": 5211,
+  "fps": 30,
+  "bytes": 4301666,
+  "sha256": "874fd411c7923b4a24071f159fb55a433ed7dbe590e5df897550b90a2534e025",
+  "full_decode_passed": true,
+  "action_speed": 1,
+  "interpolation": false,
+  "chapters": [
+    {
+      "title": "01  Главное меню и настройки",
+      "start": 0.0,
+      "end": 17.966666666666665
+    },
+    {
+      "title": "02  Замена аватара собеседника",
+      "start": 17.966666666666665,
+      "end": 38.7
+    },
+    {
+      "title": "03  Свой аватар и настройки",
+      "start": 38.7,
+      "end": 55.86666666666666
+    },
+    {
+      "title": "04  Сообщение и редактирование",
+      "start": 55.86666666666667,
+      "end": 88.3
+    },
+    {
+      "title": "05  Профиль и новая переписка",
+      "start": 88.3,
+      "end": 112.03333333333333
+    },
+    {
+      "title": "06  Дата, время и галочки",
+      "start": 112.03333333333333,
+      "end": 145.26666666666668
+    },
+    {
+      "title": "07  Профиль и номер",
+      "start": 145.26666666666668,
+      "end": 157.26666666666668
+    },
+    {
+      "title": "08  Статусы и сохранение",
+      "start": 157.26666666666668,
+      "end": 173.7
+    }
+  ],
+  "clips": [
+    {
+      "movie": "artifacts\\current-video\\menu-v2.mp4",
+      "edit": "docs\\builds\\native-build7-menu-video-edit.json",
+      "sha256": "2a4aaa6d5d8b9a8487aabc04bb375dc9c666cd2ad2983c529c38f9b359da97bb",
+      "raw_sha256": "894678c847338b6a1c0d07fbcfcbf94724c318ee9e6cad0dadbd65d6000cc225"
+    },
+    {
+      "movie": "artifacts\\current-video\\avatar-v2.mp4",
+      "edit": "docs\\builds\\native-build7-avatar-video-edit.json",
+      "sha256": "f67343895c2d461cb03de8ed7c893085be750a55ee3aba8cf70af1ff5a58cdf7",
+      "raw_sha256": "cf38e0ea13bdc3b1e9fdbaeecde5b59a792799e0a4066455d733133781bcb313"
+    },
+    {
+      "movie": "artifacts\\current-video\\body-v2.mp4",
+      "edit": "docs\\builds\\native-build7-body-video-edit.json",
+      "sha256": "c84227490e95dd0198e5ccd8142985b04a127d2261ec1101d54b9bb4d25fd11d",
+      "raw_sha256": "08ca3bf20655a5f75de969aff22530dab06cbce0c8bc49b37f777624fef4b4ca"
+    }
+  ],
+  "faststart": true,
+  "platform": "IOSSIMULATOR",
+  "device": "iPhone 13 Pro Max",
+  "ios": "27.0",
+  "app_build": "18",
+  "delivered_device_build": "7",
+  "app_recompiled_for_recording": false,
+  "capture_run": 40760122774,
+  "capture_job": 123069634065,
+  "capture_conclusion": "success",
+  "capture_commit": "4dc100119730be43d7ad77bd7ac7cfa7275af5e0",
+  "simulator_artifact_run": 40683642811,
+  "simulator_ipa_sha256": "0bdbcb18e177bd310680e963304d0aeafdf950c76211dd1d21d8bc3ca0373d8c",
+  "same_installation_and_document": true,
+  "raw_control_screenshots_reviewed": 44,
+  "final_video_is_edited": true,
+  "physical_iphone_tested": false,
+  "synthetic_demo_data": true,
+  "renderer_ffmpeg": "9.0.2",
+  "edits": "Technical waits, repeated navigation and portions of form filling omitted; retained actions at 1x, no interpolation",
+  "limitations": [
+    "Simulator executable from same source as device IPA, not the physical-device IPA running in Simulator",
+    "Full App Store pixel comparison and physical-device smoothness not verified"
+  ],
+  "final_boundary_frames": [
+    0,
+    538,
+    539,
+    585,
+    586,
+    702,
+    703,
+    1160,
+    1161,
+    1278,
+    1279,
+    1645,
+    1646,
+    1675,
+    1676,
+    2648,
+    2649,
+    3360,
+    3361,
+    4357,
+    4358,
+    4717,
+    4718,
+    5210
+  ],
+  "body_reviewed_output_frames": [
+    217,
+    543,
+    812,
+    1122,
+    1300,
+    1507,
+    1742,
+    1853,
+    1929,
+    2055,
+    2206,
+    2340,
+    2452,
+    2524,
+    2602,
+    2658,
+    2768,
+    2923,
+    3017,
+    3097,
+    3174,
+    3254,
+    3373,
+    3449,
+    3500
+  ],
+  "artifact_archives": [
+    {
+      "id": 12849525240,
+      "sha256": "3db04d42da01ad1c5a9adc434ff72519055b55ac0d88a39b37f325c2fff31a58"
+    },
+    {
+      "id": 12850030301,
+      "sha256": "a1bf8e8bbaeaa86dbb78948e168b71abf37aa4fbfa865ad1f07e348b4e8fd394"
+    },
+    {
+      "id": 12850715166,
+      "sha256": "e63badcaab548a0282e7e27272940d67558e446b93465eccc63a2db661231a2a"
+    }
+  ],
+  "encoding": {
+    "codec_name": "h264",
+    "profile": "Main",
+    "level": 40,
+    "pix_fmt": "yuv420p",
+    "width": 720,
+    "height": 1622,
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1"
+  },
+  "corrections_after_visual_review": [
+    "Removed actual Home screen frames following stopApp at avatar chapter cut boundaries; application unchanged"
+  ],
+  "final_boundary_frames_visually_reviewed": true,
+  "body_output_samples_visually_reviewed": true
+}

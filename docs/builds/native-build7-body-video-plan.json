@@ -1,0 +1,267 @@
+{
+  "source": "artifacts\\current-video\\release24\\qa-presentation\\recording.mp4",
+  "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+  "app_source_file": "artifacts\\current-video\\release24\\app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 134.328,
+      "end": 151.188,
+      "title": "04  Сообщение и редактирование"
+    },
+    {
+      "start": 191.881,
+      "end": 203.314,
+      "title": "04  Сообщение и редактирование"
+    },
+    {
+      "start": 207.754,
+      "end": 219.318,
+      "title": "04  Сообщение и редактирование"
+    },
+    {
+      "start": 223.018,
+      "end": 234.982,
+      "title": "05  Профиль и новая переписка"
+    },
+    {
+      "start": 275.25,
+      "end": 277.15,
+      "title": "05  Профиль и новая переписка"
+    },
+    {
+      "start": 319.602,
+      "end": 333.324,
+      "title": "05  Профиль и новая переписка"
+    },
+    {
+      "start": 342.601,
+      "end": 346.407,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 387.6,
+      "end": 393.0,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 399.1,
+      "end": 400.6,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 413.476,
+      "end": 420.326,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 439.3,
+      "end": 442.5,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 460.24,
+      "end": 466.0,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 481.0,
+      "end": 482.7,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 502.0,
+      "end": 505.1,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 511.5,
+      "end": 513.6,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 533.53,
+      "end": 535.13,
+      "title": "06  Дата, время и галочки"
+    },
+    {
+      "start": 554.6,
+      "end": 560.77,
+      "title": "07  Профиль и номер"
+    },
+    {
+      "start": 599.5,
+      "end": 604.5,
+      "title": "07  Профиль и номер"
+    },
+    {
+      "start": 622.6,
+      "end": 624.23,
+      "title": "07  Профиль и номер"
+    },
+    {
+      "start": 643.3,
+      "end": 647.0,
+      "title": "08  Статусы и сохранение"
+    },
+    {
+      "start": 660.5,
+      "end": 661.94,
+      "title": "08  Статусы и сохранение"
+    },
+    {
+      "start": 678.1,
+      "end": 682.0,
+      "title": "08  Статусы и сохранение"
+    },
+    {
+      "start": 704.2,
+      "end": 708.2,
+      "title": "08  Статусы и сохранение"
+    },
+    {
+      "start": 779.2,
+      "end": 780.3,
+      "title": "08  Статусы и сохранение"
+    },
+    {
+      "start": 797.4,
+      "end": 799.7,
+      "title": "08  Статусы и сохранение"
+    }
+  ],
+  "protect": [
+    [
+      704.2,
+      708.2
+    ]
+  ],
+  "target_seconds": 118,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 1.1271470796508538,
+    "valid_ticks": 13,
+    "maximum_tick_deviation_seconds": 0.17999999999994998,
+    "creation_time": "2026-10-28T20:26:07.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-28T20:27:00+00:00",
+        "frame": 1,
+        "pts": 52.985,
+        "clock_mask_error": 0.00014860313057261742,
+        "offset_from_request": 1.1154800796508795,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-01-chats.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:28:00+00:00",
+        "frame": 182,
+        "pts": 113.008333,
+        "clock_mask_error": 0.00039627501486031304,
+        "offset_from_request": 1.0921470796508856,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-03-sent.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:29:00+00:00",
+        "frame": 975,
+        "pts": 172.883333,
+        "clock_mask_error": 0.00039627501486031304,
+        "offset_from_request": 1.2171470796508856,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-03b-selected.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:30:00+00:00",
+        "frame": 1672,
+        "pts": 232.943333,
+        "clock_mask_error": 0.00029720626114523483,
+        "offset_from_request": 1.1571470796508834,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-07-profile-fields.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:31:00+00:00",
+        "frame": 2171,
+        "pts": 292.956667,
+        "clock_mask_error": 0.0006439468991480087,
+        "offset_from_request": 1.1438130796508972,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-08-avatar-crop.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:32:00+00:00",
+        "frame": 2586,
+        "pts": 353.008333,
+        "clock_mask_error": 0.00014860313057261742,
+        "offset_from_request": 1.0921470796508856,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-09-manual-date.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:33:00+00:00",
+        "frame": 3095,
+        "pts": 413.153333,
+        "clock_mask_error": 0.0,
+        "offset_from_request": 0.9471470796509038,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-10-manual-time.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:34:00+00:00",
+        "frame": 3581,
+        "pts": 472.973333,
+        "clock_mask_error": 0.0005448781454329305,
+        "offset_from_request": 1.1271470796508538,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-11-both-sides.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:35:00+00:00",
+        "frame": 4277,
+        "pts": 532.898333,
+        "clock_mask_error": 0.00014860313057261742,
+        "offset_from_request": 1.2021470796508993,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-12-receipt-edit.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:36:00+00:00",
+        "frame": 4808,
+        "pts": 593.005,
+        "clock_mask_error": 0.0024271844660194173,
+        "offset_from_request": 1.0954800796508835,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-14b-phone-updated.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:37:00+00:00",
+        "frame": 5268,
+        "pts": 652.968333,
+        "clock_mask_error": 0.0004458093917178522,
+        "offset_from_request": 1.1321470796508493,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-15-recently.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:38:00+00:00",
+        "frame": 6839,
+        "pts": 712.89,
+        "clock_mask_error": 0.0006439468991480087,
+        "offset_from_request": 1.2104800796508925,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-17-typing-motion.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:39:00+00:00",
+        "frame": 9124,
+        "pts": 773.01,
+        "clock_mask_error": 0.0021299782048741825,
+        "offset_from_request": 1.090480079650888,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\release24\\qa-presentation\\maestro\\2026-10-28_202621\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\acceptance-public-edit-document.png"
+      }
+    ]
+  }
+}

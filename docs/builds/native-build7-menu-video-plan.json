@@ -1,0 +1,47 @@
+{
+  "source": "artifacts\\current-video\\menu24\\qa-menu\\recording.mp4",
+  "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+  "app_source_file": "artifacts\\current-video\\menu24\\app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 133.67,
+      "end": 145.035,
+      "title": "01  Главное меню и настройки"
+    },
+    {
+      "start": 153.022,
+      "end": 178.17,
+      "title": "01  Главное меню и настройки"
+    }
+  ],
+  "target_seconds": 18,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 2.4123540973663324,
+    "valid_ticks": 2,
+    "maximum_tick_deviation_seconds": 0.049166999999997074,
+    "creation_time": "2026-10-28T20:13:55.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-28T20:16:00+00:00",
+        "frame": 113,
+        "pts": 124.278333,
+        "clock_mask_error": 0.00029720626114523483,
+        "offset_from_request": 2.4615210973663295,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\menu24\\qa-menu\\maestro\\2026-10-28_201404\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\menu-collapsed.png"
+      },
+      {
+        "minute_utc": "2026-10-28T20:17:00+00:00",
+        "frame": 422,
+        "pts": 184.376667,
+        "clock_mask_error": 0.0,
+        "offset_from_request": 2.3631870973663354,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\current-video\\menu24\\qa-menu\\maestro\\2026-10-28_201404\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\settings-gear-fallback.png"
+      }
+    ]
+  }
+}

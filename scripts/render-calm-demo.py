@@ -51,6 +51,7 @@ def main():
     parser.add_argument('plan', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--analyze-only', action='store_true')
+    parser.add_argument('--analysis-cache', type=Path, help='Prefix of a previously verified .edit.json / .motion.json pair')
     args = parser.parse_args()
     assert not args.output.exists(), 'Preserve the previous deliverable; use a new name'
     plan = json.loads(args.plan.read_text(encoding='utf-8'))
@@ -69,40 +70,56 @@ def main():
     first = max(0, bisect.bisect_right(times, ranges[0]['start']) - 1)
     last = min(len(times) - 1, bisect.bisect_left(times, ranges[-1]['end']))
     select = f"select='between(n,{first},{last})'"
-    analysis = subprocess.Popen([
-        'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
-        '-vf', select + ',scale=180:390,format=gray', '-fps_mode', 'passthrough',
-        '-frames:v', str(last - first + 1), '-f', 'rawvideo', '-'
-    ], stdout=subprocess.PIPE)
     motions = [[] for _ in ranges]
-    motion_events = []
-    previous = None
-    previous_at = None
-    for index in range(first, last + 1):
-        data = analysis.stdout.read(180 * 390)
-        assert len(data) == 180 * 390, f'Missing analysis frame {index}'
-        # Ignore the system clock, tiny caret flashes and low-contrast codec /
-        # wallpaper changes when finding technical waits between UI actions.
-        image = Image.frombytes('L', (180, 390), data).crop((0, 23, 180, 386))
-        at = times[index]
-        if previous is not None:
-            difference = ImageChops.difference(image, previous)
-            histogram = difference.histogram()
-            changed = sum(histogram[20:]) / (180 * 363)
-            moving = changed > 0.00015
-            if moving:
-                motion_events.append(dict(index=index, at=at, changed=changed))
-            if moving:
-                for section, entries in zip(ranges, motions):
-                    # A long capture gap repeats a still frame; protect the onset
-                    # of the next visible change without retaining the whole wait.
-                    left = max(section['start'], max(previous_at, at - 0.18) - 0.2)
-                    right = min(section['end'], at + 0.3)
-                    if left < right:
-                        entries.append([left, right])
-        previous, previous_at = image, at
-    analysis.stdout.close()
-    assert analysis.wait() == 0
+    if args.analysis_cache:
+        cached = json.loads(args.analysis_cache.with_suffix('.edit.json').read_text(encoding='utf-8'))
+        assert cached['source_sha256'] == hashlib.sha256(source.read_bytes()).hexdigest(), 'Changed source recording'
+        assert Path(cached['plan']['source']).resolve() == source, 'Different source recording'
+        previous_ranges = cached['plan']['ranges']
+        assert previous_ranges[0]['start'] <= ranges[0]['start'] and previous_ranges[-1]['end'] >= ranges[-1]['end'], 'Cache does not cover selected frames'
+        motion_events = json.loads(args.analysis_cache.with_suffix('.motion.json').read_text(encoding='utf-8'))
+        for event in motion_events:
+            index, at = event['index'], event['at']
+            assert 0 < index < len(times) and abs(times[index] - at) < 0.000001, 'Invalid cached frame PTS'
+            for section, entries in zip(ranges, motions):
+                left = max(section['start'], max(times[index - 1], at - 0.18) - 0.2)
+                right = min(section['end'], at + 0.3)
+                if left < right:
+                    entries.append([left, right])
+    else:
+        analysis = subprocess.Popen([
+            'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
+            '-vf', select + ',scale=180:390,format=gray', '-fps_mode', 'passthrough',
+            '-frames:v', str(last - first + 1), '-enc_time_base:v', '1:60000', '-f', 'rawvideo', '-'
+        ], stdout=subprocess.PIPE)
+        motion_events = []
+        previous = None
+        previous_at = None
+        for index in range(first, last + 1):
+            data = analysis.stdout.read(180 * 390)
+            assert len(data) == 180 * 390, f'Missing analysis frame {index}'
+            # Ignore the system clock, tiny caret flashes and low-contrast codec /
+            # wallpaper changes when finding technical waits between UI actions.
+            image = Image.frombytes('L', (180, 390), data).crop((0, 23, 180, 386))
+            at = times[index]
+            if previous is not None:
+                difference = ImageChops.difference(image, previous)
+                histogram = difference.histogram()
+                changed = sum(histogram[20:]) / (180 * 363)
+                moving = changed > 0.00015
+                if moving:
+                    motion_events.append(dict(index=index, at=at, changed=changed))
+                if moving:
+                    for section, entries in zip(ranges, motions):
+                        # A long capture gap repeats a still frame; protect the onset
+                        # of the next visible change without retaining the whole wait.
+                        left = max(section['start'], max(previous_at, at - 0.18) - 0.2)
+                        right = min(section['end'], at + 0.3)
+                        if left < right:
+                            entries.append([left, right])
+            previous, previous_at = image, at
+        analysis.stdout.close()
+        assert analysis.wait() == 0
     args.output.with_suffix('.motion.json').write_text(json.dumps(motion_events, indent=2) + '\n')
     for section, entries in zip(ranges, motions):
         for start, end in plan.get('protect', []):
@@ -176,9 +193,9 @@ def main():
     filters.write_text(f"select='{expression}',scale=720:1558,format=rgb24", encoding='utf-8')
     decoder = subprocess.Popen([
         'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
-        '-filter_script:v', str(filters),
+        '-/filter:v', str(filters),
         '-fps_mode', 'passthrough', '-frames:v', str(len(needed)),
-        '-f', 'rawvideo', '-'
+        '-enc_time_base:v', '1:60000', '-f', 'rawvideo', '-'
     ], stdout=subprocess.PIPE)
     stage = args.output.with_suffix('.stage.mp4')
     assert not stage.exists(), 'Use a fresh output name after an interrupted render'
