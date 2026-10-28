@@ -1,4 +1,4 @@
 {
-  "attempt": 16,
-  "purpose": "Build client-corrected avatar/no-loupe UI with app-private storage for sideloading without App Groups"
+  "attempt": 17,
+  "purpose": "Same verified application sources; use disk preflight after simulator packaging also reproduced ENOSPC"
 }
