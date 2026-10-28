@@ -1,8 +1,8 @@
 {
-  "attempt": 14,
-  "app_run_id": "40560245454",
+  "attempt": 15,
+  "app_run_id": "40648363512",
   "scenarios": [
-    "presentation"
+    "release"
   ],
-  "purpose": "Final continuous native walkthrough: composer clearing, persistent public edit, profiles, avatar, messages, date/time, receipts, statuses and restart"
+  "purpose": "Verify revised original iOS main menu, native bottom search and folders; replace an existing avatar and verify persistence; record complete message, profile, time, receipt and status functionality on the same native binary"
 }
