@@ -1,8 +1,8 @@
 {
-  "attempt": 24,
-  "app_run_id": "40683642811",
+  "attempt": 25,
+  "app_run_id": "40775151423",
   "scenarios": [
-    "release"
+    "wallpaper"
   ],
-  "purpose": "Record final 2-3 minute demonstration using existing compiled simulator artifact, matching delivered iPhone build7 source 8b302485; no app rebuild"
+  "purpose": "Inspect unified client build9 source 6cb7e4b: original gear, bundled native wallpaper rendering and original wallpaper controls before full persistence QA"
 }

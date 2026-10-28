@@ -51,7 +51,7 @@ appId: org.chatstudio.localsimulator
     visible: '[\s\S]*demo_anna[\s\S]*'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/uploaded-avatar-after-restart
-# The settings tab must follow the OWNER avatar, not the current chat's peer.
+# The settings screen must follow the OWNER avatar; the client tab stays a gear.
 - runFlow: qa-root.yaml
 - longPressOn:
     point: '27%, 6%'

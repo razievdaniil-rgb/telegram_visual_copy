@@ -37,7 +37,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'handoff', 'fresh', 'gear'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'handoff', 'fresh', 'gear', 'wallpaper'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY
@@ -76,7 +76,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Install pinned screenshot verifier dependency
-        if: matrix.scenario == 'release' || matrix.scenario == 'handoff' || matrix.scenario == 'gear'
+        if: matrix.scenario == 'release' || matrix.scenario == 'handoff' || matrix.scenario == 'gear' || matrix.scenario == 'wallpaper'
         run: python3 -m pip install Pillow==11.3.0
       - name: Install official pinned Maestro CLI
         run: |
@@ -106,7 +106,7 @@ jobs:
           if [ '${{ matrix.scenario }}' != fresh ]; then
             python3 native/scripts/seed_demo.py "$CONTAINER"
           fi
-          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = release ] || [ '${{ matrix.scenario }}' = handoff ]; then
+          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = release ] || [ '${{ matrix.scenario }}' = handoff ] || [ '${{ matrix.scenario }}' = wallpaper ]; then
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
@@ -117,6 +117,7 @@ jobs:
           LIMIT=600
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
           if [ '${{ matrix.scenario }}' = handoff ]; then LIMIT=1020; fi
+          if [ '${{ matrix.scenario }}' = wallpaper ]; then LIMIT=900; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Verify actual avatar to gear mode changes
         if: matrix.scenario == 'gear' && steps.scenario_capture.outcome == 'success'

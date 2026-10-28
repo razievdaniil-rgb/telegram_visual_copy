@@ -46,7 +46,7 @@ appId: org.chatstudio.localsimulator
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: artifacts/native-demo/menu-restored
-# Verify the original gear path in the exact same binary, then restore default avatar.
+# Final client configuration uses the original gear throughout the recording.
 - launchApp:
     arguments:
       TelegramSimulator.settingsTabAvatar: 'NO'
@@ -60,10 +60,5 @@ appId: org.chatstudio.localsimulator
     visible: 'Мой профиль'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/settings-gear-fallback
-- launchApp:
-    arguments:
-      TelegramSimulator.settingsTabAvatar: 'YES'
-- extendedWaitUntil:
-    visible: '[\s\S]*Михаил[\s\S]*'
-    timeout: 60000
-- takeScreenshot: artifacts/native-demo/menu-avatar-restored
+- runFlow: qa-root.yaml
+- takeScreenshot: artifacts/native-demo/menu-final-gear
