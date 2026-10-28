@@ -1,8 +1,8 @@
 {
-  "attempt": 23,
+  "attempt": 24,
   "app_run_id": "40683642811",
   "scenarios": [
-    "gear"
+    "release"
   ],
-  "purpose": "Verify real icon change using string NSArgumentDomain values; reject identical avatar/gear screenshots; same delivered IPA"
+  "purpose": "Record final 2-3 minute demonstration using existing compiled simulator artifact, matching delivered iPhone build7 source 8b302485; no app rebuild"
 }
