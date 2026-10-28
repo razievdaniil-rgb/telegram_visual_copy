@@ -14,7 +14,7 @@ def inspect(ipa):
     resources = Path(__file__).resolve().parents[1] / "Resources"
     records = []
     with zipfile.ZipFile(ipa) as archive:
-        for name in ("SimulatorDefaultPattern.tgv", "SimulatorDefaultPatternPreview.png"):
+        for name in ("SimulatorDefaultPattern.tgv", "fqv01SQemVIBAAAApND8LDRUhRU.tgv", "SimulatorDefaultPattern.bin", "SimulatorDefaultPatternPreview.png"):
             entry = "Payload/Telegram.app/" + name
             data = archive.read(entry)
             expected = (resources / name).read_bytes()
@@ -29,6 +29,10 @@ def inspect(ipa):
                 if root.tag.rsplit("}", 1)[-1] != "svg":
                     raise ValueError("Expected SVG pattern")
                 record.update(decoded_bytes=len(svg), viewbox=root.attrib.get("viewBox"))
+            elif name.endswith(".bin"):
+                if data != expected or len(data) <= 8 or struct.unpack_from("<2i", data) != (1440, 2960):
+                    raise ValueError("Wrong prepared native vector commands")
+                record.update(dimensions=[1440, 2960], representation="prepared-pattern-wallpaper")
             else:
                 def dimensions(png):
                     if not png.startswith(b"\x89PNG\r\n\x1a\n"):

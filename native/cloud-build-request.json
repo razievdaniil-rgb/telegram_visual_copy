@@ -1,5 +1,5 @@
 {
-  "attempt": 9,
+  "attempt": 10,
   "target": "build-unsigned-device",
-  "purpose": "Single client IPA with original settings gear, bundled offline doodle pattern, native global wallpaper chooser and local per-chat color/photo persistence"
+  "purpose": "Single final client app: original gear, original wallpaper UI, prepared native vector cache seeded before public backgrounds, canonical built-in TGV resource; source model unchanged from build9"
 }

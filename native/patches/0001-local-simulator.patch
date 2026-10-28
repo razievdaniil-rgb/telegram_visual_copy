@@ -839,7 +839,7 @@ index 5bf77c1..5e7c90f 100644
                              let _ = ApplicationSpecificNotice.incrementChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
                              tip = .textSelection
 diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
-index 22ecc71..5a11df6 100644
+index 22ecc71..d287d86 100644
 --- a/submodules/TelegramUI/Sources/TelegramRootController.swift
 +++ b/submodules/TelegramUI/Sources/TelegramRootController.swift
 @@ -71,7 +71,47 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
@@ -890,7 +890,13 @@ index 22ecc71..5a11df6 100644
      private let context: AccountContext
      
      public var rootTabController: TabBarController?
-@@ -106,6 +146,14 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -101,11 +141,20 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+     public var minimizedContainerUpdated: (MinimizedContainer?) -> Void = { _ in }
+         
+     public init(context: AccountContext) {
++        SimulatorWallpaperBootstrap.seed(context: context)
+         self.context = context
+         
          self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
          
          super.init(mode: .automaticMasterDetail, theme: NavigationControllerTheme(presentationTheme: self.presentationData.theme))
@@ -905,7 +911,7 @@ index 22ecc71..5a11df6 100644
          
          self.presentationDataDisposable = (context.sharedContext.presentationData
          |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
-@@ -144,6 +192,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -144,6 +193,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
      }
      
      deinit {

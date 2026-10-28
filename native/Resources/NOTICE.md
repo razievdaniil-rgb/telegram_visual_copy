@@ -5,3 +5,5 @@ SimulatorDefaultPattern.tgv contains gzip-compressed original Telegram Web vecto
 SimulatorDefaultPatternPreview.png is the unchanged Telegram iOS 13.1.1 resource 5789658100176783156-m.resource (source pin fb0e62ba). See assets/telegram-ios/NOTICE.md for attribution.
 
 The full cloud pattern is absent from the iOS source checkout. Both bundled files are installed into the local media box under the default wallpaper's native resource identifiers; no Telegram connection is required.
+
+SimulatorDefaultPattern.bin is a prepared vector command stream, not a bitmap. native/scripts/check_pattern.c uses the pinned upstream NanoSVG parser and the filled-template command format from Svg.m CGContextCoder/processShape. It is reproduced by the Native Swift sources workflow and consumed unchanged by the original iOS renderer. The raw TGV is also supplied under the canonical fqv01SQemVIBAAAApND8LDRUhRU.tgv filename used by TelegramAccountAuxiliaryMethods.

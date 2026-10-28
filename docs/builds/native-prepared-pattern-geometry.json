@@ -1,0 +1,9 @@
+{
+  "prepared_sha256": "56089dc7026b0ad504bee2668d90d72f84fb10c30f9b892bd97141aa67417272",
+  "width": 1440,
+  "height": 2960,
+  "commands": 24217,
+  "filled_shapes": 745,
+  "preview_alpha_correlation": 0.956816017540544,
+  "scope": "Prepared vector geometry compared to original iOS preview; native rendering still requires Simulator QA"
+}

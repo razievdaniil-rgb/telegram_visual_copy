@@ -67,6 +67,7 @@ jobs:
           cc -O2 -I "$SVG" native/scripts/check_pattern.c "$SVG/nanosvg.c" -lm -o /tmp/check-pattern
           mkdir -p artifacts/native-pattern
           timeout 20s /tmp/check-pattern /tmp/simulator-pattern.svg artifacts/native-pattern/SimulatorDefaultPattern.bin
+          if [ -f native/Resources/SimulatorDefaultPattern.bin ]; then cmp native/Resources/SimulatorDefaultPattern.bin artifacts/native-pattern/SimulatorDefaultPattern.bin; fi
       - uses: actions/upload-artifact@v4
         with:
           name: Native-Prepared-Wallpaper
