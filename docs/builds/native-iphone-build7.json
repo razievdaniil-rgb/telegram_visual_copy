@@ -1,0 +1,117 @@
+{
+  "sha256": "0cee2d0f27bf87ac556df5e0b5d15c47016b79a8e461825c15751e0706d1d075",
+  "size_bytes": 608286248,
+  "bundle_id": "org.chatstudio.localsimulator",
+  "version": "13.1.1",
+  "build": "7",
+  "architectures": "arm64",
+  "platforms": [
+    "IOS"
+  ],
+  "requires_installation_signing": true,
+  "runtime_verified": false,
+  "installation_verified": false,
+  "app_source_sha": "8b302485137b5a707973f690b1da25dd5c330c56",
+  "device_run": 40683642847,
+  "device_job": 122800382197,
+  "device_artifact": 12815755906,
+  "device_workflow_conclusion": "success",
+  "artifact_zip_sha256": "ca8edf005ea21a422939458ff11d4e55dd823075b8f9fc3c6f3ef83e9076a739",
+  "download_verified": {
+    "payload_sha256": true,
+    "zip_crc": true,
+    "local_macho_cpu_arm64": true,
+    "local_macho_platform_ios": true,
+    "source_manifest": true,
+    "display_name": "Telegram"
+  },
+  "simulator_run": 40683642811,
+  "simulator_artifact": 12816126966,
+  "simulator_workflow_conclusion": "success",
+  "qa_state": "completed and recorded frames inspected",
+  "default_settings_tab": "owner avatar",
+  "gear_fallback": "original Telegram icon path; QA override in same binary",
+  "separate_bottom_search": false,
+  "local_storage": "private app container; no App Groups dependency",
+  "physical_iphone_installation_verified": false,
+  "notes": [
+    "Unsigned IPA: installation requires signing through Sideloadly or another supported tool",
+    "Source checks: 14 portable Swift tests and exact 22-file patch passed",
+    "11 original UI implementations unchanged; configured PeerInfoScreen is reported separately"
+  ],
+  "qa_runs": {
+    "fresh": {
+      "run": 40690700205,
+      "job": 122824489034,
+      "artifact": 12818060970,
+      "conclusion": "success",
+      "screenshots_reviewed": 5
+    },
+    "handoff": {
+      "run": 40692521903,
+      "job": 122830810997,
+      "artifact": 12818871238,
+      "conclusion": "success",
+      "screenshots_reviewed": 27
+    },
+    "gear": {
+      "run": 40696000474,
+      "job": 122842891586,
+      "artifact": 12818904521,
+      "conclusion": "success",
+      "screenshots_reviewed": 4
+    }
+  },
+  "runtime_verified_on_simulator": true,
+  "runtime_verified_on_physical_iphone": false,
+  "source_checks": {
+    "portable_swift_tests": 14,
+    "patched_upstream_files": 22,
+    "unchanged_primary_ui_files": 11,
+    "typescript": "passed",
+    "lint": "passed"
+  },
+  "menu_geometry": {
+    "passed": true,
+    "errors": [
+      0,
+      0,
+      1.565713200379867,
+      1.565713200379867
+    ],
+    "maximum": 10
+  },
+  "settings_icon_modes": {
+    "passed": true,
+    "avatar_to_gear_mae": 34.029193353754756,
+    "restored_avatar_mae": 0.0,
+    "same_binary": true
+  },
+  "motion_review": {
+    "movie": "Native-QA-handoff / qa-handoff/recording.mp4",
+    "pts_range_seconds": [
+      208,
+      217
+    ],
+    "decoded_frames": 167,
+    "method": "ffprobe PTS and original decoded frame indices; no interpolation or t-based selection",
+    "observed": "Native editor dismisses; new owner image remains consistent during original tab selection animation, with no old avatar flash",
+    "physical_fps_confirmed": false
+  },
+  "cache_saves": {
+    "device": true,
+    "simulator": true,
+    "verified_from_logs": true
+  },
+  "simulator_ipa_sha256": "0bdbcb18e177bd310680e963304d0aeafdf950c76211dd1d21d8bc3ca0373d8c",
+  "test_corrections": [
+    "Drawn Chats and owner-name labels absent from AX; observed Compose and My Profile elements used instead",
+    "Maestro Boolean arguments lack Foundation prefix; string NO/YES and pixel regression verify real icon changes",
+    "The observed unchanged-icon capture was rejected as a negative control"
+  ],
+  "limitations": [
+    "Physical iPhone signing, installation and refresh require the owner test",
+    "Independent matched App Store pixel and animation timing comparison not completed",
+    "Network functions, true stories and calls are outside the local simulator scope"
+  ]
+}

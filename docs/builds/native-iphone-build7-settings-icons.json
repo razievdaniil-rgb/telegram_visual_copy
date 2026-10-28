@@ -1,0 +1,14 @@
+{
+  "crop_points": [
+    340,
+    846,
+    382,
+    884
+  ],
+  "avatar_to_gear_error": 34.029193353754756,
+  "restored_avatar_error": 0.0,
+  "minimum_mode_difference": 8,
+  "maximum_restored_error": 2.5,
+  "passed": true,
+  "scope": "Seeded native settings-tab icon mode changes only, not full pixel equivalence"
+}

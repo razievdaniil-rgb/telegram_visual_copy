@@ -1,0 +1,34 @@
+{
+  "baseline": "artifacts/native-demo/qa-handoff/maestro/2026-10-28_130722/qa-handoff/takeScreenshot/artifacts/native-demo/menu-collapsed.png",
+  "crop_points": [
+    12,
+    145,
+    77,
+    295
+  ],
+  "maximum_mean_error": 10,
+  "comparisons": [
+    {
+      "screenshot": "artifacts/native-demo/qa-handoff/maestro/2026-10-28_130722/qa-handoff/takeScreenshot/artifacts/native-demo/menu-recollapsed-before-search.png",
+      "mean_absolute_error": 0.0,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts/native-demo/qa-handoff/maestro/2026-10-28_130722/qa-handoff/takeScreenshot/artifacts/native-demo/menu-settings-closed.png",
+      "mean_absolute_error": 0.0,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts/native-demo/qa-handoff/maestro/2026-10-28_130722/qa-handoff/takeScreenshot/artifacts/native-demo/menu-work-folder.png",
+      "mean_absolute_error": 1.565713200379867,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts/native-demo/qa-handoff/maestro/2026-10-28_130722/qa-handoff/takeScreenshot/artifacts/native-demo/menu-restored.png",
+      "mean_absolute_error": 1.565713200379867,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "Seeded avatar geometry only; full visual review remains required"
+}

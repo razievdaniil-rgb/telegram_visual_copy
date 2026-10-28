@@ -1,0 +1,99 @@
+{
+  "upstream": "fb0e62ba8a147f0821da6aa63c09da7d79a10111",
+  "verification": "source identity only; configured controllers separately reported; not a pixel or runtime animation comparison",
+  "files": [
+    {
+      "path": "submodules/Display/Source/Font.swift",
+      "sha256": "12ff2af7525693aee3b792631387bfee6980898eb507117c9e021e77c26cd99c",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/Display/Source/Navigation/NavigationController.swift",
+      "sha256": "50201ef844b3650993acc4cdc2f85395825a2750134feb7c1cd361a788821a74",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TabBarUI/Sources/TabBarController.swift",
+      "sha256": "44bf4628deca3d14b5d879beeb7b96cd324bc5652eb23a90e031ecf77e85ec14",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Sources/ChatController.swift",
+      "sha256": "76746e5dc6bf50b7760e0ffd71eb023874d914dd502347be94daacbb50e0f7a9",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/ChatTitleView/Sources/ChatTitleView.swift",
+      "sha256": "9f4eb275e292ddec37f30f200bfb356d765c55df83b7f7b50a032c5f18b29a1e",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageTextBubbleContentNode/Sources/ChatMessageTextBubbleContentNode.swift",
+      "sha256": "de1b656c1f7e0f079ccc68a4820caf825a6a1d6b3a225c22f0bbbba18da22905",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageBubbleItemNode/Sources/ChatMessageBubbleItemNode.swift",
+      "sha256": "797efc6655a04f204a6e57156f3eb98f236a4dbdfdb2f9381a7cce2eac1496ed",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatMessageDateAndStatusNode/Sources/ChatMessageDateAndStatusNode.swift",
+      "sha256": "2a11aedff209ad65ca1cef208eefbfeb1af8ade7ac0b441cfecdb6c669db0ff2",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode/Sources/ChatTextInputPanelNode.swift",
+      "sha256": "5ea7772bf0888bc71f90b79ad5df90187e9bcd22157dc69c80d02f1f1123ce12",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramPresentationData/Sources/PresentationTheme.swift",
+      "sha256": "e0df884681e586f848df68b939c4c53d0ed6e1dec53472a54f65f9037884dcd5",
+      "matches_upstream": true
+    },
+    {
+      "path": "submodules/TelegramPresentationData/Sources/DefaultDayPresentationTheme.swift",
+      "sha256": "7bf8e82dc967216b70654f04e5a9bf54866af7ce9c2dd4711770dc06c0533a00",
+      "matches_upstream": true
+    }
+  ],
+  "configured_files": [
+    {
+      "path": "submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoScreen.swift",
+      "sha256": "a337e1e8d97df81cfb7a0d910dc38cd168f0a177305467b855d1e1df9249028e",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/ChatListController.swift",
+      "sha256": "fa6882ac31dbe9805725dab08c05a3d1626355a552e1e2555c71796beced3b23",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/ChatListControllerNode.swift",
+      "sha256": "1f751bc2582feff869a5891d42d3939e02de0b5f7af779840d4be24127554309",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/ChatListContainerItemNode.swift",
+      "sha256": "a1652deb4e7de26d47234c67c9dffdac8f6b10bb98602b5341368831d4423bdc",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift",
+      "sha256": "a5c5d7fa1a8487eb46db2dbb2f4421e014a2c46c643924642414c46eeeea3c4f",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    },
+    {
+      "path": "submodules/ChatListUI/Sources/Node/ChatListItem.swift",
+      "sha256": "b1f8bdf56c417d23c6ce3f827a957af6e2aeae40fdfa33d6eac10c2c93578200",
+      "matches_upstream": false,
+      "reason": "Local interface data, header/account-avatar configuration, matching scroll bounds and unsupported-story guards; exact patch checked by test_preparation.py"
+    }
+  ]
+}
