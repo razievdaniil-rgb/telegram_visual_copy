@@ -37,6 +37,23 @@ index 4c3a641..8c8fc6e 100644
      buildParser.add_argument(
          '--buildNumber',
          required=True,
+diff --git a/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift b/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
+index fb87496..4c70585 100644
+--- a/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
++++ b/submodules/ChatListUI/Sources/ChatListContainerItemNode.swift
+@@ -74,7 +74,11 @@ final class ChatListContainerItemNode: ASDisplayNode {
+         self.listNode = ChatListNode(context: context, location: location, chatListFilter: filter, previewing: previewing, fillPreloadItems: controlsHistoryPreload, mode: chatListMode, theme: presentationData.theme, fontSize: presentationData.listsFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameSortOrder: presentationData.nameSortOrder, nameDisplayOrder: presentationData.nameDisplayOrder, animationCache: animationCache, animationRenderer: animationRenderer, disableAnimations: true, isInlineMode: isInlineMode, autoSetReady: autoSetReady, isMainTab: isMainTab)
+         
+         if let controller, case .chatList(groupId: .root) = controller.location {
+-            self.listNode.scrollHeightTopInset = ChatListNavigationBar.searchScrollHeight + ChatListNavigationBar.storiesScrollHeight
++            // The bottom-search header has no positively collapsible search
++            // row. Stories expand via tempTopInset in the negative direction.
++            // Artificial minimum content height otherwise lets short lists
++            // scroll completely under this fixed header.
++            self.listNode.scrollHeightTopInset = controller.simulatorUsesBottomSearch ? 0.0 : ChatListNavigationBar.searchScrollHeight + ChatListNavigationBar.storiesScrollHeight
+         }
+         
+         self.edgeEffectView = EdgeEffectView()
 diff --git a/submodules/ChatListUI/Sources/ChatListController.swift b/submodules/ChatListUI/Sources/ChatListController.swift
 index 5bdff8a..7ea2fb6 100644
 --- a/submodules/ChatListUI/Sources/ChatListController.swift
@@ -138,41 +155,19 @@ index 5bdff8a..7ea2fb6 100644
                              self?.parentController?.composePressed()
                          }
 diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
-index 594f370..5fd1907 100644
+index 594f370..bad1620 100644
 --- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 +++ b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
-@@ -1183,6 +1183,8 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
-     var toolbarActionSelected: ((ToolbarActionOption) -> Void)?
-     
-     private var isSearchDisplayControllerActive: ChatListNavigationBar.ActiveSearch?
-+    private var bottomSearchContentOffset: CGFloat?
-+    private var isRestoringBottomSearchOffset = false
-     private var skipSearchDisplayControllerLayout: Bool = false
-     private(set) var searchDisplayController: SearchDisplayController?
-     private var disappearingSearchDisplayController: SearchDisplayController?
-@@ -1721,8 +1723,11 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -1721,7 +1721,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                  leftInset: layout.safeInsets.left,
                  rightInset: layout.safeInsets.right,
                  trailingButtonsInset: layout.navigationBarTrailingButtonsInset,
 -                search: ChatListNavigationBar.Search(isEnabled: true),
--                activeSearch: self.isSearchDisplayControllerActive,
 +                search: self.controller?.simulatorUsesBottomSearch == true ? nil : ChatListNavigationBar.Search(isEnabled: true),
-+                // Bottom search is a full-screen overlay. Keep the underlying
-+                // list/header insets stable instead of shrinking them to the
-+                // external search header and preserving that offset on return.
-+                activeSearch: self.controller?.simulatorUsesBottomSearch == true ? nil : self.isSearchDisplayControllerActive,
+                 activeSearch: self.isSearchDisplayControllerActive,
                  primaryContent: headerContent?.primaryContent,
                  secondaryContent: headerContent?.secondaryContent,
-                 secondaryTransition: self.inlineStackContainerTransitionFraction,
-@@ -1785,6 +1790,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
-                 self.view.addSubview(navigationBarComponentView)
-             }
-             transition.setFrame(view: navigationBarComponentView, frame: CGRect(origin: CGPoint(), size: navigationBarSize))
-+            transition.setAlpha(view: navigationBarComponentView, alpha: self.controller?.simulatorUsesBottomSearch == true && self.isSearchDisplayControllerActive != nil ? 0.0 : 1.0)
-             
-             return (navigationBarSize.height, 0.0)
-         } else {
-@@ -1792,6 +1798,12 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -1792,6 +1792,12 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
          }
      }
      
@@ -185,7 +180,7 @@ index 594f370..5fd1907 100644
      private func updateNavigationScrolling(navigationHeight: CGFloat, transition: ContainedViewLayoutTransition) {
          var mainOffset: CGFloat
          if let contentOffset = self.mainContainerNode.contentOffset, case let .known(value) = contentOffset {
-@@ -1802,7 +1814,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -1802,7 +1808,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
          
          self.mainContainerNode.updateScrollingOffset(navigationHeight: navigationHeight, offset: mainOffset, transition: transition)
          
@@ -194,7 +189,7 @@ index 594f370..5fd1907 100644
          if abs(mainOffset) < 0.1 {
              mainOffset = 0.0
          }
-@@ -1887,7 +1899,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -1887,7 +1893,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
          var storiesInset = storiesInset
          
          let navigationBarLayout = self.updateNavigationBar(layout: layout, deferScrollApplication: true, transition: ComponentTransition(transition))
@@ -203,35 +198,7 @@ index 594f370..5fd1907 100644
          
          navigationBarHeight = navigationBarLayout.navigationHeight
          visualNavigationHeight = navigationBarLayout.navigationHeight
-@@ -2061,6 +2073,17 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
-             disappearingSearchDisplayController.containerLayoutUpdated(layout, navigationBarHeight: cleanNavigationBarHeight, transition: transition)
-         }
-         
-+        // The full-screen search owns keyboard avoidance. Preserve the list's
-+        // pre-search position through keyboard and tab-bar layout transitions.
-+        if let offset = self.bottomSearchContentOffset, !self.isRestoringBottomSearchOffset {
-+            self.isRestoringBottomSearchOffset = true
-+            let _ = self.mainContainerNode.currentItemNode.scrollToOffsetFromTop(offset, animated: false)
-+            self.isRestoringBottomSearchOffset = false
-+            if self.isSearchDisplayControllerActive == nil && self.disappearingSearchDisplayController == nil && (layout.inputHeight ?? 0.0) == 0.0 {
-+                self.bottomSearchContentOffset = nil
-+            }
-+        }
-+
-         self.updateNavigationScrolling(navigationHeight: navigationBarLayout.navigationHeight, transition: transition)
-         
-         if let navigationBarComponentView = self.navigationBarView.view as? ChatListNavigationBar.View {
-@@ -2142,6 +2165,9 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
-                 return
-             }
-             
-+            if strongSelf.controller?.simulatorUsesBottomSearch == true, case let .known(offset) = strongSelf.mainContainerNode.currentItemNode.visibleContentOffset() {
-+                strongSelf.bottomSearchContentOffset = offset
-+            }
-             strongSelf.isSearchDisplayControllerActive = ChatListNavigationBar.ActiveSearch(isExternal: placeholderNode == nil)
-             
-             strongSelf.searchDisplayController?.containerLayoutUpdated(containerLayout, navigationBarHeight: cleanNavigationBarHeight, transition: .immediate)
-@@ -2151,7 +2177,12 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -2151,7 +2157,12 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                  }
                  
                  if isSearchBar {
@@ -245,17 +212,7 @@ index 594f370..5fd1907 100644
                          navigationBarComponentView.searchContentNode?.addSubnode(subnode)
                      }
                  } else {
-@@ -2182,6 +2213,9 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
-                     }
-                     if self.disappearingSearchDisplayController === searchDisplayController {
-                         self.disappearingSearchDisplayController = nil
-+                        if self.bottomSearchContentOffset != nil {
-+                            self.controller?.requestLayout(transition: .immediate)
-+                        }
-                     }
-                 })
-                 
-@@ -2228,7 +2262,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -2228,7 +2239,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
              }
              
              if let controller = self.controller {
@@ -264,7 +221,7 @@ index 594f370..5fd1907 100644
                      if self.allowOverscrollStoryExpansion && self.inlineStackContainerNode == nil && isPrimary {
                          let timestamp = CACurrentMediaTime()
                          if let _ = self.currentOverscrollStoryExpansionTimestamp {
-@@ -2304,7 +2338,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -2304,7 +2315,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
          
          if let clippedScrollOffset = navigationBarComponentView.clippedScrollOffset {
              let searchScrollOffset = clippedScrollOffset
@@ -273,7 +230,7 @@ index 594f370..5fd1907 100644
                  return true
              } else if clippedScrollOffset < 0.0 && clippedScrollOffset > -listView.tempTopInset {
                  return true
-@@ -2346,11 +2380,11 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+@@ -2346,11 +2357,11 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
          
          if let clippedScrollOffset = navigationBarComponentView.clippedScrollOffset {
              let searchScrollOffset = clippedScrollOffset

@@ -17,6 +17,7 @@ appId: org.chatstudio.localsimulator
     duration: 700
 - waitForAnimationToEnd:
     timeout: 5000
+- takeScreenshot: artifacts/native-demo/menu-recollapsed-before-search
 - tapOn:
     point: '92%, 94%'
 - takeScreenshot: artifacts/native-demo/menu-search-open

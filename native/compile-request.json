@@ -1,4 +1,4 @@
 {
-  "attempt": 13,
-  "purpose": "Preserve and restore the pre-search native list offset through keyboard and tab-bar transitions; verify first row, search dismissal and folders in recorded simulator frames"
+  "attempt": 14,
+  "purpose": "Fix proven pre-search short-list overscroll: disable artificial minimum scroll height for the bottom-search header; retain original search layout and remove offset-restoration workaround"
 }
