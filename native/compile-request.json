@@ -1,4 +1,4 @@
 {
-  "attempt": 9,
-  "purpose": "Menu and avatar capture: original header and list avatar rings, shared light action capsule, bottom search, offline sections, folders; reclaim temporary output before saving cache"
+  "attempt": 10,
+  "purpose": "Fix first chat row overlap observed in simulator: remove absent top search row from initial scrolling offset and snap range; retain native story/header animation"
 }

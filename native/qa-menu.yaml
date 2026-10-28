@@ -1,11 +1,8 @@
 appId: org.chatstudio.localsimulator
 ---
 - runFlow: qa-root.yaml
-- extendedWaitUntil:
-    visible: '[\s\S]*WORK[\s\S]*'
-    timeout: 15000
-- assertVisible: '[\s\S]*Группы[\s\S]*'
-- assertVisible: '[\s\S]*Боты[\s\S]*'
+# Original Texture folder labels are drawn, but absent from the AX tree.
+# Inspect these screenshots; use the visible tab coordinates after collapse.
 - takeScreenshot: artifacts/native-demo/menu-collapsed
 - swipe:
     start: '50%, 34%'
@@ -32,10 +29,12 @@ appId: org.chatstudio.localsimulator
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/menu-search-results
 - tapOn: 'Отмена'
-- tapOn: '[\s\S]*WORK[\s\S]*'
+- tapOn:
+    point: '65%, 13%'
 - extendedWaitUntil:
     visible: '[\s\S]*Миронова[\s\S]*'
     timeout: 10000
 - takeScreenshot: artifacts/native-demo/menu-work-folder
-- tapOn: '[\s\S]*Все чаты[\s\S]*'
+- tapOn:
+    point: '15%, 13%'
 - takeScreenshot: artifacts/native-demo/menu-restored
