@@ -104,7 +104,7 @@ index 5bdff8a..3c8ff56 100644
              if navigationBarView.storiesUnlocked {
                  self.shouldFixStorySubscriptionOrder = true
 diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
-index 594f370..95f7bfc 100644
+index 594f370..6a45582 100644
 --- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 +++ b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 @@ -1721,7 +1721,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
@@ -116,6 +116,20 @@ index 594f370..95f7bfc 100644
                  activeSearch: self.isSearchDisplayControllerActive,
                  primaryContent: headerContent?.primaryContent,
                  secondaryContent: headerContent?.secondaryContent,
+@@ -2151,7 +2151,12 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+                 }
+                 
+                 if isSearchBar {
+-                    if let navigationBarComponentView = self.navigationBarView.view as? ChatListNavigationBar.View {
++                    if self.controller?.simulatorUsesBottomSearch == true {
++                        // No inactive header placeholder in bottom-search mode.
++                        // SearchDisplayController owns the original field's root
++                        // frame, opening/closing animation and keyboard handling.
++                        self.addSubnode(subnode)
++                    } else if let navigationBarComponentView = self.navigationBarView.view as? ChatListNavigationBar.View {
+                         navigationBarComponentView.searchContentNode?.addSubnode(subnode)
+                     }
+                 } else {
 diff --git a/submodules/ChatListUI/Sources/Node/ChatListItem.swift b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
 index e41738b..0e00fb6 100644
 --- a/submodules/ChatListUI/Sources/Node/ChatListItem.swift
