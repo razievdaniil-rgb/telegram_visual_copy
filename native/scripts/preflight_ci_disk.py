@@ -16,7 +16,7 @@ def main():
     assert (workspace / 'native/upstream.json').is_file()
     home = Path.home().resolve(strict=True)
     sdk = home / 'Library/Android/sdk'
-    minimum = 50 * 1024**3
+    minimum = 45 * 1024**3
     before = shutil.disk_usage(workspace).free
     removed = []
     if before < minimum and sdk.exists():

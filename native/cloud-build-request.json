@@ -1,5 +1,5 @@
 {
-  "attempt": 6,
+  "attempt": 7,
   "target": "build-unsigned-device",
-  "purpose": "Same client-corrected application with disk-space preflight before cache restore to prevent observed packaging ENOSPC"
+  "purpose": "Use measured 45 GiB preflight threshold after reclaiming 13.5 GiB of unused Android SDK; application code unchanged"
 }

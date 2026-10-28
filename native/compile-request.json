@@ -1,4 +1,4 @@
 {
-  "attempt": 17,
-  "purpose": "Same verified application sources; use disk preflight after simulator packaging also reproduced ENOSPC"
+  "attempt": 18,
+  "purpose": "Use measured 45 GiB preflight threshold after reclaiming 13.5 GiB of unused Android SDK; application code unchanged"
 }
