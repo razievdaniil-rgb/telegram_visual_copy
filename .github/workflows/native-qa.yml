@@ -75,6 +75,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - name: Install pinned screenshot verifier dependency
+        if: matrix.scenario == 'release'
+        run: python3 -m pip install Pillow==11.3.0
       - name: Install official pinned Maestro CLI
         run: |
           curl -fLsS https://github.com/mobile-dev-inc/Maestro/releases/download/cli-2.11.0/maestro.zip -o "$RUNNER_TEMP/maestro.zip"
@@ -112,9 +115,14 @@ jobs:
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Record release menu chapter
+        id: menu_capture
         if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-menu.yaml --timeout 600
+      - name: Verify short-list avatar positions in recorded menu frames
+        id: menu_geometry
+        if: matrix.scenario == 'release' && steps.menu_capture.outcome == 'success'
+        run: python3 native/scripts/verify_menu_frames.py artifacts/native-demo/qa-menu
       - uses: actions/upload-artifact@v4
         if: always() && matrix.scenario == 'release'
         with:
@@ -125,7 +133,8 @@ jobs:
             artifacts/native-demo/qa-menu/
           retention-days: 7
       - name: Record release avatar replacement chapter
-        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
+        id: avatar_capture
+        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.menu_geometry.outcome == 'success' }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-avatar.yaml --timeout 600
       - uses: actions/upload-artifact@v4
@@ -138,7 +147,7 @@ jobs:
             artifacts/native-demo/qa-avatar/
           retention-days: 7
       - name: Record release functionality chapter
-        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
+        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.avatar_capture.outcome == 'success' }}
         timeout-minutes: 20
         run: python3 native/scripts/record_scenario.py native/qa-presentation.yaml --timeout 1020
       - name: Collect native crash reports
