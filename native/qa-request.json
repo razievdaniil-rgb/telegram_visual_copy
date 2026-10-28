@@ -1,8 +1,8 @@
 {
-  "attempt": 26,
+  "attempt": 27,
   "app_run_id": "40775151423",
   "scenarios": [
     "wallpaper"
   ],
-  "purpose": "Retry wallpaper inspection on the same compiled unified build; avoid importing Photos before the catalog-only inspection"
+  "purpose": "Diagnose missing native pattern using exact compiled SVG decoder and media-cache metadata; center the Appearance row above the tab bar"
 }

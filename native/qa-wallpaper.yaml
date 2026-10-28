@@ -21,6 +21,8 @@ appId: org.chatstudio.localsimulator
       text: 'Оформление'
     direction: DOWN
     timeout: 20000
+    centerElement: true
+- takeScreenshot: artifacts/native-demo/wallpaper-settings-before-appearance
 - tapOn: 'Оформление'
 - extendedWaitUntil:
     visible: 'Обои для чатов'
