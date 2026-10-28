@@ -1,4 +1,4 @@
 {
-  "attempt": 20,
-  "purpose": "Single final client app: original gear, original wallpaper UI, prepared native vector cache seeded before public backgrounds, canonical built-in TGV resource; source model unchanged from build9"
+  "attempt": 21,
+  "purpose": "Single final client IPA: original gear, byte-identical original iOS TGV, reproducible full native vector cache, original wallpaper chooser and local persistence"
 }

@@ -1,9 +1,11 @@
 {
-  "prepared_sha256": "56089dc7026b0ad504bee2668d90d72f84fb10c30f9b892bd97141aa67417272",
+  "original_git_blob": "a106f042d62c833e8f096d2877c490eb156d1169",
+  "original_tgv_sha256": "3c5ef666d033ce9effe703b80348b9d7363323f0076b2856ec041923c78b0ab8",
+  "prepared_sha256": "96071caea6918689bc93261ae9e570b9f4665f5908d33b9c3d7fdf4b994ffbde",
   "width": 1440,
   "height": 2960,
   "commands": 24217,
   "filled_shapes": 745,
-  "preview_alpha_correlation": 0.956816017540544,
-  "scope": "Prepared vector geometry compared to original iOS preview; native rendering still requires Simulator QA"
+  "full_original_alpha_correlation": 0.9999801086065678,
+  "scope": "Complete prepared contours compared to unmodified original SVG; native display and scale still require Simulator QA"
 }
