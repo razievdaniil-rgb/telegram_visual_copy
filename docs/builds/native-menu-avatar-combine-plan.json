@@ -1,0 +1,17 @@
+{
+  "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+  "clips": [
+    {
+      "movie": "artifacts\\menu-update\\final19\\menu-v2.mp4",
+      "edit": "docs/builds/native-menu-video-edit.json"
+    },
+    {
+      "movie": "artifacts\\menu-update\\final19\\avatar.mp4",
+      "edit": "docs/builds/native-avatar-video-edit.json"
+    },
+    {
+      "movie": "artifacts\\menu-update\\final19\\body-v2.mp4",
+      "edit": "docs/builds/native-body-video-edit.json"
+    }
+  ]
+}

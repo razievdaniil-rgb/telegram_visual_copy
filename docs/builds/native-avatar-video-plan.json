@@ -1,0 +1,36 @@
+{
+  "source": "artifacts\\menu-update\\qa19-avatar\\qa-avatar\\recording.mp4",
+  "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+  "app_source_file": "artifacts\\menu-update\\qa19-avatar\\app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 47.54,
+      "end": 49.64,
+      "title": "02  Замена аватара"
+    },
+    {
+      "start": 58.596,
+      "end": 67.959,
+      "title": "02  Замена аватара"
+    },
+    {
+      "start": 77.906,
+      "end": 94.928,
+      "title": "02  Замена аватара"
+    },
+    {
+      "start": 108.491,
+      "end": 110.891,
+      "title": "02  Замена аватара"
+    }
+  ],
+  "target_seconds": 25,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "MP4 creation-time midpoint, second precision; final cuts require decoded-frame review",
+    "offset_from_request_seconds": 0.49866390228271484,
+    "uncertainty_seconds": 0.5,
+    "creation_time": "2026-10-28T09:46:08.000000Z",
+    "requires_frame_review": true
+  }
+}

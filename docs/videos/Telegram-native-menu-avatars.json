@@ -1,0 +1,80 @@
+{
+  "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+  "duration_seconds": 164.76666666666668,
+  "frames": 4943,
+  "fps": 30,
+  "bytes": 5624395,
+  "sha256": "2cd8734c70df5679999d07d3817dda3cb63ace3c68333589980d0e119a4c48fe",
+  "full_decode_passed": true,
+  "action_speed": 1,
+  "interpolation": false,
+  "chapters": [
+    {
+      "title": "01  Главное меню, поиск и папки",
+      "start": 0.0,
+      "end": 20.066666666666666
+    },
+    {
+      "title": "02  Замена аватара",
+      "start": 20.066666666666666,
+      "end": 46.63333333333333
+    },
+    {
+      "title": "03  Сообщение и редактирование",
+      "start": 46.63333333333333,
+      "end": 76.13333333333333
+    },
+    {
+      "title": "04  Профиль и новая переписка",
+      "start": 76.13333333333333,
+      "end": 92.63333333333333
+    },
+    {
+      "title": "05  Дата, время и галочки",
+      "start": 92.63333333333333,
+      "end": 132.56666666666666
+    },
+    {
+      "title": "06  Профиль и номер",
+      "start": 132.56666666666666,
+      "end": 154.3
+    },
+    {
+      "title": "07  Статусы и сохранение",
+      "start": 154.3,
+      "end": 163.76666666666668
+    },
+    {
+      "title": "08  После перезапуска",
+      "start": 163.76666666666668,
+      "end": 164.76666666666668
+    }
+  ],
+  "clips": [
+    {
+      "movie": "artifacts\\menu-update\\final19\\menu-v2.mp4",
+      "edit": "artifacts\\menu-update\\final19\\menu-v2.edit.json",
+      "sha256": "0899f1b97c57ce8b577dce74bf2f71471e40cef801d407b70bb15373fb4e53d3",
+      "raw_sha256": "a05652274c920a21d142c340c3343c20f91bab972f8153a42c27a55ef7a86e49"
+    },
+    {
+      "movie": "artifacts\\menu-update\\final19\\avatar.mp4",
+      "edit": "artifacts\\menu-update\\final19\\avatar.edit.json",
+      "sha256": "4440b2bc3ee798c1c2005f96bcc6647d0281f73f4ec5c293577d27c9632c74f1",
+      "raw_sha256": "6622eccdb84717126286ede7a7cdbd2b3b59f33864bedf0bd795b577210eb4f6"
+    },
+    {
+      "movie": "artifacts\\menu-update\\final19\\body-v2.mp4",
+      "edit": "artifacts\\menu-update\\final19\\body-v2.edit.json",
+      "sha256": "649eb6094b408e3feb8a625e71ec0d575f3ee9926cc974665b6e2e0f15f215b6",
+      "raw_sha256": "9ec4cb76e5b634edaa89069561d0feecab469e59642e1aede21ed66ee4bf65bf"
+    }
+  ],
+  "faststart_verified": true,
+  "top_level_atoms": [
+    "ftyp",
+    "moov",
+    "free",
+    "mdat"
+  ]
+}

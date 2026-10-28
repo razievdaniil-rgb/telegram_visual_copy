@@ -1,0 +1,152 @@
+{
+  "plan": {
+    "source": "artifacts\\menu-update\\qa19-avatar\\qa-avatar\\recording.mp4",
+    "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+    "app_source_file": "artifacts\\menu-update\\qa19-avatar\\app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 47.54,
+        "end": 49.64,
+        "title": "02  Замена аватара"
+      },
+      {
+        "start": 58.596,
+        "end": 67.959,
+        "title": "02  Замена аватара"
+      },
+      {
+        "start": 77.906,
+        "end": 94.928,
+        "title": "02  Замена аватара"
+      },
+      {
+        "start": 108.491,
+        "end": 110.891,
+        "title": "02  Замена аватара"
+      }
+    ],
+    "target_seconds": 25,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "MP4 creation-time midpoint, second precision; final cuts require decoded-frame review",
+      "offset_from_request_seconds": 0.49866390228271484,
+      "uncertainty_seconds": 0.5,
+      "creation_time": "2026-10-28T09:46:08.000000Z",
+      "requires_frame_review": true
+    }
+  },
+  "sections": [
+    {
+      "start": 47.54,
+      "end": 49.64,
+      "title": "02  Замена аватара",
+      "cuts": [],
+      "kept": [
+        [
+          47.54,
+          49.64
+        ]
+      ]
+    },
+    {
+      "start": 58.596,
+      "end": 67.959,
+      "title": "02  Замена аватара",
+      "cuts": [
+        [
+          62.64166700346452,
+          63.841666997690304
+        ],
+        [
+          66.22833300346451,
+          66.67833299769032
+        ]
+      ],
+      "kept": [
+        [
+          58.596,
+          62.64166700346452
+        ],
+        [
+          63.841666997690304,
+          66.22833300346451
+        ],
+        [
+          66.67833299769032,
+          67.959
+        ]
+      ]
+    },
+    {
+      "start": 77.906,
+      "end": 94.928,
+      "title": "02  Замена аватара",
+      "cuts": [
+        [
+          78.44600000346452,
+          79.11499999769032
+        ],
+        [
+          81.13500000346451,
+          82.15833299769032
+        ],
+        [
+          86.56000000346451,
+          87.11666699769032
+        ],
+        [
+          92.20333300346451,
+          92.61333299769032
+        ]
+      ],
+      "kept": [
+        [
+          77.906,
+          78.44600000346452
+        ],
+        [
+          79.11499999769032,
+          81.13500000346451
+        ],
+        [
+          82.15833299769032,
+          86.56000000346451
+        ],
+        [
+          87.11666699769032,
+          92.20333300346451
+        ],
+        [
+          92.61333299769032,
+          94.928
+        ]
+      ]
+    },
+    {
+      "start": 108.491,
+      "end": 110.891,
+      "title": "02  Замена аватара",
+      "cuts": [],
+      "kept": [
+        [
+          108.491,
+          110.891
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "02  Замена аватара",
+      "start": 0.0,
+      "end": 26.566666666666666
+    }
+  ],
+  "output_frames": 797,
+  "source_sha256": "6622eccdb84717126286ede7a7cdbd2b3b59f33864bedf0bd795b577210eb4f6",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 26.566666666666666
+}

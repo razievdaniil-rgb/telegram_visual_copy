@@ -33,3 +33,5 @@
 ## Главное меню — 28 октября
 
 `ChatListController` включает `updateTabBarSearchState` и штатную доступность кнопки историй, ограничивает открытие медиаисторий локальным уведомлением. `ChatListControllerNode` скрывает верхний placeholder только у корневого локального списка с нижним поиском. `TelegramEngineMessages.storySubscriptions` получает локальное превью из `TelegramSimulator.storySubscriptions`; медиа и сетевых историй нет. Инициализация папок записывает стандартный `ChatListFiltersState` один раз и не переписывает последующие настройки. Внешний вид рисуют оригинальные ChatListNavigationBar, StoryPeerListComponent, HorizontalTabs и TabBarComponent.
+
+Для корневого нижнего поиска `ChatListContainerItemNode.scrollHeightTopInset = 0`: искусственная минимальная высота не даёт короткому списку уйти под неподвижный заголовок. Начальное/доводочное смещение исключает отсутствующий верхний поисковый ряд. Исходное раскрытие через отрицательный `tempTopInset` сохранено. QA #19 проверяет четыре возвращённых состояния по снимкам.

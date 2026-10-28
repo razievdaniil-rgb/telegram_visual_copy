@@ -1,0 +1,113 @@
+{
+  "plan": {
+    "source": "artifacts\\menu-update\\qa19-menu\\qa-menu\\recording.mp4",
+    "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+    "app_source_file": "artifacts\\menu-update\\qa19-menu\\app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 109.848,
+        "end": 114.533,
+        "title": "01  Главное меню, поиск и папки"
+      },
+      {
+        "start": 126.992,
+        "end": 153.766,
+        "title": "01  Главное меню, поиск и папки"
+      }
+    ],
+    "target_seconds": 20,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 1.5013800775451642,
+      "valid_ticks": 1,
+      "maximum_tick_deviation_seconds": 0.0,
+      "creation_time": "2026-10-28T09:43:10.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-28T09:45:00+00:00",
+          "frame": 137,
+          "pts": 109.858333,
+          "clock_mask_error": 4.953437685753913e-05,
+          "offset_from_request": 1.5013800775451642,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\menu-update\\qa19-menu\\qa-menu\\maestro\\2026-10-28_094315\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\menu-collapsed.png"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "start": 109.848,
+      "end": 114.533,
+      "title": "01  Главное меню, поиск и папки",
+      "cuts": [],
+      "kept": [
+        [
+          109.848,
+          114.533
+        ]
+      ]
+    },
+    {
+      "start": 126.992,
+      "end": 153.766,
+      "title": "01  Главное меню, поиск и папки",
+      "cuts": [
+        [
+          130.48196715338213,
+          132.38646689774527
+        ],
+        [
+          135.97030015338214,
+          142.32979989774526
+        ],
+        [
+          145.95363315338213,
+          146.92646689774526
+        ],
+        [
+          150.51363315338213,
+          152.73579989774524
+        ]
+      ],
+      "kept": [
+        [
+          126.992,
+          130.48196715338213
+        ],
+        [
+          132.38646689774527,
+          135.97030015338214
+        ],
+        [
+          142.32979989774526,
+          145.95363315338213
+        ],
+        [
+          146.92646689774526,
+          150.51363315338213
+        ],
+        [
+          152.73579989774524,
+          153.766
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "01  Главное меню, поиск и папки",
+      "start": 0.0,
+      "end": 20.066666666666666
+    }
+  ],
+  "output_frames": 602,
+  "source_sha256": "a05652274c920a21d142c340c3343c20f91bab972f8153a42c27a55ef7a86e49",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 20.066666666666666
+}

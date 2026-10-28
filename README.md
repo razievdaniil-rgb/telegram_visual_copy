@@ -2,7 +2,7 @@
 
 С 26 октября 2026 проект использует оригинальный Telegram iOS 13.1.1. Функции согласованного ТЗ проверены после исправлений на iPhone 13 Pro Max Simulator / iOS 27.0: профили, переписки, редактор, ручные даты/время, галочки, статусы и сохранение после перезапуска. [Проверка по ТЗ, дефекты и результаты](docs/NATIVE_REQUIREMENTS_QA.md), [исходники и повторение сборки](native/README.md), [текущее состояние](docs/STATUS.md).
 
-[**Видеодемонстрация 2:43**](https://raw.githubusercontent.com/razievdaniil-rgb/telegram_visual_copy/main/docs/videos/Telegram-native-demo.mp4) — актуальный нативный бинарник `4ae3913`, без ускорения действий. [Главы и проверка видео](docs/FEATURE_VIDEO.md).
+[**Видеодемонстрация 2:45**](https://raw.githubusercontent.com/razievdaniil-rgb/telegram_visual_copy/main/docs/videos/Telegram-native-menu-avatars.mp4) — актуальный нативный бинарник `211bcf2`, без ускорения действий. [Главы и проверка видео](docs/FEATURE_VIDEO.md).
 
 Старый device IPA `bf3488d` не содержит текущих исправлений; использовать его для приёмки нельзя. Актуальные проверки выполняются на simulator-сборках. Обновлённую сборку для физического iPhone, подпись и установку ещё предстоит проверить.
 

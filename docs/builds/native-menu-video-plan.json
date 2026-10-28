@@ -1,0 +1,38 @@
+{
+  "source": "artifacts\\menu-update\\qa19-menu\\qa-menu\\recording.mp4",
+  "app_source_sha": "211bcf2eb88d00682d57b82b5b0ad34c6911ffa9",
+  "app_source_file": "artifacts\\menu-update\\qa19-menu\\app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 109.848,
+      "end": 114.533,
+      "title": "01  Главное меню, поиск и папки"
+    },
+    {
+      "start": 126.992,
+      "end": 153.766,
+      "title": "01  Главное меню, поиск и папки"
+    }
+  ],
+  "target_seconds": 20,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 1.5013800775451642,
+    "valid_ticks": 1,
+    "maximum_tick_deviation_seconds": 0.0,
+    "creation_time": "2026-10-28T09:43:10.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-28T09:45:00+00:00",
+        "frame": 137,
+        "pts": 109.858333,
+        "clock_mask_error": 4.953437685753913e-05,
+        "offset_from_request": 1.5013800775451642,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\menu-update\\qa19-menu\\qa-menu\\maestro\\2026-10-28_094315\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\menu-collapsed.png"
+      }
+    ]
+  }
+}
