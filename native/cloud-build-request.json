@@ -1,5 +1,5 @@
 {
-  "attempt": 11,
+  "attempt": 12,
   "target": "build-unsigned-device",
-  "purpose": "Single final client IPA: original gear, byte-identical original iOS TGV, reproducible full native vector cache, original wallpaper chooser and local persistence"
+  "purpose": "Final unified client app: original gear and wallpaper controls, exact original TGV and prepared vector cache via the upstream TelegramEngine API"
 }
