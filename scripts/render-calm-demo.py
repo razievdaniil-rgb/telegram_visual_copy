@@ -122,7 +122,8 @@ def main():
         return sum(end - start for section in sections for start, end in section['kept'])
 
     target = plan.get('target_seconds', 165)
-    assert 120 <= target <= 180
+    clip = plan.get('clip', False)
+    assert (2 <= target <= 180) if clip else (120 <= target <= 180)
     low, high = 0.9, 4.0
     # Adjust reading pauses, never the speed of visible motion.
     for _ in range(28):
@@ -134,7 +135,7 @@ def main():
     sections = edit((low + high) / 2)
     duration = length(sections)
     if not args.analyze_only:
-        assert 120 <= duration <= 180, f'{duration:.1f}s at 1x: review ranges rather than accelerate'
+        assert (2 if clip else 120) <= duration <= 180, f'{duration:.1f}s at 1x: review ranges rather than accelerate'
     mapping = []
     chapters = []
     for chapter, section in enumerate(sections):
@@ -157,11 +158,26 @@ def main():
     if args.analyze_only:
         print(json.dumps(dict(duration_seconds=len(mapping) / 30, chapters=chapters), ensure_ascii=False, indent=2))
         return
-    first, last = mapping[0][0], mapping[-1][0]
+    needed = sorted({index for index, _ in mapping})
+    runs = []
+    for index in needed:
+        if runs and index == runs[-1][1] + 1:
+            runs[-1][1] = index
+        else:
+            runs.append([index, index])
+    terms = [f'eq(n,{a})' if a == b else f'between(n,{a},{b})' for a, b in runs]
+    # A flat sum can exceed libavutil's expression recursion limit.
+    while len(terms) > 1:
+        terms = [f'({terms[i]}+{terms[i+1]})' if i + 1 < len(terms) else terms[i] for i in range(0, len(terms), 2)]
+    expression = terms[0]
+    # Decode in source order, but scale/transfer only frames actually used by the
+    # edit. A filter file avoids Windows command-line limits on long recordings.
+    filters = args.output.with_suffix('.filter.txt')
+    filters.write_text(f"select='{expression}',scale=720:1558,format=rgb24", encoding='utf-8')
     decoder = subprocess.Popen([
         'ffmpeg', '-hide_banner', '-loglevel', 'error', '-nostdin', '-i', str(source),
-        '-vf', f"select='between(n,{first},{last})',scale=720:1558,format=rgb24",
-        '-fps_mode', 'passthrough', '-frames:v', str(last - first + 1),
+        '-filter_script:v', str(filters),
+        '-fps_mode', 'passthrough', '-frames:v', str(len(needed)),
         '-f', 'rawvideo', '-'
     ], stdout=subprocess.PIPE)
     stage = args.output.with_suffix('.stage.mp4')
@@ -174,7 +190,7 @@ def main():
     ], stdin=subprocess.PIPE)
     font = ImageFont.truetype('C:/Windows/Fonts/arial.ttf', 26)
     current = 0
-    for index in range(first, last + 1):
+    for index in needed:
         data = decoder.stdout.read(720 * 1558 * 3)
         assert len(data) == 720 * 1558 * 3, f'Missing render frame {index}'
         if current >= len(mapping) or mapping[current][0] != index:
@@ -210,7 +226,7 @@ def main():
     ]))
     stream = output['streams'][0]
     assert stream['r_frame_rate'] == '30/1' and int(stream['nb_read_frames']) == len(mapping)
-    assert 120 <= float(output['format']['duration']) <= 180
+    assert (2 if clip else 120) <= float(output['format']['duration']) <= 180
     print(json.dumps(dict(duration=output['format']['duration'], frames=len(mapping),
         bytes=args.output.stat().st_size, sha256=hashlib.sha256(args.output.read_bytes()).hexdigest(),
         chapters=chapters), ensure_ascii=False, indent=2))
