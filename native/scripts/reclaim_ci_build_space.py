@@ -19,7 +19,10 @@ def main():
     assert package.resolve().parent == artifacts / 'native-build'
     cache = (Path.home() / 'telegram-bazel-cache').resolve(strict=True)
     assert not cache.is_relative_to(checkout) and not checkout.is_relative_to(cache)
-    digest = hashlib.sha256(package.read_bytes()).hexdigest()
+    def package_digest():
+        with package.open('rb') as source:
+            return hashlib.file_digest(source, 'sha256').hexdigest()
+    digest = package_digest()
     bazel = checkout / 'build-input/bazel-9.2.0-darwin-arm64'
     assert bazel.is_file()
     before = shutil.disk_usage(workspace).free
@@ -28,7 +31,7 @@ def main():
     # The IPA and diagnostics were copied out and the IPA was already uploaded.
     shutil.rmtree(checkout)
     assert cache.is_dir() and package.is_file()
-    assert hashlib.sha256(package.read_bytes()).hexdigest() == digest, 'Packaged application changed'
+    assert package_digest() == digest, 'Packaged application changed'
     print(f'Freed {shutil.disk_usage(workspace).free - before} bytes; IPA unchanged: {digest}', flush=True)
 
 
