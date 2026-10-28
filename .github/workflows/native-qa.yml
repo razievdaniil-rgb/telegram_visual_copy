@@ -83,6 +83,7 @@ jobs:
           chmod +x "$MAESTRO_BIN"
           dirname "$MAESTRO_BIN" >> "$GITHUB_PATH"
       - name: Install on a fresh dedicated iPhone with synthetic data
+        id: install
         timeout-minutes: 12
         run: |
           set -x
@@ -111,7 +112,7 @@ jobs:
           if [ '${{ matrix.scenario }}' = suite ] || [ '${{ matrix.scenario }}' = presentation ]; then LIMIT=900; fi
           python3 native/scripts/record_scenario.py 'native/qa-${{ matrix.scenario }}.yaml' --timeout "$LIMIT"
       - name: Record release menu chapter
-        if: matrix.scenario == 'release'
+        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-menu.yaml --timeout 600
       - uses: actions/upload-artifact@v4
@@ -124,7 +125,7 @@ jobs:
             artifacts/native-demo/qa-menu/
           retention-days: 7
       - name: Record release avatar replacement chapter
-        if: matrix.scenario == 'release'
+        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-avatar.yaml --timeout 600
       - uses: actions/upload-artifact@v4
@@ -137,7 +138,7 @@ jobs:
             artifacts/native-demo/qa-avatar/
           retention-days: 7
       - name: Record release functionality chapter
-        if: matrix.scenario == 'release'
+        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
         timeout-minutes: 20
         run: python3 native/scripts/record_scenario.py native/qa-presentation.yaml --timeout 1020
       - name: Collect native crash reports
