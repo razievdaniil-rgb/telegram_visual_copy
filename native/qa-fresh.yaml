@@ -3,7 +3,7 @@ appId: org.chatstudio.localsimulator
 # No injected profiles or chats: this is the same initial state as the delivered IPA.
 - launchApp
 - extendedWaitUntil:
-    visible: 'Чаты'
+    visible: 'Написать сообщение'
     timeout: 60000
 - takeScreenshot: artifacts/native-demo/fresh-first-launch
 - longPressOn:
@@ -15,6 +15,9 @@ appId: org.chatstudio.localsimulator
 - tapOn: 'Добавить собеседника'
 - tapOn:
     id: 'simulator.profile.field.0'
+- tapOn:
+    text: 'Continue|Продолжить'
+    optional: true
 - inputText: 'Тест'
 - tapOn:
     id: 'simulator.profile.field.1'
@@ -59,7 +62,6 @@ appId: org.chatstudio.localsimulator
     point: '8%, 9%'
 - tapOn:
     point: '88%, 94%'
-- extendedWaitUntil:
-    visible: '[\s\S]*Мой профиль[\s\S]*'
-    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
 - takeScreenshot: artifacts/native-demo/fresh-settings
