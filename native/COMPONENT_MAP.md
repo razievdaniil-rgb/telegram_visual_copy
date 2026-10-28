@@ -35,3 +35,7 @@
 `ChatListController` включает `updateTabBarSearchState` и штатную доступность кнопки историй, ограничивает открытие медиаисторий локальным уведомлением. `ChatListControllerNode` скрывает верхний placeholder только у корневого локального списка с нижним поиском. `TelegramEngineMessages.storySubscriptions` получает локальное превью из `TelegramSimulator.storySubscriptions`; медиа и сетевых историй нет. Инициализация папок записывает стандартный `ChatListFiltersState` один раз и не переписывает последующие настройки. Внешний вид рисуют оригинальные ChatListNavigationBar, StoryPeerListComponent, HorizontalTabs и TabBarComponent.
 
 Для корневого нижнего поиска `ChatListContainerItemNode.scrollHeightTopInset = 0`: искусственная минимальная высота не даёт короткому списку уйти под неподвижный заголовок. Начальное/доводочное смещение исключает отсутствующий верхний поисковый ряд. Исходное раскрытие через отрицательный `tempTopInset` сохранено. QA #19 проверяет четыре возвращённых состояния по снимкам.
+
+## Уточнения клиента для iPhone
+
+`SimulatorUIConfiguration` задаёт default аватара вкладки настроек и QA-переопределение. Оригинальный `PeerInfoScreen` выбирает тот же `accountTabBarAvatar`, `peerAvatarImage` и кольцо выбора; при выключении используется исходная иконка Settings. `simulatorUsesCompactHeader` сохраняет компактную геометрию ChatList, но больше не включает `updateTabBarSearchState`, поэтому отдельной нижней лупы нет. AppDelegate берёт приватный контейнер только в локальном режиме без расширений; онлайн-ветвь сохраняет исходный App Groups.

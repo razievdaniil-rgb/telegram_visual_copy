@@ -1,5 +1,5 @@
 {
-  "attempt": 5,
+  "attempt": 6,
   "target": "build-unsigned-device",
-  "purpose": "Build client-corrected avatar/no-loupe UI with app-private storage for sideloading without App Groups"
+  "purpose": "Same client-corrected application with disk-space preflight before cache restore to prevent observed packaging ENOSPC"
 }
