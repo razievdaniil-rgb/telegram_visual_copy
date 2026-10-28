@@ -1,0 +1,6 @@
+appId: org.chatstudio.localsimulator
+---
+# One installed binary, one document, real native recording.
+- runFlow: qa-menu.yaml
+- runFlow: qa-avatar.yaml
+- runFlow: qa-compose.yaml
