@@ -138,7 +138,7 @@ index 5bdff8a..7ea2fb6 100644
                              self?.parentController?.composePressed()
                          }
 diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
-index 594f370..16c01ed 100644
+index 594f370..5fd1907 100644
 --- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 +++ b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 @@ -1183,6 +1183,8 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
@@ -211,7 +211,7 @@ index 594f370..16c01ed 100644
 +        // pre-search position through keyboard and tab-bar layout transitions.
 +        if let offset = self.bottomSearchContentOffset, !self.isRestoringBottomSearchOffset {
 +            self.isRestoringBottomSearchOffset = true
-+            let _ = self.mainContainerNode.currentItemNode.listNode.scrollToOffsetFromTop(offset, animated: false)
++            let _ = self.mainContainerNode.currentItemNode.scrollToOffsetFromTop(offset, animated: false)
 +            self.isRestoringBottomSearchOffset = false
 +            if self.isSearchDisplayControllerActive == nil && self.disappearingSearchDisplayController == nil && (layout.inputHeight ?? 0.0) == 0.0 {
 +                self.bottomSearchContentOffset = nil
@@ -225,7 +225,7 @@ index 594f370..16c01ed 100644
                  return
              }
              
-+            if strongSelf.controller?.simulatorUsesBottomSearch == true, case let .known(offset) = strongSelf.mainContainerNode.currentItemNode.listNode.visibleContentOffset() {
++            if strongSelf.controller?.simulatorUsesBottomSearch == true, case let .known(offset) = strongSelf.mainContainerNode.currentItemNode.visibleContentOffset() {
 +                strongSelf.bottomSearchContentOffset = offset
 +            }
              strongSelf.isSearchDisplayControllerActive = ChatListNavigationBar.ActiveSearch(isExternal: placeholderNode == nil)

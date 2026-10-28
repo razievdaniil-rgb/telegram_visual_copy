@@ -198,6 +198,9 @@ appId: org.chatstudio.localsimulator
     visible: 'Открыть профиль'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/film-16-typing
+- waitForAnimationToEnd:
+    # Keep native typing-dot motion in the source footage before restarting.
+    timeout: 4000
 - takeScreenshot: artifacts/native-demo/film-17-typing-motion
 - runFlow: qa-root.yaml
 - tapOn: '[\s\S]*Елена Смирнова[\s\S]*'
@@ -213,6 +216,8 @@ appId: org.chatstudio.localsimulator
     visible: '[\s\S]*Привет! Прототип уже работает\.[\s\S]*'
     timeout: 15000
 - assertNotVisible: '[\s\S]*Привет! Показываю прототип\.[\s\S]*'
+- waitForAnimationToEnd:
+    timeout: 3000
 - takeScreenshot: artifacts/native-demo/film-19-public-edit-persisted
 # Technical acceptance after the presentation's final public frame:
 # read the document-backed editor, independently of Postbox's edit overlay.
