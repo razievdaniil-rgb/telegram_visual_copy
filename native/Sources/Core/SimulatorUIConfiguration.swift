@@ -3,7 +3,7 @@ import Foundation
 // Keep both settings-tab presentations in the same compiled application.
 // The launch preference is for repeatable QA; the normal installation uses the default.
 public enum SimulatorUIConfiguration {
-    public static let defaultSettingsTabAvatar = true
+    public static let defaultSettingsTabAvatar = false
     public static let settingsTabAvatarKey = "TelegramSimulator.settingsTabAvatar"
 
     // The local app has no extensions and must not require a paid App Groups entitlement.

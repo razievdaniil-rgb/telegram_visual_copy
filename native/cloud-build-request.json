@@ -1,5 +1,5 @@
 {
-  "attempt": 7,
+  "attempt": 8,
   "target": "build-unsigned-device",
-  "purpose": "Use measured 45 GiB preflight threshold after reclaiming 13.5 GiB of unused Android SDK; application code unchanged"
+  "purpose": "Client iPhone IPA with original settings gear by default; same tested application and bundle as build 7, only defaultSettingsTabAvatar changes to false"
 }
