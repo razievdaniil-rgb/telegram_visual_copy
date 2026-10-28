@@ -24,6 +24,7 @@ FILES = [
 CONFIGURATION_FILES = [
     "submodules/ChatListUI/Sources/ChatListController.swift",
     "submodules/ChatListUI/Sources/ChatListControllerNode.swift",
+    "submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift",
 ]
 
 

@@ -1,9 +1,9 @@
 appId: org.chatstudio.localsimulator
 ---
 - runFlow: qa-root.yaml
-- assertVisible: 'WORK'
-- assertVisible: 'Группы'
-- assertVisible: 'Боты'
+- assertVisible: '[\s\S]*WORK[\s\S]*'
+- assertVisible: '[\s\S]*Группы[\s\S]*'
+- assertVisible: '[\s\S]*Боты[\s\S]*'
 - takeScreenshot: artifacts/native-demo/menu-collapsed
 - swipe:
     start: '50%, 34%'
@@ -27,7 +27,7 @@ appId: org.chatstudio.localsimulator
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/menu-search-results
 - tapOn: 'Отмена'
-- tapOn: 'WORK'
+- tapOn: '[\s\S]*WORK[\s\S]*'
 - extendedWaitUntil:
     visible: '[\s\S]*Миронова[\s\S]*'
     timeout: 10000

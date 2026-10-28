@@ -38,7 +38,7 @@ index 4c3a641..8c8fc6e 100644
          '--buildNumber',
          required=True,
 diff --git a/submodules/ChatListUI/Sources/ChatListController.swift b/submodules/ChatListUI/Sources/ChatListController.swift
-index 5bdff8a..3c8ff56 100644
+index 5bdff8a..f9bbd75 100644
 --- a/submodules/ChatListUI/Sources/ChatListController.swift
 +++ b/submodules/ChatListUI/Sources/ChatListController.swift
 @@ -199,6 +199,10 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
@@ -103,6 +103,14 @@ index 5bdff8a..3c8ff56 100644
          if let navigationBarView = self.chatListDisplayNode.navigationBarView.view as? ChatListNavigationBar.View {
              if navigationBarView.storiesUnlocked {
                  self.shouldFixStorySubscriptionOrder = true
+@@ -6647,6 +6662,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+         return self.storyCameraTransitionInCoordinator != nil
+     }
+     func storyCameraPanGestureChanged(transitionFraction: CGFloat) {
++        if TelegramSimulator.enabled { return }
+         guard let rootController = self.context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface else {
+             return
+         }
 diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
 index 594f370..6a45582 100644
 --- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
@@ -130,6 +138,43 @@ index 594f370..6a45582 100644
                          navigationBarComponentView.searchContentNode?.addSubnode(subnode)
                      }
                  } else {
+diff --git a/submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift b/submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
+index 9c466c5..3ce7f92 100644
+--- a/submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
++++ b/submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
+@@ -2694,7 +2694,9 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
+ 
+             let foundRemotePeers: Signal<([FoundPeer], [FoundPeer], [AdPeer], Bool), NoError>
+             let currentRemotePeersValue: ([FoundPeer], [FoundPeer], [AdPeer]) = currentRemotePeers.with { $0 } ?? ([], [], [])
+-            if communityId != nil {
++            if TelegramSimulator.enabled || communityId != nil {
++                // The local account has no remote directory. Finish this section
++                // instead of retaining a spinner for the disabled network.
+                 foundRemotePeers = .single(([], [], [], false))
+             } else if case .savedMessagesChats = location {
+                 foundRemotePeers = .single(([], [], [], false))
+@@ -2762,7 +2764,9 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
+             }
+ 
+             let foundPublicMessages: Signal<([FoundRemoteMessages], Bool), NoError>
+-            if key == .chats || key == .publicPosts, let query, query.hasPrefix("#") {
++            if TelegramSimulator.enabled {
++                foundPublicMessages = .single(([], false))
++            } else if key == .chats || key == .publicPosts, let query, query.hasPrefix("#") {
+                 let searchSignal = context.engine.messages.searchHashtagPosts(hashtag: finalQuery, state: nil, limit: 10)
+ 
+                 let loadMore: Signal<([FoundRemoteMessages], Bool), NoError>
+@@ -2829,7 +2833,9 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
+             let cleanFinalQuery = finalQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+ 
+             let foundRemoteMessages: Signal<([FoundRemoteMessages], Bool), NoError>
+-            if key == .publicPosts {
++            if TelegramSimulator.enabled {
++                foundRemoteMessages = .single(([], false))
++            } else if key == .publicPosts {
+                 foundRemoteMessages = .single(([FoundRemoteMessages(messages: [], readCounters: [:], threadsData: [:], totalCount: 0)], false))
+             } else if case .savedMessagesChats = location {
+                 foundRemoteMessages = .single(([FoundRemoteMessages(messages: [], readCounters: [:], threadsData: [:], totalCount: 0)], false))
 diff --git a/submodules/ChatListUI/Sources/Node/ChatListItem.swift b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
 index e41738b..0e00fb6 100644
 --- a/submodules/ChatListUI/Sources/Node/ChatListItem.swift

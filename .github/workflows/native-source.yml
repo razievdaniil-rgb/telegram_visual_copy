@@ -40,6 +40,7 @@ jobs:
             /submodules/ChatListUI/Sources/Node/ChatListItem.swift
             /submodules/ChatListUI/Sources/ChatListController.swift
             /submodules/ChatListUI/Sources/ChatListControllerNode.swift
+            /submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
       - uses: actions/checkout@v4
         with:
           repository: ali-fareed/rules_apple
