@@ -1,0 +1,36 @@
+appId: org.chatstudio.localsimulator
+---
+- runFlow: qa-root.yaml
+- assertVisible: 'WORK'
+- assertVisible: 'Группы'
+- assertVisible: 'Боты'
+- takeScreenshot: artifacts/native-demo/menu-collapsed
+- swipe:
+    start: '50%, 34%'
+    end: '50%, 70%'
+    duration: 700
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/menu-expanded-stories
+- swipe:
+    start: '50%, 70%'
+    end: '50%, 33%'
+    duration: 700
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    point: '92%, 94%'
+- takeScreenshot: artifacts/native-demo/menu-search-open
+- inputText: 'Анна'
+- extendedWaitUntil:
+    visible: '[\s\S]*Анна[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/menu-search-results
+- tapOn: 'Отмена'
+- tapOn: 'WORK'
+- extendedWaitUntil:
+    visible: '[\s\S]*Миронова[\s\S]*'
+    timeout: 10000
+- takeScreenshot: artifacts/native-demo/menu-work-folder
+- tapOn: 'Все|Все чаты'
+- takeScreenshot: artifacts/native-demo/menu-restored

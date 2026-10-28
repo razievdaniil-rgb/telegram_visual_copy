@@ -1,5 +1,5 @@
 diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
-index 4c3a641..82d1552 100644
+index 4c3a641..8c8fc6e 100644
 --- a/build-system/Make/Make.py
 +++ b/build-system/Make/Make.py
 @@ -480,6 +480,9 @@ def resolve_configuration(base_path, bazel_command_line: BazelCommandLine, argum
@@ -37,6 +37,85 @@ index 4c3a641..82d1552 100644
      buildParser.add_argument(
          '--buildNumber',
          required=True,
+diff --git a/submodules/ChatListUI/Sources/ChatListController.swift b/submodules/ChatListUI/Sources/ChatListController.swift
+index 5bdff8a..3c8ff56 100644
+--- a/submodules/ChatListUI/Sources/ChatListController.swift
++++ b/submodules/ChatListUI/Sources/ChatListController.swift
+@@ -199,6 +199,10 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+     private var activeDownloadsDisposable: Disposable?
+     private var clearUnseenDownloadsTimer: SwiftSignalKit.Timer?
+     
++    var simulatorUsesBottomSearch: Bool {
++        return TelegramSimulator.enabled && !self.previewing && self.location == .chatList(groupId: .root)
++    }
++
+     private(set) var isPremium: Bool = false
+     private(set) var storyPostingAvailability: StoriesConfiguration.PostingAvailability = .disabled
+     private var storiesPostingAvailabilityDisposable: Disposable?
+@@ -298,6 +302,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+         super.init(context: context, navigationBarPresentationData: nil)
+         
+         self.accessoryPanelContainer = ASDisplayNode()
++        if self.simulatorUsesBottomSearch {
++            self.updateTabBarSearchState(.init(isActive: false), transition: .immediate)
++        }
+         
+         self.tabBarItemContextActionType = .always
+         self.automaticallyControlPresentationContextLayout = false
+@@ -781,8 +788,9 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+         |> deliverOnMainQueue
+         ).startStrict(next: { [weak self] postingAvailability in
+             if let self {
+-                self.storyPostingAvailability = postingAvailability
+-                self.storyPostingAvailabilityValue.set(postingAvailability)
++                let effectiveAvailability: StoriesConfiguration.PostingAvailability = TelegramSimulator.enabled ? .enabled : postingAvailability
++                self.storyPostingAvailability = effectiveAvailability
++                self.storyPostingAvailabilityValue.set(effectiveAvailability)
+             }
+         })
+         
+@@ -2026,6 +2034,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+                 storyPeerListView.cancelLoadingItem()
+             }
+             
++            if TelegramSimulator.enabled { self.simulatorStoriesUnavailable(); return }
+             switch subject {
+             case .archive:
+                 StoryContainerScreen.openArchivedStories(context: self.context, parentController: self, avatarNode: itemNode.avatarNode, sharedProgressDisposable: self.sharedOpenStoryProgressDisposable)
+@@ -2970,6 +2979,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+     
+     private weak var storyCameraTooltip: TooltipScreen?
+     fileprivate func openStoryCamera(fromList: Bool, gesturePullOffset: CGFloat? = nil, sourceView: UIView? = nil) {
++        if TelegramSimulator.enabled { self.simulatorStoriesUnavailable(); return }
+         guard !self.context.isFrozen else {
+             let controller = self.context.sharedContext.makeAccountFreezeInfoScreen(context: self.context)
+             self.push(controller)
+@@ -4375,7 +4385,12 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+         self.openStories(peerId: peerId, completion: { _ in })
+     }
+     
++    private func simulatorStoriesUnavailable() {
++        self.present(textAlertController(context: self.context, title: "Истории", text: "Эта функция недоступна в симуляторе", actions: [TextAlertAction(type: .defaultAction, title: self.presentationData.strings.Common_OK, action: {})]), in: .window(.root))
++    }
++
+     public func openStories(peerId: EnginePeer.Id, completion: @escaping (StoryContainerScreen) -> Void = { _ in }) {
++        if TelegramSimulator.enabled { self.simulatorStoriesUnavailable(); return }
+         if let navigationBarView = self.chatListDisplayNode.navigationBarView.view as? ChatListNavigationBar.View {
+             if navigationBarView.storiesUnlocked {
+                 self.shouldFixStorySubscriptionOrder = true
+diff --git a/submodules/ChatListUI/Sources/ChatListControllerNode.swift b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
+index 594f370..95f7bfc 100644
+--- a/submodules/ChatListUI/Sources/ChatListControllerNode.swift
++++ b/submodules/ChatListUI/Sources/ChatListControllerNode.swift
+@@ -1721,7 +1721,7 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
+                 leftInset: layout.safeInsets.left,
+                 rightInset: layout.safeInsets.right,
+                 trailingButtonsInset: layout.navigationBarTrailingButtonsInset,
+-                search: ChatListNavigationBar.Search(isEnabled: true),
++                search: self.controller?.simulatorUsesBottomSearch == true ? nil : ChatListNavigationBar.Search(isEnabled: true),
+                 activeSearch: self.isSearchDisplayControllerActive,
+                 primaryContent: headerContent?.primaryContent,
+                 secondaryContent: headerContent?.secondaryContent,
 diff --git a/submodules/ChatListUI/Sources/Node/ChatListItem.swift b/submodules/ChatListUI/Sources/Node/ChatListItem.swift
 index e41738b..0e00fb6 100644
 --- a/submodules/ChatListUI/Sources/Node/ChatListItem.swift
@@ -233,6 +312,21 @@ index 5d93338..ea6900a 100644
      return requestEditMessage(accountPeerId: account.peerId, postbox: account.postbox, network: account.network, stateManager: account.stateManager, transformOutgoingMessageMedia: account.transformOutgoingMessageMedia, messageMediaPreuploadManager: account.messageMediaPreuploadManager, mediaReferenceRevalidationContext: account.mediaReferenceRevalidationContext, messageId: messageId, text: text, media: media, entities: entities, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, disableUrlPreview: disableUrlPreview, scheduleInfoAttribute: scheduleInfoAttribute, invertMediaAttribute: invertMediaAttribute)
  }
  
+diff --git a/submodules/TelegramCore/Sources/State/AccountStateManager.swift b/submodules/TelegramCore/Sources/State/AccountStateManager.swift
+index 6ae1b60..348cf7e 100644
+--- a/submodules/TelegramCore/Sources/State/AccountStateManager.swift
++++ b/submodules/TelegramCore/Sources/State/AccountStateManager.swift
+@@ -229,8 +229,8 @@ public final class AccountStateManager {
+             return self.nextId
+         }
+         
+-        private let isUpdatingValue = ValuePromise<Bool>(true)
+-        private var currentIsUpdatingValue = true {
++        private let isUpdatingValue = ValuePromise<Bool>(!TelegramSimulator.enabled)
++        private var currentIsUpdatingValue = !TelegramSimulator.enabled {
+             didSet {
+                 if self.currentIsUpdatingValue != oldValue {
+                     self.isUpdatingValue.set(self.currentIsUpdatingValue)
 diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
 index 25aa698..7052671 100644
 --- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
@@ -248,7 +342,7 @@ index 25aa698..7052671 100644
          var ephemeralRequests: [EphemeralDeleteMessageRequest] = []
          for messageId in messageIds where messageId.namespace == Namespaces.Message.EphemeralLocal || messageId.namespace == Namespaces.Message.WelcomeMessageCloud {
 diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
-index fe15eed..e190ba9 100644
+index fe15eed..b27e9e1 100644
 --- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
 +++ b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
 @@ -104,6 +104,7 @@ public extension TelegramEngine {
@@ -267,6 +361,14 @@ index fe15eed..e190ba9 100644
              return _internal_applyMaxReadMessageIdInteractively(postbox: self.account.postbox, stateManager: self.account.stateManager, messageId: messageId)
          }
  
+@@ -1077,6 +1079,7 @@ public extension TelegramEngine {
+         }
+         
+         public func storySubscriptions(isHidden: Bool, tempKeepNewlyArchived: Bool = false) -> Signal<EngineStorySubscriptions, NoError> {
++            if TelegramSimulator.enabled { return TelegramSimulator.storySubscriptions(isHidden: isHidden) }
+             return `deferred` { () -> Signal<EngineStorySubscriptions, NoError> in
+                 let debugTimerSignal: Signal<Bool, NoError>
+ #if DEBUG && false
 diff --git a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift b/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
 index 65b156f..719ec6d 100644
 --- a/submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
@@ -294,6 +396,19 @@ index 852384b..2f8d0fa 100644
          switch self.content {
              case let .message(_, read, _, _, _):
                  return read
+diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
+index 34f2377..4cfc9c1 100644
+--- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
++++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
+@@ -174,7 +174,7 @@ func infoItems(
+         }
+         
+         if let phone = user.phone {
+-            let formattedPhone = formatPhoneNumber(context: context, number: phone)
++            let formattedPhone = TelegramSimulator.enabled ? phone : formatPhoneNumber(context: context, number: phone)
+             let label: String
+             if formattedPhone.hasPrefix("+888 ") {
+                 label = presentationData.strings.UserInfo_AnonymousNumberLabel
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
 index 1ceb46b..e7e5d64 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
@@ -380,6 +495,38 @@ index fe34b99..a8030b6 100644
              let permissionsPosition = ValuePromise(0, ignoreRepeated: true)
              self.permissionsDisposable.set((combineLatest(queue: .mainQueue(), requiredPermissions(context: context), permissionUISplitTest(postbox: context.account.postbox), permissionsPosition.get(), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .notifications)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .cellularData)!))
              |> deliverOnMainQueue).start(next: { [weak self] required, splitTest, position, contactsPermissionWarningNotice, notificationsPermissionWarningNotice, cellularDataPermissionWarningNotice in
+diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
+index f5823d1..219b89f 100644
+--- a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
++++ b/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
+@@ -2229,7 +2229,11 @@ extension ChatControllerImpl {
+ 
+                             do {
+                                 if currentMessage.text != text.string || currentEntities != entities || currentRichText != nil || richText != nil || updatingMedia || webpagePreviewAttribute != currentWebpagePreviewAttribute || disableUrlPreview {
+-                                    strongSelf.context.account.pendingUpdateMessageManager.add(messageId: editMessage.messageId, text: richText != nil ? "" : text.string, media: media, entities: richText != nil ? nil : entitiesAttribute, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, invertMediaAttribute: invertedMediaAttribute, disableUrlPreview: disableUrlPreview)
++                                    if TelegramSimulator.enabled {
++                                        let _ = TelegramSimulator.edit(account: strongSelf.context.account, id: editMessage.messageId, text: text.string).startStandalone()
++                                    } else {
++                                        strongSelf.context.account.pendingUpdateMessageManager.add(messageId: editMessage.messageId, text: richText != nil ? "" : text.string, media: media, entities: richText != nil ? nil : entitiesAttribute, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, invertMediaAttribute: invertedMediaAttribute, disableUrlPreview: disableUrlPreview)
++                                    }
+                                 }
+                             }
+                         }
+diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
+index 5bf77c1..5e7c90f 100644
+--- a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
++++ b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
+@@ -109,7 +109,9 @@ extension ChatControllerImpl {
+                         }
+                     } else {
+                         let numberOfComponents = message.text.components(separatedBy: CharacterSet.whitespacesAndNewlines).count
+-                        let displayTextSelectionTip = numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
++                        // A fresh local account should show the ordinary menu, without the
++                        // first-use selection tutorial. Keep actual text selection unchanged.
++                        let displayTextSelectionTip = !TelegramSimulator.enabled && numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
+                         if displayTextSelectionTip {
+                             let _ = ApplicationSpecificNotice.incrementChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
+                             tip = .textSelection
 diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
 index 22ecc71..5a11df6 100644
 --- a/submodules/TelegramUI/Sources/TelegramRootController.swift
@@ -455,57 +602,3 @@ index 22ecc71..5a11df6 100644
          self.permissionsDisposable?.dispose()
          self.presentationDataDisposable?.dispose()
          self.applicationInFocusDisposable?.dispose()
-diff --git a/submodules/TelegramCore/Sources/State/AccountStateManager.swift b/submodules/TelegramCore/Sources/State/AccountStateManager.swift
-index 6ae1b60..348cf7e 100644
---- a/submodules/TelegramCore/Sources/State/AccountStateManager.swift
-+++ b/submodules/TelegramCore/Sources/State/AccountStateManager.swift
-@@ -229,8 +229,8 @@ public final class AccountStateManager {
-             return self.nextId
-         }
-         
--        private let isUpdatingValue = ValuePromise<Bool>(true)
--        private var currentIsUpdatingValue = true {
-+        private let isUpdatingValue = ValuePromise<Bool>(!TelegramSimulator.enabled)
-+        private var currentIsUpdatingValue = !TelegramSimulator.enabled {
-             didSet {
-                 if self.currentIsUpdatingValue != oldValue {
-                     self.isUpdatingValue.set(self.currentIsUpdatingValue)
-diff --git a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
-index 34f2377..4cfc9c1 100644
---- a/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
-+++ b/submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
-@@ -174,7 +174,7 @@ func infoItems(
-         }
-         
-         if let phone = user.phone {
--            let formattedPhone = formatPhoneNumber(context: context, number: phone)
-+            let formattedPhone = TelegramSimulator.enabled ? phone : formatPhoneNumber(context: context, number: phone)
-             let label: String
-             if formattedPhone.hasPrefix("+888 ") {
-                 label = presentationData.strings.UserInfo_AnonymousNumberLabel
-diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
---- a/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
-+++ b/submodules/TelegramUI/Sources/Chat/ChatControllerOpenMessageContextMenu.swift
-@@ -109,7 +109,9 @@ extension ChatControllerImpl {
-                         }
-                     } else {
-                         let numberOfComponents = message.text.components(separatedBy: CharacterSet.whitespacesAndNewlines).count
--                        let displayTextSelectionTip = numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
-+                        // A fresh local account should show the ordinary menu, without the
-+                        // first-use selection tutorial. Keep actual text selection unchanged.
-+                        let displayTextSelectionTip = !TelegramSimulator.enabled && numberOfComponents >= 3 && !message.text.isEmpty && chatTextSelectionTips < 3 && !isAd
-                         if displayTextSelectionTip {
-                             let _ = ApplicationSpecificNotice.incrementChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
-                             tip = .textSelection
-diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
---- a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
-+++ b/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
-@@ -2231,3 +2231,7 @@
-                                 if currentMessage.text != text.string || currentEntities != entities || currentRichText != nil || richText != nil || updatingMedia || webpagePreviewAttribute != currentWebpagePreviewAttribute || disableUrlPreview {
--                                    strongSelf.context.account.pendingUpdateMessageManager.add(messageId: editMessage.messageId, text: richText != nil ? "" : text.string, media: media, entities: richText != nil ? nil : entitiesAttribute, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, invertMediaAttribute: invertedMediaAttribute, disableUrlPreview: disableUrlPreview)
-+                                    if TelegramSimulator.enabled {
-+                                        let _ = TelegramSimulator.edit(account: strongSelf.context.account, id: editMessage.messageId, text: text.string).startStandalone()
-+                                    } else {
-+                                        strongSelf.context.account.pendingUpdateMessageManager.add(messageId: editMessage.messageId, text: richText != nil ? "" : text.string, media: media, entities: richText != nil ? nil : entitiesAttribute, richText: richText, inlineStickers: inlineStickers, webpagePreviewAttribute: webpagePreviewAttribute, invertMediaAttribute: invertedMediaAttribute, disableUrlPreview: disableUrlPreview)
-+                                    }
-                                 }

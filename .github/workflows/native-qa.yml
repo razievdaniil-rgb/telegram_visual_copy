@@ -37,7 +37,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY

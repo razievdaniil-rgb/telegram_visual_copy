@@ -38,6 +38,8 @@ jobs:
             /submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen/Sources/PeerInfoProfileItems.swift
             /submodules/TelegramUI/Components/Chat/ChatMessageBubbleContentNode/Sources/ChatMessageBubbleContentNode.swift
             /submodules/ChatListUI/Sources/Node/ChatListItem.swift
+            /submodules/ChatListUI/Sources/ChatListController.swift
+            /submodules/ChatListUI/Sources/ChatListControllerNode.swift
       - uses: actions/checkout@v4
         with:
           repository: ali-fareed/rules_apple

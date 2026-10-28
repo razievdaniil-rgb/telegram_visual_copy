@@ -10,6 +10,31 @@ public enum TelegramSimulator {
     public static func peerId(_ id: String) -> PeerId {
         return PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(SimulatorDocument.numericId(id)))
     }
+    // Feed the original header component, without a Telegram service or story media.
+    // These circles preview local virtual profiles; opening/publishing is guarded in UI.
+    public static func storySubscriptions(isHidden: Bool) -> Signal<EngineStorySubscriptions, NoError> {
+        return TelegramSimulatorWorkspace.shared.changed.get() |> map { _ in
+            let document = TelegramSimulatorWorkspace.shared.snapshot()
+            func item(_ person: SimulatorProfile, count: Int) -> EngineStorySubscriptions.Item {
+                return EngineStorySubscriptions.Item(peer: EnginePeer(profile(person)), hasUnseen: count > 0, hasUnseenCloseFriends: false, hasLiveItems: false, hasPending: false, storyCount: count, unseenCount: count, lastTimestamp: 1)
+            }
+            return EngineStorySubscriptions(accountItem: isHidden ? nil : item(document.owner, count: 0), items: isHidden ? [] : document.profiles.map { item($0, count: 1) }, hasMoreToken: nil)
+        }
+    }
+    private static let menuDefaultsKey = "TelegramSimulator.menuDefaults.v1"
+    private static func configureMenu(transaction: Transaction) {
+        // Preserve folders subsequently changed through Telegram's own settings.
+        transaction.updatePreferencesEntry(key: PreferencesKeys.chatListFilters, { entry in
+            var state = entry?.get(ChatListFiltersState.self) ?? ChatListFiltersState.default
+            if state.filters.isEmpty {
+                let folders: [(Int32, String, ChatListFilterPeerCategories)] = [(2, "Группы", .groups), (3, "WORK", [.contacts, .nonContacts]), (4, "Боты", .bots)]
+                state.filters = [.allChats] + folders.map { id, title, categories in
+                    .filter(id: id, title: ChatFolderTitle(text: title, entities: [], enableAnimations: false), emoticon: nil, data: ChatListFilterData(isShared: false, hasSharedLinks: false, categories: categories, excludeMuted: false, excludeRead: false, excludeArchived: true, includePeers: ChatListFilterIncludePeers(), excludePeers: [], color: nil))
+                }
+            }
+            return PreferencesEntry(state)
+        })
+    }
     public static func messageId(_ message: SimulatorMessage, in document: SimulatorDocument) -> MessageId? {
         return resolveMessageId(message, in: document, timeline: document.timelineIds())
     }
@@ -51,12 +76,14 @@ public enum TelegramSimulator {
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
         let document = indexed.document
         let timelineIds = indexed.timeline
+        let configureMenu = !UserDefaults.standard.bool(forKey: menuDefaultsKey)
         for profile in [document.owner] + document.profiles {
             if let avatar = profile.avatar, let part = avatar.split(separator: ",", maxSplits: 1).last, let data = Data(base64Encoded: String(part)) {
                 account.postbox.mediaBox.storeResourceData(LocalFileMediaResource(fileId: SimulatorDocument.numericId(avatar)).id, data: data, synchronous: true)
             }
         }
         return account.postbox.transaction { transaction -> Void in
+            if configureMenu { self.configureMenu(transaction: transaction) }
             let previousContacts = transaction.getContactPeerIds()
             let currentContacts = Set(document.profiles.map { peerId($0.id) })
             let previousInclusions = Dictionary(uniqueKeysWithValues: previousContacts.map { ($0, transaction.getPeerChatListInclusion($0)) })
@@ -139,6 +166,8 @@ public enum TelegramSimulator {
                 let readIncoming = incoming.prefix(max(0, incoming.count - chat.unread)).compactMap { timelineIds[$0.id] }.max() ?? 0
                 transaction.resetIncomingReadStates([id: [Namespaces.Message.Cloud: .idBased(maxIncomingReadId: chat.unread == 0 ? maxId : readIncoming, maxOutgoingReadId: maxRead, maxKnownId: maxId, count: Int32(chat.unread), markedUnread: chat.unread > 0)]])
             }
+        } |> afterNext { _ in
+            if configureMenu { UserDefaults.standard.set(true, forKey: menuDefaultsKey) }
         }
     }
     public static func send(account: Account, peerId: PeerId, messages: [EnqueueMessage]) -> Signal<[MessageId?], NoError> {
