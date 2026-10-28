@@ -22,7 +22,7 @@ appId: org.chatstudio.localsimulator
 - tapOn:
     point: '88%, 94%'
 - extendedWaitUntil:
-    visible: '[\s\S]*Даниил[\s\S]*'
+    visible: 'Мой профиль'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/settings-owner-profile
 - tapOn:
@@ -57,7 +57,7 @@ appId: org.chatstudio.localsimulator
 - tapOn:
     point: '88%, 94%'
 - extendedWaitUntil:
-    visible: '[\s\S]*Даниил[\s\S]*'
+    visible: 'Мой профиль'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/settings-gear-fallback
 - launchApp:

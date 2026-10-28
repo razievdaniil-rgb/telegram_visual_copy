@@ -82,7 +82,7 @@ appId: org.chatstudio.localsimulator
 - tapOn:
     point: '88%, 94%'
 - extendedWaitUntil:
-    visible: '[\s\S]*Даниил[\s\S]*'
+    visible: 'Мой профиль'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/owner-avatar-settings-updated
 - runFlow: qa-root.yaml
@@ -90,6 +90,6 @@ appId: org.chatstudio.localsimulator
 - tapOn:
     point: '88%, 94%'
 - extendedWaitUntil:
-    visible: '[\s\S]*Даниил[\s\S]*'
+    visible: 'Мой профиль'
     timeout: 30000
 - takeScreenshot: artifacts/native-demo/owner-avatar-settings-after-restart

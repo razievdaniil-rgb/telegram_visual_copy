@@ -1,8 +1,8 @@
 {
-  "attempt": 21,
+  "attempt": 22,
   "app_run_id": "40683642811",
   "scenarios": [
-    "fresh"
+    "handoff"
   ],
-  "purpose": "Repeat fresh-install scenario using the observed accessible Compose label instead of the drawn-only Chats title; same compiled IPA"
+  "purpose": "Use observed My Profile settings row for readiness; drawn owner title is not exposed in AX. Verify same IPA avatar/gear, owner photo, settings and composer"
 }
