@@ -1,8 +1,9 @@
 {
-  "attempt": 19,
-  "app_run_id": "40662176361",
+  "attempt": 20,
+  "app_run_id": "40683642811",
   "scenarios": [
-    "release"
+    "fresh",
+    "handoff"
   ],
-  "purpose": "Verify revised original iOS main menu, native bottom search and folders; replace an existing avatar and verify persistence; record complete message, profile, time, receipt and status functionality on the same native binary"
+  "purpose": "Final same-source device handoff: fresh first launch without seed; no loupe, owner avatar and original gear fallback; settings, avatar replacement and persistence, public composer regression"
 }

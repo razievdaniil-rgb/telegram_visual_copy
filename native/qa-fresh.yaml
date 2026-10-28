@@ -1,0 +1,65 @@
+appId: org.chatstudio.localsimulator
+---
+# No injected profiles or chats: this is the same initial state as the delivered IPA.
+- launchApp
+- extendedWaitUntil:
+    visible: 'Чаты'
+    timeout: 60000
+- takeScreenshot: artifacts/native-demo/fresh-first-launch
+- longPressOn:
+    point: '27%, 6%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/fresh-empty-editor
+- tapOn: 'Добавить собеседника'
+- tapOn:
+    id: 'simulator.profile.field.0'
+- inputText: 'Тест'
+- tapOn:
+    id: 'simulator.profile.field.1'
+- inputText: 'Друг'
+- tapOn:
+    id: 'simulator.profile.field.2'
+- inputText: 'friend_test'
+- tapOn:
+    id: 'simulator.profile.field.3'
+- inputText: '+79991112233'
+- tapOn:
+    id: 'simulator.profile.field.4'
+- inputText: 'Проверка первой установки'
+- tapOn: 'Сохранить'
+- tapOn: 'Создать чат'
+- tapOn: '[\s\S]*Тест Друг[\s\S]*'
+- tapOn:
+    id: 'simulator.section.2.row.0'
+- tapOn: 'Сообщение'
+- tapOn: 'Текст сообщения'
+- inputText: 'Проверка первой установки'
+- tapOn: 'Исходящее'
+- tapOn: 'Сохранить'
+- tapOn: 'Редактор'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Тест Друг[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*Проверка первой установки[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/fresh-created-chat
+- stopApp
+- launchApp
+- extendedWaitUntil:
+    visible: '[\s\S]*Тест Друг[\s\S]*'
+    timeout: 30000
+- tapOn: '[\s\S]*Тест Друг[\s\S]*'
+- extendedWaitUntil:
+    visible: '[\s\S]*Проверка первой установки[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/fresh-chat-after-restart
+- tapOn:
+    point: '8%, 9%'
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: '[\s\S]*Мой профиль[\s\S]*'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/fresh-settings
