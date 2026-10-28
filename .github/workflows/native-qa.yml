@@ -76,7 +76,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Install pinned screenshot verifier dependency
-        if: matrix.scenario == 'release'
+        if: matrix.scenario == 'release' || matrix.scenario == 'handoff'
         run: python3 -m pip install Pillow==11.3.0
       - name: Install official pinned Maestro CLI
         run: |
