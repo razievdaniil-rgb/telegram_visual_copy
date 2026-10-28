@@ -1,0 +1,22 @@
+appId: org.chatstudio.localsimulator
+---
+- runFlow: qa-root.yaml
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: 'Мой профиль'
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: 'Оформление'
+    direction: DOWN
+    centerElement: true
+    timeout: 20000
+- tapOn: 'Оформление'
+- extendedWaitUntil:
+    visible: 'Обои для чатов'
+    timeout: 20000
+- tapOn: 'Обои для чатов'
+- extendedWaitUntil:
+    visible: 'Выбрать из галереи'
+    timeout: 20000

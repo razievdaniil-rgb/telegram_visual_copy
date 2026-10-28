@@ -1,8 +1,8 @@
 {
-  "attempt": 27,
-  "app_run_id": "40775151423",
+  "attempt": 28,
+  "app_run_id": "40787740414",
   "scenarios": [
-    "wallpaper"
+    "release"
   ],
-  "purpose": "Diagnose missing native pattern using exact compiled SVG decoder and media-cache metadata; center the Appearance row above the tab bar"
+  "purpose": "One final client build source 363617534c57261ed3c39ea803626f69971f6be2: record menu, full native pattern, wallpaper selection/persistence/reset, avatar replacement and full text/editor functionality on one installation; no app rebuild"
 }

@@ -1,6 +1,6 @@
 appId: org.chatstudio.localsimulator
 ---
-# First pass: inspect the original controls before recording the full change flow.
+# Original public controls, sending/editing, persistence and reset on one document.
 - runFlow: qa-root.yaml
 - takeScreenshot: artifacts/native-demo/wallpaper-gear-default
 - tapOn: '[\s\S]*Анна Миронова[\s\S]*'
@@ -33,3 +33,80 @@ appId: org.chatstudio.localsimulator
     visible: 'Выбрать из галереи'
     timeout: 20000
 - takeScreenshot: artifacts/native-demo/wallpaper-catalog
+- tapOn:
+    # Blue preset, grounded in the recorded original grid from QA #27.
+    point: '50%, 41%'
+- extendedWaitUntil:
+    visible: 'Применить'
+    timeout: 20000
+- takeScreenshot: artifacts/native-demo/wallpaper-blue-preview
+- tapOn: 'Применить'
+- extendedWaitUntil:
+    visible: 'Выбрать из галереи'
+    timeout: 20000
+- runFlow: qa-root.yaml
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/wallpaper-blue-chat
+- tapOn:
+    point: '45%, 95%'
+- tapOn:
+    text: 'Continue|Продолжить'
+    optional: true
+- inputText: 'Проверяю новый фон.'
+- tapOn: 'Отправить'
+- extendedWaitUntil:
+    visible: 'Голосовое сообщение'
+    timeout: 10000
+- assertVisible: '[\s\S]*Проверяю новый фон\.[\s\S]*'
+- longPressOn: '[\s\S]*Проверяю новый фон\.[\s\S]*'
+- tapOn: 'Изменить'
+- eraseText
+- inputText: 'Новый фон сохраняется.'
+- tapOn: 'Отправить'
+- extendedWaitUntil:
+    visible: '[\s\S]*Новый фон сохраняется\.[\s\S]*'
+    timeout: 15000
+- takeScreenshot: artifacts/native-demo/wallpaper-after-message-edit
+- runFlow: qa-root.yaml
+- longPressOn:
+    point: '27%, 6%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.1.row.0'
+- tapOn:
+    id: 'simulator.profile.field.3'
+- eraseText
+- inputText: '+79990000123'
+- tapOn: 'Сохранить'
+- tapOn: 'Готово'
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/wallpaper-after-profile-edit
+- runFlow: qa-root.yaml
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
+- assertVisible: '[\s\S]*Новый фон сохраняется\.[\s\S]*'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/wallpaper-blue-after-restart
+- runFlow: qa-wallpaper-open-catalog.yaml
+- tapOn: 'Сбросить настройки обоев'
+- extendedWaitUntil:
+    visible: 'Сбросить все обои'
+    timeout: 10000
+- takeScreenshot: artifacts/native-demo/wallpaper-reset-confirmation
+- tapOn: 'Сбросить все обои'
+- extendedWaitUntil:
+    visible: 'Выбрать из галереи'
+    timeout: 20000
+- runFlow: qa-root.yaml
+- tapOn: '[\s\S]*Анна Миронова[\s\S]*'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/wallpaper-default-after-reset
+- runFlow: qa-root.yaml
+- takeScreenshot: artifacts/native-demo/wallpaper-final-gear
