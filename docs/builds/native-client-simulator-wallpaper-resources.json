@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "entry": "Payload/Telegram.app/SimulatorDefaultPattern.tgv",
+      "bytes": 180957,
+      "sha256": "db4963635ebbf6434339d163759b2c91483aabcee75e5916dc6c2a6fa0b02731",
+      "decoded_bytes": 507560,
+      "viewbox": "480 986.6666667 480 986.6666667"
+    },
+    {
+      "entry": "Payload/Telegram.app/SimulatorDefaultPatternPreview.png",
+      "bytes": 20054,
+      "sha256": "c6bbc605fa67a839c37fc73736fa530c0502200c6f1e51c0e8ed0071000f49c2",
+      "dimensions": [
+        155,
+        320
+      ],
+      "xcode_png_optimized": true,
+      "original_resource": "Payload/Telegram.app/5789658100176783156-m.resource",
+      "original_resource_sha256": "3fd003819238e4823705b39ea8815e8cca09ab60a41dedcc34cae495f32ed7fa"
+    }
+  ],
+  "passed": true,
+  "scope": "Exact vector/original preview and compiled PNG dimensions; native rendering and persistence require UI QA"
+}

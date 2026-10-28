@@ -1,0 +1,17 @@
+{
+  "framework": "Payload/Telegram.app/Frameworks/TelegramCoreFramework.framework/TelegramCoreFramework",
+  "framework_sha256": "1ff964bbe6b6f3e1020fb7d65fcad5f7977a0047a3fec774471e30bad847508d",
+  "default_settings_tab": "gear",
+  "matches": [
+    {
+      "symbol": "_$s12TelegramCore24SimulatorUIConfigurationO24defaultSettingsTabAvatarSbvpZ",
+      "section": "__const",
+      "segment": "__TEXT",
+      "file_offset": 30308416,
+      "value": 0
+    }
+  ],
+  "verification": "Compiled constant only; does not verify device signing or runtime",
+  "expected": "gear",
+  "passed": true
+}

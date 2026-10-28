@@ -1,8 +1,8 @@
 {
-  "attempt": 25,
+  "attempt": 26,
   "app_run_id": "40775151423",
   "scenarios": [
     "wallpaper"
   ],
-  "purpose": "Inspect unified client build9 source 6cb7e4b: original gear, bundled native wallpaper rendering and original wallpaper controls before full persistence QA"
+  "purpose": "Retry wallpaper inspection on the same compiled unified build; avoid importing Photos before the catalog-only inspection"
 }

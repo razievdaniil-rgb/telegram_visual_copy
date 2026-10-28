@@ -106,7 +106,7 @@ jobs:
           if [ '${{ matrix.scenario }}' != fresh ]; then
             python3 native/scripts/seed_demo.py "$CONTAINER"
           fi
-          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = release ] || [ '${{ matrix.scenario }}' = handoff ] || [ '${{ matrix.scenario }}' = wallpaper ]; then
+          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = release ] || [ '${{ matrix.scenario }}' = handoff ]; then
             xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
           fi
       - name: Check ${{ matrix.scenario }} and record actual frames
