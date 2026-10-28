@@ -3,6 +3,15 @@ import XCTest
 @testable import SimulatorModel
 
 final class SimulatorUIConfigurationTests: XCTestCase {
+    func testLocalContainerDoesNotRequireAppGroups() {
+        let shared = URL(fileURLWithPath: "/shared/group", isDirectory: true)
+        let home = "/private/test-home"
+        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: nil, localMode: true, homeDirectory: home)?.path, home)
+        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: shared, localMode: true, homeDirectory: home)?.path, home)
+        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: shared, localMode: false, homeDirectory: home), shared)
+        XCTAssertNil(SimulatorUIConfiguration.applicationContainer(appGroupURL: nil, localMode: false, homeDirectory: home))
+    }
+
     func testLocalAvatarDefaultAndExplicitGearFallback() {
         let suite = "SimulatorUIConfigurationTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!

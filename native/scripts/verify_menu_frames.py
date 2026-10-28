@@ -34,7 +34,7 @@ def main():
 
     baseline_path = args.baseline or find('menu-collapsed')
     targets = args.targets or [find(name) for name in (
-        'menu-recollapsed-before-search', 'menu-search-closed', 'menu-work-folder', 'menu-restored')]
+        'menu-recollapsed-before-search', 'menu-settings-closed', 'menu-work-folder', 'menu-restored')]
     baseline = avatar_strip(baseline_path)
     assert max(ImageStat.Stat(baseline).stddev) > 30, 'Blank baseline cannot verify avatars'
     records = []

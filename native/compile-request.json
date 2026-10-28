@@ -1,4 +1,4 @@
 {
-  "attempt": 15,
-  "purpose": "Client corrections: no bottom loupe; original live owner avatar in settings tab; preserve compact header scroll bounds"
+  "attempt": 16,
+  "purpose": "Build client-corrected avatar/no-loupe UI with app-private storage for sideloading without App Groups"
 }

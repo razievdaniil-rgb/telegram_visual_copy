@@ -1,5 +1,5 @@
 {
-  "attempt": 4,
+  "attempt": 5,
   "target": "build-unsigned-device",
-  "purpose": "Build current client-corrected native app for physical iPhone, unsigned for Sideloadly"
+  "purpose": "Build client-corrected avatar/no-loupe UI with app-private storage for sideloading without App Groups"
 }

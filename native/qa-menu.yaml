@@ -18,21 +18,21 @@ appId: org.chatstudio.localsimulator
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: artifacts/native-demo/menu-recollapsed-before-search
+# Four native tabs now occupy the full capsule; no separate search button.
 - tapOn:
-    point: '92%, 94%'
-- takeScreenshot: artifacts/native-demo/menu-search-open
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: '[\s\S]*Даниил[\s\S]*'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/settings-owner-profile
 - tapOn:
-    text: 'Continue|Продолжить'
-    optional: true
-- inputText: 'Анна'
+    point: '62%, 94%'
 - extendedWaitUntil:
     visible: '[\s\S]*Миронова[\s\S]*'
-    timeout: 15000
-- takeScreenshot: artifacts/native-demo/menu-search-results
-- tapOn: 'Отмена'
+    timeout: 10000
 - waitForAnimationToEnd:
     timeout: 5000
-- takeScreenshot: artifacts/native-demo/menu-search-closed
+- takeScreenshot: artifacts/native-demo/menu-settings-closed
 - tapOn:
     point: '65%, 13%'
 - waitForAnimationToEnd:
@@ -46,3 +46,24 @@ appId: org.chatstudio.localsimulator
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: artifacts/native-demo/menu-restored
+# Verify the original gear path in the exact same binary, then restore default avatar.
+- launchApp:
+    arguments:
+      TelegramSimulator.settingsTabAvatar: false
+- extendedWaitUntil:
+    visible: '[\s\S]*Михаил[\s\S]*'
+    timeout: 60000
+- takeScreenshot: artifacts/native-demo/menu-gear-fallback
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: '[\s\S]*Даниил[\s\S]*'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/settings-gear-fallback
+- launchApp:
+    arguments:
+      TelegramSimulator.settingsTabAvatar: true
+- extendedWaitUntil:
+    visible: '[\s\S]*Михаил[\s\S]*'
+    timeout: 60000
+- takeScreenshot: artifacts/native-demo/menu-avatar-restored

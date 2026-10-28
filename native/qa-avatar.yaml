@@ -51,3 +51,45 @@ appId: org.chatstudio.localsimulator
     visible: '[\s\S]*demo_anna[\s\S]*'
     timeout: 15000
 - takeScreenshot: artifacts/native-demo/uploaded-avatar-after-restart
+# The settings tab must follow the OWNER avatar, not the current chat's peer.
+- runFlow: qa-root.yaml
+- longPressOn:
+    point: '27%, 6%'
+- extendedWaitUntil:
+    visible: 'Редактор'
+    timeout: 10000
+- tapOn:
+    id: 'simulator.section.0.row.0'
+- tapOn: 'Выбрать аватар'
+- tapOn:
+    text: 'Allow Full Access|Allow Access to All Photos|Разрешить полный доступ|Разрешить доступ ко всем фото'
+    optional: true
+- tapOn:
+    text: 'Recents|Недавние'
+    optional: true
+- tapOn:
+    point: '16%, 28%'
+- tapOn:
+    point: '90%, 92%'
+- extendedWaitUntil:
+    visible: 'Сохранить'
+    timeout: 10000
+- tapOn: 'Сохранить'
+- tapOn: 'Готово'
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: artifacts/native-demo/owner-avatar-tab-updated
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: '[\s\S]*Даниил[\s\S]*'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/owner-avatar-settings-updated
+- runFlow: qa-root.yaml
+- takeScreenshot: artifacts/native-demo/owner-avatar-tab-after-restart
+- tapOn:
+    point: '88%, 94%'
+- extendedWaitUntil:
+    visible: '[\s\S]*Даниил[\s\S]*'
+    timeout: 30000
+- takeScreenshot: artifacts/native-demo/owner-avatar-settings-after-restart
