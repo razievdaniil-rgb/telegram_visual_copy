@@ -41,7 +41,7 @@ jobs:
           app_run = os.environ.get('INPUT_RUN') or request['app_run_id']
           scenarios = json.loads(os.environ['INPUT_SCENARIOS']) if os.environ.get('INPUT_SCENARIOS') else request['scenarios']
           assert str(app_run).isdigit()
-          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'handoff', 'fresh', 'gear', 'wallpaper'}
+          assert scenarios and set(scenarios) <= {'public', 'editor', 'messages', 'status', 'avatar', 'time', 'compose', 'suite', 'presentation', 'menu', 'release', 'delivery-tail', 'handoff', 'fresh', 'gear', 'wallpaper'}
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               f.write(f'app_run={app_run}\nscenarios={json.dumps(scenarios)}\n')
           PY
@@ -134,7 +134,7 @@ jobs:
           xcrun simctl spawn "$DEVICE" "$RUNNER_TEMP/pattern-probe" "$FRAMEWORKS/TelegramUIFramework.framework/TelegramUIFramework" "$GITHUB_WORKSPACE/artifacts/native-demo/pattern-probe/input.svg" "$GITHUB_WORKSPACE/artifacts/native-demo/pattern-probe"
       - name: Check ${{ matrix.scenario }} and record actual frames
         id: scenario_capture
-        if: matrix.scenario != 'release'
+        if: matrix.scenario != 'release' && matrix.scenario != 'delivery-tail'
         timeout-minutes: 34
         run: |
           LIMIT=600
@@ -156,6 +156,13 @@ jobs:
         if: ${{ !cancelled() && matrix.scenario == 'release' && steps.install.outcome == 'success' }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-menu.yaml --timeout 600
+      - name: Initialize Photos and import the synthetic fixture for remaining chapters
+        id: tail_photo
+        if: matrix.scenario == 'delivery-tail' && steps.install.outcome == 'success'
+        timeout-minutes: 9
+        run: |
+          python3 native/scripts/record_scenario.py native/qa-photos-setup.yaml --timeout 180
+          python3 native/scripts/import_demo_photo.py
       - name: Verify short-list avatar positions in recorded menu frames
         id: menu_geometry
         if: matrix.scenario == 'release' && steps.menu_capture.outcome == 'success'
@@ -197,11 +204,11 @@ jobs:
         run: python3 native/scripts/verify_wallpaper_frames.py artifacts/native-demo/qa-wallpaper
       - name: Record release avatar replacement chapter
         id: avatar_capture
-        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.release_photo.outcome == 'success' }}
+        if: ${{ !cancelled() && ((matrix.scenario == 'release' && steps.release_photo.outcome == 'success') || (matrix.scenario == 'delivery-tail' && steps.tail_photo.outcome == 'success')) }}
         timeout-minutes: 12
         run: python3 native/scripts/record_scenario.py native/qa-avatar.yaml --timeout 600
       - uses: actions/upload-artifact@v4
-        if: always() && matrix.scenario == 'release'
+        if: always() && (matrix.scenario == 'release' || matrix.scenario == 'delivery-tail')
         with:
           name: Native-QA-release-avatar
           path: |
@@ -210,7 +217,7 @@ jobs:
             artifacts/native-demo/qa-avatar/
           retention-days: 7
       - name: Record release functionality chapter
-        if: ${{ !cancelled() && matrix.scenario == 'release' && steps.avatar_capture.outcome == 'success' }}
+        if: ${{ !cancelled() && (matrix.scenario == 'release' || matrix.scenario == 'delivery-tail') && steps.avatar_capture.outcome == 'success' }}
         timeout-minutes: 20
         run: python3 native/scripts/record_scenario.py native/qa-presentation.yaml --timeout 1020
       - name: Collect synthetic wallpaper cache diagnostics

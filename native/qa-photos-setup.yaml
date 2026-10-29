@@ -1,0 +1,10 @@
+appId: com.apple.mobileslideshow
+---
+# Open Photos before import, so a fresh simulator initializes its photo library.
+- launchApp
+- tapOn:
+    text: 'Continue|Продолжить|Get Started|Начать'
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 10000
+- takeScreenshot: artifacts/native-demo/photos-initialized

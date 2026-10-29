@@ -1,8 +1,8 @@
 {
-  "attempt": 30,
+  "attempt": 31,
   "app_run_id": "40787740414",
   "scenarios": [
-    "release"
+    "delivery-tail"
   ],
-  "purpose": "Record the same unified Simulator22 after grounding gallery Apply coordinates in the actual native frame (control absent from AX); verify pattern detail, palette persistence/reset, avatars and all editor functionality"
+  "purpose": "Finish avatar and editor chapters on the same compiled Simulator22/source363; initialize Photos before bounded fixture import. Menu and wallpaper already passed QA30. No application rebuild."
 }
