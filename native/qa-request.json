@@ -1,8 +1,8 @@
 {
-  "attempt": 29,
+  "attempt": 30,
   "app_run_id": "40787740414",
   "scenarios": [
     "release"
   ],
-  "purpose": "Repeat the full client recording on the same compiled Simulator22: native pattern is now visually confirmed; use the actual Apply in all chats button label, then verify persistence, avatars and editor"
+  "purpose": "Record the same unified Simulator22 after grounding gallery Apply coordinates in the actual native frame (control absent from AX); verify pattern detail, palette persistence/reset, avatars and all editor functionality"
 }

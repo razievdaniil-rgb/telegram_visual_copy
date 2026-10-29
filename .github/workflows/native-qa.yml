@@ -145,6 +145,9 @@ jobs:
       - name: Verify actual avatar to gear mode changes
         if: matrix.scenario == 'gear' && steps.scenario_capture.outcome == 'success'
         run: python3 native/scripts/verify_settings_icons.py artifacts/native-demo/qa-gear
+      - name: Verify native wallpaper detail and persistence from screenshots
+        if: matrix.scenario == 'wallpaper' && steps.scenario_capture.outcome == 'success'
+        run: python3 native/scripts/verify_wallpaper_frames.py artifacts/native-demo/qa-wallpaper
       - name: Verify handoff short-list positions from actual screenshots
         if: matrix.scenario == 'handoff' && steps.scenario_capture.outcome == 'success'
         run: python3 native/scripts/verify_menu_frames.py artifacts/native-demo/qa-handoff
@@ -189,6 +192,9 @@ jobs:
           import os, subprocess
           subprocess.run(['xcrun', 'simctl', 'addmedia', os.environ['DEVICE'], 'native/fixtures/upload-avatar.png'], timeout=90, check=True)
           PY
+      - name: Verify release wallpaper detail and persisted palette
+        if: matrix.scenario == 'release' && steps.wallpaper_capture.outcome == 'success'
+        run: python3 native/scripts/verify_wallpaper_frames.py artifacts/native-demo/qa-wallpaper
       - name: Record release avatar replacement chapter
         id: avatar_capture
         if: ${{ !cancelled() && matrix.scenario == 'release' && steps.release_photo.outcome == 'success' }}

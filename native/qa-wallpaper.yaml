@@ -36,11 +36,13 @@ appId: org.chatstudio.localsimulator
 - tapOn:
     # Blue preset, grounded in the recorded original grid from QA #27.
     point: '50%, 41%'
-- extendedWaitUntil:
-    visible: 'Применить во всех чатах'
-    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 5000
 - takeScreenshot: artifacts/native-demo/wallpaper-blue-preview
-- tapOn: 'Применить во всех чатах'
+- tapOn:
+    # Original gallery controls are drawn but absent from its AX tree.
+    # The recorded full-screen Apply in all chats button spans 91–97% height.
+    point: '50%, 94%'
 - extendedWaitUntil:
     visible: 'Выбрать из галереи'
     timeout: 20000
