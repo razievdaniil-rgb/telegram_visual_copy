@@ -37,10 +37,10 @@ appId: org.chatstudio.localsimulator
     # Blue preset, grounded in the recorded original grid from QA #27.
     point: '50%, 41%'
 - extendedWaitUntil:
-    visible: 'Применить'
+    visible: 'Применить во всех чатах'
     timeout: 20000
 - takeScreenshot: artifacts/native-demo/wallpaper-blue-preview
-- tapOn: 'Применить'
+- tapOn: 'Применить во всех чатах'
 - extendedWaitUntil:
     visible: 'Выбрать из галереи'
     timeout: 20000

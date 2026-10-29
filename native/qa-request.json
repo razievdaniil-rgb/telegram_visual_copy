@@ -1,8 +1,8 @@
 {
-  "attempt": 28,
+  "attempt": 29,
   "app_run_id": "40787740414",
   "scenarios": [
     "release"
   ],
-  "purpose": "One final client build source 363617534c57261ed3c39ea803626f69971f6be2: record menu, full native pattern, wallpaper selection/persistence/reset, avatar replacement and full text/editor functionality on one installation; no app rebuild"
+  "purpose": "Repeat the full client recording on the same compiled Simulator22: native pattern is now visually confirmed; use the actual Apply in all chats button label, then verify persistence, avatars and editor"
 }
