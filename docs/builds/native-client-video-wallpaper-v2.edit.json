@@ -1,0 +1,342 @@
+{
+  "plan": {
+    "source": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\recording.mp4",
+    "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+    "app_source_file": "artifacts/client-gear/release30-wallpaper/app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 91.3,
+        "end": 93.65,
+        "title": "02  Оригинальный фон"
+      },
+      {
+        "start": 246,
+        "end": 257,
+        "title": "Обои в штатных настройках"
+      },
+      {
+        "start": 295.5,
+        "end": 301.65,
+        "title": "Применение нового фона"
+      },
+      {
+        "start": 336.5,
+        "end": 366.75,
+        "title": "Отправка и редактирование"
+      },
+      {
+        "start": 423.5,
+        "end": 424.95,
+        "title": "Фон после перезапуска"
+      },
+      {
+        "start": 449.4,
+        "end": 461.35,
+        "title": "Сброс обоев"
+      },
+      {
+        "start": 550,
+        "end": 552.1,
+        "title": "Стандартный фон восстановлен"
+      }
+    ],
+    "target_seconds": 44,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 0.5415100383758045,
+      "valid_ticks": 5,
+      "maximum_tick_deviation_seconds": 0.12833299999994097,
+      "creation_time": "2026-10-29T00:21:16.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-29T00:22:00+00:00",
+          "frame": 1,
+          "pts": 44.055,
+          "clock_mask_error": 0.00039627501486031304,
+          "offset_from_request": 0.4315100383758548,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-gear-default.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:25:00+00:00",
+          "frame": 264,
+          "pts": 224.073333,
+          "clock_mask_error": 0.00019813750743015652,
+          "offset_from_request": 0.4131770383758635,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-catalog.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:26:00+00:00",
+          "frame": 777,
+          "pts": 300.056667,
+          "clock_mask_error": 0.00574598771547454,
+          "offset_from_request": -15.57015696162415,
+          "plausible_creation_time": false,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-blue-chat.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:27:00+00:00",
+          "frame": 1322,
+          "pts": 343.865,
+          "clock_mask_error": 9.906875371507826e-05,
+          "offset_from_request": 0.6215100383758454,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-after-message-edit.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:28:00+00:00",
+          "frame": 2478,
+          "pts": 403.885,
+          "clock_mask_error": 0.0004953437685753912,
+          "offset_from_request": 0.6015100383758636,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-after-profile-edit.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:30:00+00:00",
+          "frame": 3229,
+          "pts": 523.945,
+          "clock_mask_error": 0.0006934812760055479,
+          "offset_from_request": 0.5415100383758045,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-default-after-reset.png"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "start": 91.3,
+      "end": 93.65,
+      "title": "02  Оригинальный фон",
+      "cuts": [
+        [
+          91.87374999899417,
+          93.26750000067055
+        ]
+      ],
+      "kept": [
+        [
+          91.3,
+          91.87374999899417
+        ],
+        [
+          93.26750000067055,
+          93.65
+        ]
+      ]
+    },
+    {
+      "start": 246,
+      "end": 257,
+      "title": "Обои в штатных настройках",
+      "cuts": [
+        [
+          246.57374999899417,
+          248.09416700067055
+        ],
+        [
+          253.8604169989942,
+          254.49083300067056
+        ]
+      ],
+      "kept": [
+        [
+          246,
+          246.57374999899417
+        ],
+        [
+          248.09416700067055,
+          253.8604169989942
+        ],
+        [
+          254.49083300067056,
+          257
+        ]
+      ]
+    },
+    {
+      "start": 295.5,
+      "end": 301.65,
+      "title": "Применение нового фона",
+      "cuts": [
+        [
+          296.0737499989942,
+          298.4475000006705
+        ]
+      ],
+      "kept": [
+        [
+          295.5,
+          296.0737499989942
+        ],
+        [
+          298.4475000006705,
+          301.65
+        ]
+      ]
+    },
+    {
+      "start": 336.5,
+      "end": 366.75,
+      "title": "Отправка и редактирование",
+      "cuts": [
+        [
+          338.9220829989942,
+          339.5658330006705
+        ],
+        [
+          343.7587499989942,
+          346.52083300067056
+        ],
+        [
+          348.7287499989942,
+          352.84416700067055
+        ],
+        [
+          354.65041699899416,
+          355.3741670006705
+        ],
+        [
+          362.8220829989942,
+          363.53083300067055
+        ],
+        [
+          365.58708299899416,
+          366.30250000067053
+        ]
+      ],
+      "kept": [
+        [
+          336.5,
+          338.9220829989942
+        ],
+        [
+          339.5658330006705,
+          343.7587499989942
+        ],
+        [
+          346.52083300067056,
+          348.7287499989942
+        ],
+        [
+          352.84416700067055,
+          354.65041699899416
+        ],
+        [
+          355.3741670006705,
+          362.8220829989942
+        ],
+        [
+          363.53083300067055,
+          365.58708299899416
+        ],
+        [
+          366.30250000067053,
+          366.75
+        ]
+      ]
+    },
+    {
+      "start": 423.5,
+      "end": 424.95,
+      "title": "Фон после перезапуска",
+      "cuts": [],
+      "kept": [
+        [
+          423.5,
+          424.95
+        ]
+      ]
+    },
+    {
+      "start": 449.4,
+      "end": 461.35,
+      "title": "Сброс обоев",
+      "cuts": [
+        [
+          454.3820829989942,
+          458.90083300067056
+        ]
+      ],
+      "kept": [
+        [
+          449.4,
+          454.3820829989942
+        ],
+        [
+          458.90083300067056,
+          461.35
+        ]
+      ]
+    },
+    {
+      "start": 550,
+      "end": 552.1,
+      "title": "Стандартный фон восстановлен",
+      "cuts": [
+        [
+          550.5737499989941,
+          551.7175000006706
+        ]
+      ],
+      "kept": [
+        [
+          550,
+          550.5737499989941
+        ],
+        [
+          551.7175000006706,
+          552.1
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "02  Оригинальный фон",
+      "start": 0.0,
+      "end": 0.9333333333333333
+    },
+    {
+      "title": "Обои в штатных настройках",
+      "start": 0.9333333333333333,
+      "end": 9.766666666666667
+    },
+    {
+      "title": "Применение нового фона",
+      "start": 9.766666666666667,
+      "end": 13.533333333333333
+    },
+    {
+      "title": "Отправка и редактирование",
+      "start": 13.533333333333333,
+      "end": 34.1
+    },
+    {
+      "title": "Фон после перезапуска",
+      "start": 34.1,
+      "end": 35.53333333333333
+    },
+    {
+      "title": "Сброс обоев",
+      "start": 35.53333333333333,
+      "end": 42.93333333333333
+    },
+    {
+      "title": "Стандартный фон восстановлен",
+      "start": 42.93333333333333,
+      "end": 43.86666666666667
+    }
+  ],
+  "output_frames": 1316,
+  "source_sha256": "e605090a15c16ac7a3ee7aaa0e24ecfd2f225b369094e95143e8fafcaaffcdec",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 43.86666666666667
+}

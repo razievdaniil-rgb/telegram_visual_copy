@@ -1,245 +1,40 @@
 {
   "ipa": "Telegram-client.ipa",
-  "source": "6cb7e4b0dcc56e963127dd4e343ba8881e5e8f58",
-  "sha256": "16068fc7f82b03ba088adbd759406387e2b678bb71ec7b31be9b1e3933e67a89",
-  "bytes": 608529097,
+  "source": "363617534c57261ed3c39ea803626f69971f6be2",
+  "version": "13.1.1",
+  "build": "12",
+  "sha256": "4303cd192001efdef8eaabab7f8e3c8dd2dc6ecbbd7fdb571e5780d4bee07789",
+  "bytes": 609032044,
   "binaries": [
     {
       "path": "Payload/Telegram.app/Telegram",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
+      "embedded_dependencies": [
         {
           "name": "@rpath/MtProtoKitFramework.framework/MtProtoKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/PostboxFramework.framework/PostboxFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/TelegramCoreFramework.framework/TelegramCoreFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/TelegramUIFramework.framework/TelegramUIFramework",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AddressBook.framework/AddressBook",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AVFoundation.framework/AVFoundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/PassKit.framework/PassKit",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/Metal.framework/Metal",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/QuartzCore.framework/QuartzCore",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/ImageIO.framework/ImageIO",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/GLKit.framework/GLKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreMedia.framework/CoreMedia",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreVideo.framework/CoreVideo",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Accelerate.framework/Accelerate",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libz.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Network.framework/Network",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/libbz2.1.0.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libiconv.2.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreAudio.framework/CoreAudio",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/QuickLook.framework/QuickLook",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreMotion.framework/CoreMotion",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Vision.framework/Vision",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/WebKit.framework/WebKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreText.framework/CoreText",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Security.framework/Security",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libresolv.9.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreImage.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreLocation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDarwin.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDispatch.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftMetal.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftOSLog.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftObjectiveC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftQuartzCore.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftSpatial.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftXPC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftos.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftsimd.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUIKit.dylib",
-          "weak": true
+          "weak": false,
+          "packaged": true
         }
       ]
     },
@@ -247,117 +42,17 @@
       "path": "Payload/Telegram.app/Frameworks/MtProtoKitFramework.framework/MtProtoKitFramework",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
-        {
-          "name": "/System/Library/Frameworks/Foundation.framework/Foundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Security.framework/Security",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libz.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        }
-      ]
+      "embedded_dependencies": []
     },
     {
       "path": "Payload/Telegram.app/Frameworks/PostboxFramework.framework/PostboxFramework",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
+      "embedded_dependencies": [
         {
           "name": "@rpath/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Foundation.framework/Foundation",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libz.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Security.framework/Security",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDarwin.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDispatch.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftObjectiveC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftXPC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftFoundation.dylib",
-          "weak": false
+          "weak": false,
+          "packaged": true
         }
       ]
     },
@@ -365,233 +60,27 @@
       "path": "Payload/Telegram.app/Frameworks/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Foundation.framework/Foundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDarwin.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDispatch.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftObjectiveC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftXPC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswift_Concurrency.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftFoundation.dylib",
-          "weak": true
-        }
-      ]
+      "embedded_dependencies": []
     },
     {
       "path": "Payload/Telegram.app/Frameworks/TelegramCoreFramework.framework/TelegramCoreFramework",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
+      "embedded_dependencies": [
         {
           "name": "@rpath/MtProtoKitFramework.framework/MtProtoKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/PostboxFramework.framework/PostboxFramework",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Foundation.framework/Foundation",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libz.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Security.framework/Security",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CloudKit.framework/CloudKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/LinkPresentation.framework/LinkPresentation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/WebKit.framework/WebKit",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftAVFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftAccelerate.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreAudio.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreFoundation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreImage.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreLocation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreMIDI.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDarwin.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDispatch.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftMetal.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftOSLog.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftObjectiveC.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftQuartzCore.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftSpatial.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftXPC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftos.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftsimd.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftFoundation.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUIKit.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCloudKit.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftNetwork.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreGraphics.dylib",
-          "weak": false
+          "weak": false,
+          "packaged": true
         }
       ]
     },
@@ -599,502 +88,26 @@
       "path": "Payload/Telegram.app/Frameworks/TelegramUIFramework.framework/TelegramUIFramework",
       "cpu": "arm64",
       "platform": "IOS",
-      "dependencies": [
+      "embedded_dependencies": [
         {
           "name": "@rpath/MtProtoKitFramework.framework/MtProtoKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/SwiftSignalKitFramework.framework/SwiftSignalKitFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/PostboxFramework.framework/PostboxFramework",
-          "weak": false
+          "weak": false,
+          "packaged": true
         },
         {
           "name": "@rpath/TelegramCoreFramework.framework/TelegramCoreFramework",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Foundation.framework/Foundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UIKit.framework/UIKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AddressBook.framework/AddressBook",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AVFoundation.framework/AVFoundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/PassKit.framework/PassKit",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/Metal.framework/Metal",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/QuartzCore.framework/QuartzCore",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/ImageIO.framework/ImageIO",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libc++.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/GLKit.framework/GLKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/VideoToolbox.framework/VideoToolbox",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreMedia.framework/CoreMedia",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreVideo.framework/CoreVideo",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Accelerate.framework/Accelerate",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AudioToolbox.framework/AudioToolbox",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreTelephony.framework/CoreTelephony",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libz.1.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Network.framework/Network",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/libbz2.1.0.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libiconv.2.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreAudio.framework/CoreAudio",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/QuickLook.framework/QuickLook",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreMotion.framework/CoreMotion",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Vision.framework/Vision",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/PhotosUI.framework/PhotosUI",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/WebKit.framework/WebKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreText.framework/CoreText",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Security.framework/Security",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CFNetwork.framework/CFNetwork",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libSystem.B.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libobjc.A.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/libresolv.9.dylib",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AVFAudio.framework/AVFAudio",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AVKit.framework/AVKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/BackgroundTasks.framework/BackgroundTasks",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CallKit.framework/CallKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Combine.framework/Combine",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Contacts.framework/Contacts",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/ContactsUI.framework/ContactsUI",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreHaptics.framework/CoreHaptics",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreImage.framework/CoreImage",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreLocation.framework/CoreLocation",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreML.framework/CoreML",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CoreSpotlight.framework/CoreSpotlight",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/CryptoKit.framework/CryptoKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/EventKit.framework/EventKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/EventKitUI.framework/EventKitUI",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/IOSurface.framework/IOSurface",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Intents.framework/Intents",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/LocalAuthentication.framework/LocalAuthentication",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MapKit.framework/MapKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MessageUI.framework/MessageUI",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MetalKit.framework/MetalKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MetalPerformanceShaders.framework/MetalPerformanceShaders",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/MetricKit.framework/MetricKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/OpenGLES.framework/OpenGLES",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/PDFKit.framework/PDFKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Photos.framework/Photos",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/PushKit.framework/PushKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/ReplayKit.framework/ReplayKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SafariServices.framework/SafariServices",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SceneKit.framework/SceneKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Speech.framework/Speech",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/StoreKit.framework/StoreKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/SwiftUI.framework/SwiftUI",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/Translation.framework/Translation",
-          "weak": true
-        },
-        {
-          "name": "/System/Library/Frameworks/UniformTypeIdentifiers.framework/UniformTypeIdentifiers",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/UserNotifications.framework/UserNotifications",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/VisionKit.framework/VisionKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/WidgetKit.framework/WidgetKit",
-          "weak": false
-        },
-        {
-          "name": "/System/Library/Frameworks/_Translation_SwiftUI.framework/_Translation_SwiftUI",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/libcompression.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftAVFoundation.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftAccelerate.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCallKit.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCompression.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreAudio.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreFoundation.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreImage.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreLocation.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreMIDI.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDarwin.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftDispatch.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftGLKit.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftIntents.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftMetal.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftMetalKit.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftModelIO.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftNaturalLanguage.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftOSLog.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftObjectiveC.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftPassKit.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftQuartzCore.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftSceneKit.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftSpatial.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftXPC.dylib",
-          "weak": true
-        },
-        {
-          "name": "/usr/lib/swift/libswift_Concurrency.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftos.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftsimd.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftFoundation.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreGraphics.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreMedia.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftNetwork.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftVision.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftPhotosUI.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftWebKit.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftUIKit.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftCoreML.dylib",
-          "weak": false
-        },
-        {
-          "name": "/usr/lib/swift/libswiftPhotos.dylib",
-          "weak": false
+          "weak": false,
+          "packaged": true
         }
       ]
     }
@@ -1106,5 +119,7 @@
   ],
   "photo_usage": "We need this so that you can share photos and videos from your photo library.",
   "has_provisioning_profile": false,
-  "scope": "Static package checks only; signing and physical device runtime remain unverified"
+  "runtime_verified": false,
+  "signing_verified": false,
+  "scope": "Static package checks only; signing and physical iPhone runtime remain unverified"
 }

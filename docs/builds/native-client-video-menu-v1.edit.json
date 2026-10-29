@@ -1,0 +1,113 @@
+{
+  "plan": {
+    "source": "artifacts\\client-gear\\release30-menu\\qa-menu\\recording.mp4",
+    "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+    "app_source_file": "artifacts/client-gear/release30-menu/app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 102.0,
+        "end": 126.08,
+        "title": "01  Главное меню и настройки"
+      }
+    ],
+    "target_seconds": 14,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 3.4252109754638695,
+      "valid_ticks": 1,
+      "maximum_tick_deviation_seconds": 0.0,
+      "creation_time": "2026-10-29T00:17:59.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-29T00:19:00+00:00",
+          "frame": 62,
+          "pts": 80.413333,
+          "clock_mask_error": 9.906875371507826e-05,
+          "offset_from_request": -16.611455024536127,
+          "plausible_creation_time": false,
+          "screenshot": "artifacts\\client-gear\\release30-menu\\qa-menu\\maestro\\2026-10-29_001811\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\menu-collapsed.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:20:00+00:00",
+          "frame": 258,
+          "pts": 120.376667,
+          "clock_mask_error": 0.00019813750743015652,
+          "offset_from_request": 3.4252109754638695,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\release30-menu\\qa-menu\\maestro\\2026-10-29_001811\\qa-menu\\takeScreenshot\\artifacts\\native-demo\\menu-settings-closed.png"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "start": 102.0,
+      "end": 126.08,
+      "title": "01  Главное меню и настройки",
+      "cuts": [
+        [
+          102.86519999820739,
+          104.71320000119506
+        ],
+        [
+          107.92353299820738,
+          110.41153300119507
+        ],
+        [
+          113.66186699820739,
+          115.69486700119506
+        ],
+        [
+          118.99686699820738,
+          120.60986700119507
+        ],
+        [
+          123.40519999820738,
+          125.50320000119507
+        ]
+      ],
+      "kept": [
+        [
+          102.0,
+          102.86519999820739
+        ],
+        [
+          104.71320000119506,
+          107.92353299820738
+        ],
+        [
+          110.41153300119507,
+          113.66186699820739
+        ],
+        [
+          115.69486700119506,
+          118.99686699820738
+        ],
+        [
+          120.60986700119507,
+          123.40519999820738
+        ],
+        [
+          125.50320000119507,
+          126.08
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "01  Главное меню и настройки",
+      "start": 0.0,
+      "end": 14.0
+    }
+  ],
+  "output_frames": 420,
+  "source_sha256": "63be375fdc0c9bb21fb9a3fd86cef6f30b36d1c9b5553993f1bba16bbfb3d07a",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 14.0
+}

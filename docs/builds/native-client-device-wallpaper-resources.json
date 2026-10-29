@@ -2,10 +2,27 @@
   "resources": [
     {
       "entry": "Payload/Telegram.app/SimulatorDefaultPattern.tgv",
-      "bytes": 180957,
-      "sha256": "db4963635ebbf6434339d163759b2c91483aabcee75e5916dc6c2a6fa0b02731",
-      "decoded_bytes": 507560,
-      "viewbox": "480 986.6666667 480 986.6666667"
+      "bytes": 183832,
+      "sha256": "3c5ef666d033ce9effe703b80348b9d7363323f0076b2856ec041923c78b0ab8",
+      "decoded_bytes": 507516,
+      "viewbox": "0 0 1440 2960"
+    },
+    {
+      "entry": "Payload/Telegram.app/fqv01SQemVIBAAAApND8LDRUhRU.tgv",
+      "bytes": 183832,
+      "sha256": "3c5ef666d033ce9effe703b80348b9d7363323f0076b2856ec041923c78b0ab8",
+      "decoded_bytes": 507516,
+      "viewbox": "0 0 1440 2960"
+    },
+    {
+      "entry": "Payload/Telegram.app/SimulatorDefaultPattern.bin",
+      "bytes": 498438,
+      "sha256": "96071caea6918689bc93261ae9e570b9f4665f5908d33b9c3d7fdf4b994ffbde",
+      "dimensions": [
+        1440,
+        2960
+      ],
+      "representation": "prepared-pattern-wallpaper"
     },
     {
       "entry": "Payload/Telegram.app/SimulatorDefaultPatternPreview.png",

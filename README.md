@@ -1,6 +1,10 @@
 # Активная разработка: нативный Telegram iOS
 
-[**Видео текущей сборки — 2:54**](https://raw.githubusercontent.com/razievdaniil-rgb/telegram_visual_copy/main/docs/videos/Telegram-native-build7-demo.mp4) · [Главы и происхождение записи](docs/FEATURE_VIDEO.md). Снято на уже собранном iOS Simulator executable из тех же исходников, что и device IPA build 7.
+[**Историческое видео build 7 — 2:54**](https://raw.githubusercontent.com/razievdaniil-rgb/telegram_visual_copy/main/docs/videos/Telegram-native-build7-demo.mp4) · [Главы и происхождение записи](docs/FEATURE_VIDEO.md). Снято на уже собранном iOS Simulator executable из тех же исходников, что и device IPA build 7.
+
+## Текущая поставка — iPhone build 12, 29 октября 2026
+
+[Единый IPA и отчёт](docs/IPHONE_CLIENT_BUILD.md). Исходники `3636175`: штатная шестерёнка, без отдельной нижней лупы, оригинальный узор и локальная смена общих обоев. Device и Simulator собраны; меню, общий фон и его сохранение/сброс проверены на Simulator. Новая видеозапись завершается. Подпись и работа на физическом iPhone пока не проверены.
 
 ## Поставка iPhone build 7 — 28 октября 2026
 

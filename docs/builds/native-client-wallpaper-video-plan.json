@@ -1,0 +1,108 @@
+{
+  "source": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\recording.mp4",
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "app_source_file": "artifacts/client-gear/release30-wallpaper/app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 91.3,
+      "end": 93.65,
+      "title": "02  Оригинальный фон"
+    },
+    {
+      "start": 246,
+      "end": 257,
+      "title": "Обои в штатных настройках"
+    },
+    {
+      "start": 295.5,
+      "end": 301.65,
+      "title": "Применение нового фона"
+    },
+    {
+      "start": 336.5,
+      "end": 366.75,
+      "title": "Отправка и редактирование"
+    },
+    {
+      "start": 423.5,
+      "end": 424.95,
+      "title": "Фон после перезапуска"
+    },
+    {
+      "start": 449.4,
+      "end": 461.35,
+      "title": "Сброс обоев"
+    },
+    {
+      "start": 550,
+      "end": 552.1,
+      "title": "Стандартный фон восстановлен"
+    }
+  ],
+  "target_seconds": 44,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 0.5415100383758045,
+    "valid_ticks": 5,
+    "maximum_tick_deviation_seconds": 0.12833299999994097,
+    "creation_time": "2026-10-29T00:21:16.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-29T00:22:00+00:00",
+        "frame": 1,
+        "pts": 44.055,
+        "clock_mask_error": 0.00039627501486031304,
+        "offset_from_request": 0.4315100383758548,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-gear-default.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:25:00+00:00",
+        "frame": 264,
+        "pts": 224.073333,
+        "clock_mask_error": 0.00019813750743015652,
+        "offset_from_request": 0.4131770383758635,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-catalog.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:26:00+00:00",
+        "frame": 777,
+        "pts": 300.056667,
+        "clock_mask_error": 0.00574598771547454,
+        "offset_from_request": -15.57015696162415,
+        "plausible_creation_time": false,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-blue-chat.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:27:00+00:00",
+        "frame": 1322,
+        "pts": 343.865,
+        "clock_mask_error": 9.906875371507826e-05,
+        "offset_from_request": 0.6215100383758454,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-after-message-edit.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:28:00+00:00",
+        "frame": 2478,
+        "pts": 403.885,
+        "clock_mask_error": 0.0004953437685753912,
+        "offset_from_request": 0.6015100383758636,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-after-profile-edit.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:30:00+00:00",
+        "frame": 3229,
+        "pts": 523.945,
+        "clock_mask_error": 0.0006934812760055479,
+        "offset_from_request": 0.5415100383758045,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-default-after-reset.png"
+      }
+    ]
+  }
+}

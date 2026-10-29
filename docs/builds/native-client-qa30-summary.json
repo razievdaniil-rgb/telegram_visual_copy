@@ -1,0 +1,62 @@
+{
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "qa_run": 40792297773,
+  "qa_head": "e70bd726b6f9a45de4679e20007503dc02b75a9f",
+  "menu_passed": true,
+  "wallpaper_flow_passed": true,
+  "wallpaper_frames_passed": true,
+  "photo_fixture_import": "timeout; avatar and presentation skipped in this run",
+  "full_artifact_id": 12862719223,
+  "artifact_sha256": "bffde61b2d42d94ab0539a3fbe95cab25b744b805703c3fa615a1b739072f790",
+  "wallpaper_cache": [
+    {
+      "path": "telegram-data/accounts-metadata/media/telegram-cloud-document-size-1-5789658100176783156-m",
+      "bytes": 20054,
+      "sha256": "c6bbc605fa67a839c37fc73736fa530c0502200c6f1e51c0e8ed0071000f49c2"
+    },
+    {
+      "path": "telegram-data/accounts-metadata/media/telegram-cloud-document-size-1-5789658100176783156-m_partial.meta",
+      "bytes": 20,
+      "sha256": "cf9f9dc96f0679754fc7e1c9e465785e260ecacb525feec050bbbe6f10e3e818"
+    },
+    {
+      "path": "telegram-data/accounts-metadata/media/telegram-cloud-document-4-5789658100176783156",
+      "bytes": 183832,
+      "sha256": "3c5ef666d033ce9effe703b80348b9d7363323f0076b2856ec041923c78b0ab8"
+    },
+    {
+      "path": "telegram-data/accounts-metadata/media/telegram-cloud-document-4-5789658100176783156_partial.meta",
+      "bytes": 20,
+      "sha256": "cf9f9dc96f0679754fc7e1c9e465785e260ecacb525feec050bbbe6f10e3e818"
+    },
+    {
+      "path": "telegram-data/accounts-metadata/media/cache/telegram-cloud-document-4-5789658100176783156:prepared-pattern-wallpaper",
+      "bytes": 498438,
+      "sha256": "96071caea6918689bc93261ae9e570b9f4665f5908d33b9c3d7fdf4b994ffbde"
+    },
+    {
+      "path": "telegram-data/account-14768069242906504268/postbox/media/telegram-cloud-document-size-1-5789658100176783156-m",
+      "bytes": 20054,
+      "sha256": "c6bbc605fa67a839c37fc73736fa530c0502200c6f1e51c0e8ed0071000f49c2"
+    },
+    {
+      "path": "telegram-data/account-14768069242906504268/postbox/media/telegram-cloud-document-4-5789658100176783156",
+      "bytes": 183832,
+      "sha256": "3c5ef666d033ce9effe703b80348b9d7363323f0076b2856ec041923c78b0ab8"
+    },
+    {
+      "path": "telegram-data/account-14768069242906504268/postbox/media/cache/telegram-cloud-document-4-5789658100176783156:prepared-pattern-wallpaper",
+      "bytes": 498438,
+      "sha256": "96071caea6918689bc93261ae9e570b9f4665f5908d33b9c3d7fdf4b994ffbde"
+    }
+  ],
+  "crash_reports": [],
+  "visual_review": {
+    "menu_screenshots": 10,
+    "wallpaper_screenshots": 13,
+    "menu_movie_cut_frames": 24,
+    "wallpaper_v1_cut_frames": 76,
+    "wallpaper_v2_cut_frames": 57
+  },
+  "physical_iphone_tested": false
+}

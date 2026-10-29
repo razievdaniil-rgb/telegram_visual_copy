@@ -1,0 +1,73 @@
+{
+  "crop_points": [
+    90,
+    160,
+    338,
+    270
+  ],
+  "minimum_detail": 0.3,
+  "records": [
+    {
+      "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-default-pattern.png",
+      "sha256": "343c4e0e80ea6c3940f79648302e9d1661e683860313dd6208c544b58b5ff54c",
+      "palette": "green",
+      "mean_rgb": [
+        148.6380457803845,
+        192.63419273378952,
+        125.55338057999349
+      ],
+      "highpass_detail": 1.8642676767676767,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-blue-chat.png",
+      "sha256": "98623f67c76382118a6f62d4110bdbe596682956b3185dc3e0a9722bb4b0ded4",
+      "palette": "blue",
+      "mean_rgb": [
+        151.275798305637,
+        192.7100073313783,
+        227.12139947865754
+      ],
+      "highpass_detail": 1.6918784620397525,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-after-profile-edit.png",
+      "sha256": "59e6879fcbe20a9c653fb8a75f36998bbda31feda193c2d9763c6cc51d8f7b97",
+      "palette": "blue",
+      "mean_rgb": [
+        151.275798305637,
+        192.7100073313783,
+        227.12139947865754
+      ],
+      "highpass_detail": 1.6918784620397525,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-blue-after-restart.png",
+      "sha256": "59e6879fcbe20a9c653fb8a75f36998bbda31feda193c2d9763c6cc51d8f7b97",
+      "palette": "blue",
+      "mean_rgb": [
+        151.275798305637,
+        192.7100073313783,
+        227.12139947865754
+      ],
+      "highpass_detail": 1.6918784620397525,
+      "passed": true
+    },
+    {
+      "screenshot": "artifacts\\client-gear\\release30-wallpaper\\qa-wallpaper\\maestro\\2026-10-29_002121\\qa-wallpaper\\takeScreenshot\\artifacts\\native-demo\\wallpaper-default-after-reset.png",
+      "sha256": "39b82dc15efd477537dd8ed027b3cad07ca62941d0fcb75b33b005b3d7f1130d",
+      "palette": "green",
+      "mean_rgb": [
+        148.6380457803845,
+        192.63419273378952,
+        125.55338057999349
+      ],
+      "highpass_detail": 1.8642676767676767,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "Real QA screenshot pattern detail and palette only; layout/motion need frame review"
+}
