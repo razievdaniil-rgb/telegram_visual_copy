@@ -1,0 +1,644 @@
+{
+  "plan": {
+    "source": "artifacts\\client-gear\\qa31-full\\qa-presentation\\recording.mp4",
+    "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+    "app_source_file": "artifacts/client-gear/qa31-full/app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 147.492,
+        "end": 151.192,
+        "title": "04  Профиль и новая переписка"
+      },
+      {
+        "start": 173.992,
+        "end": 176.642,
+        "title": "04  Профиль и новая переписка"
+      },
+      {
+        "start": 200.192,
+        "end": 209.292,
+        "title": "Создание чата и сообщения"
+      },
+      {
+        "start": 212.192,
+        "end": 215.892,
+        "title": "Создание чата и сообщения"
+      },
+      {
+        "start": 218.492,
+        "end": 220.742,
+        "title": "Создание чата и сообщения"
+      },
+      {
+        "start": 223.692,
+        "end": 227.542,
+        "title": "Дата, время и галочки"
+      },
+      {
+        "start": 234.192,
+        "end": 236.492,
+        "title": "Дата, время и галочки"
+      },
+      {
+        "start": 241.492,
+        "end": 241.742,
+        "title": "Дата, время и галочки"
+      },
+      {
+        "start": 250.492,
+        "end": 252.492,
+        "title": "Дата, время и галочки"
+      },
+      {
+        "start": 264.592,
+        "end": 265.292,
+        "title": "Дата, время и галочки"
+      },
+      {
+        "start": 274.992,
+        "end": 286.242,
+        "title": "Сообщение за собеседника"
+      },
+      {
+        "start": 295.192,
+        "end": 303.542,
+        "title": "Редактирование и две галочки"
+      },
+      {
+        "start": 318.592,
+        "end": 335.892,
+        "title": "Диалог и профиль"
+      },
+      {
+        "start": 355.192,
+        "end": 361.892,
+        "title": "Изменение номера телефона"
+      },
+      {
+        "start": 368.992,
+        "end": 370.442,
+        "title": "Изменение номера телефона"
+      },
+      {
+        "start": 382.992,
+        "end": 387.492,
+        "title": "Статусы собеседника"
+      },
+      {
+        "start": 395.992,
+        "end": 397.192,
+        "title": "Статусы собеседника"
+      },
+      {
+        "start": 407.492,
+        "end": 411.792,
+        "title": "Статусы собеседника"
+      },
+      {
+        "start": 430.492,
+        "end": 436.392,
+        "title": "Статусы собеседника"
+      },
+      {
+        "start": 461.992,
+        "end": 463.592,
+        "title": "Сохранение после перезапуска"
+      },
+      {
+        "start": 478.692,
+        "end": 480.292,
+        "title": "Сохранение после перезапуска"
+      }
+    ],
+    "target_seconds": 80,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 1.5075181102752566,
+      "valid_ticks": 8,
+      "maximum_tick_deviation_seconds": 0.1624999999999872,
+      "creation_time": "2026-10-29T00:56:00.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-29T00:57:00+00:00",
+          "frame": 110,
+          "pts": 59.29,
+          "clock_mask_error": 0.00014860313057261742,
+          "offset_from_request": 1.3450181102752694,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-01-chats.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:58:00+00:00",
+          "frame": 1058,
+          "pts": 119.156667,
+          "clock_mask_error": 0.0006439468991480087,
+          "offset_from_request": 1.4783511102752698,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-05-public-edit.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:59:00+00:00",
+          "frame": 1939,
+          "pts": 179.18,
+          "clock_mask_error": 0.0007925500297206261,
+          "offset_from_request": 1.4550181102752617,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-08-avatar-crop.png"
+        },
+        {
+          "minute_utc": "2026-10-29T01:00:00+00:00",
+          "frame": 2643,
+          "pts": 239.265,
+          "clock_mask_error": 4.953437685753913e-05,
+          "offset_from_request": 1.3700181102752822,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-09-manual-date.png"
+        },
+        {
+          "minute_utc": "2026-10-29T01:01:00+00:00",
+          "frame": 3768,
+          "pts": 299.098333,
+          "clock_mask_error": 9.906875371507826e-05,
+          "offset_from_request": 1.5366851102752435,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-12-receipt-edit.png"
+        },
+        {
+          "minute_utc": "2026-10-29T01:02:00+00:00",
+          "frame": 4845,
+          "pts": 359.036667,
+          "clock_mask_error": 9.906875371507826e-05,
+          "offset_from_request": 1.598351110275246,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-15-recently.png"
+        },
+        {
+          "minute_utc": "2026-10-29T01:03:00+00:00",
+          "frame": 5860,
+          "pts": 419.043333,
+          "clock_mask_error": 0.0032197344957400438,
+          "offset_from_request": 1.5916851102752503,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-16-typing.png"
+        },
+        {
+          "minute_utc": "2026-10-29T01:04:00+00:00",
+          "frame": 8043,
+          "pts": 479.03,
+          "clock_mask_error": 0.00039627501486031304,
+          "offset_from_request": 1.6050181102752958,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-19-public-edit-persisted.png"
+        }
+      ]
+    },
+    "protect": [
+      [
+        430.49248188972473,
+        433.49248188972473
+      ]
+    ]
+  },
+  "sections": [
+    {
+      "start": 147.492,
+      "end": 151.192,
+      "title": "04  Профиль и новая переписка",
+      "cuts": [
+        [
+          148.0320000034645,
+          148.85666699769033
+        ]
+      ],
+      "kept": [
+        [
+          147.492,
+          148.0320000034645
+        ],
+        [
+          148.85666699769033,
+          151.192
+        ]
+      ]
+    },
+    {
+      "start": 173.992,
+      "end": 176.642,
+      "title": "04  Профиль и новая переписка",
+      "cuts": [],
+      "kept": [
+        [
+          173.992,
+          176.642
+        ]
+      ]
+    },
+    {
+      "start": 200.192,
+      "end": 209.292,
+      "title": "Создание чата и сообщения",
+      "cuts": [
+        [
+          207.12500000346452,
+          207.70999999769035
+        ]
+      ],
+      "kept": [
+        [
+          200.192,
+          207.12500000346452
+        ],
+        [
+          207.70999999769035,
+          209.292
+        ]
+      ]
+    },
+    {
+      "start": 212.192,
+      "end": 215.892,
+      "title": "Создание чата и сообщения",
+      "cuts": [
+        [
+          215.14000000346454,
+          215.53199999769032
+        ]
+      ],
+      "kept": [
+        [
+          212.192,
+          215.14000000346454
+        ],
+        [
+          215.53199999769032,
+          215.892
+        ]
+      ]
+    },
+    {
+      "start": 218.492,
+      "end": 220.742,
+      "title": "Создание чата и сообщения",
+      "cuts": [],
+      "kept": [
+        [
+          218.492,
+          220.742
+        ]
+      ]
+    },
+    {
+      "start": 223.692,
+      "end": 227.542,
+      "title": "Дата, время и галочки",
+      "cuts": [],
+      "kept": [
+        [
+          223.692,
+          227.542
+        ]
+      ]
+    },
+    {
+      "start": 234.192,
+      "end": 236.492,
+      "title": "Дата, время и галочки",
+      "cuts": [],
+      "kept": [
+        [
+          234.192,
+          236.492
+        ]
+      ]
+    },
+    {
+      "start": 241.492,
+      "end": 241.742,
+      "title": "Дата, время и галочки",
+      "cuts": [],
+      "kept": [
+        [
+          241.492,
+          241.742
+        ]
+      ]
+    },
+    {
+      "start": 250.492,
+      "end": 252.492,
+      "title": "Дата, время и галочки",
+      "cuts": [],
+      "kept": [
+        [
+          250.492,
+          252.492
+        ]
+      ]
+    },
+    {
+      "start": 264.592,
+      "end": 265.292,
+      "title": "Дата, время и галочки",
+      "cuts": [],
+      "kept": [
+        [
+          264.592,
+          265.292
+        ]
+      ]
+    },
+    {
+      "start": 274.992,
+      "end": 286.242,
+      "title": "Сообщение за собеседника",
+      "cuts": [
+        [
+          282.07000000346454,
+          282.79166699769036
+        ]
+      ],
+      "kept": [
+        [
+          274.992,
+          282.07000000346454
+        ],
+        [
+          282.79166699769036,
+          286.242
+        ]
+      ]
+    },
+    {
+      "start": 295.192,
+      "end": 303.542,
+      "title": "Редактирование и две галочки",
+      "cuts": [
+        [
+          302.7983330034645,
+          303.1819999976903
+        ]
+      ],
+      "kept": [
+        [
+          295.192,
+          302.7983330034645
+        ],
+        [
+          303.1819999976903,
+          303.542
+        ]
+      ]
+    },
+    {
+      "start": 318.592,
+      "end": 335.892,
+      "title": "Диалог и профиль",
+      "cuts": [
+        [
+          322.1183330034645,
+          323.15999999769036
+        ],
+        [
+          325.51500000346454,
+          326.94666699769033
+        ],
+        [
+          328.9700000034645,
+          329.5783329976903
+        ],
+        [
+          335.0316670034645,
+          335.5319999976903
+        ]
+      ],
+      "kept": [
+        [
+          318.592,
+          322.1183330034645
+        ],
+        [
+          323.15999999769036,
+          325.51500000346454
+        ],
+        [
+          326.94666699769033,
+          328.9700000034645
+        ],
+        [
+          329.5783329976903,
+          335.0316670034645
+        ],
+        [
+          335.5319999976903,
+          335.892
+        ]
+      ]
+    },
+    {
+      "start": 355.192,
+      "end": 361.892,
+      "title": "Изменение номера телефона",
+      "cuts": [
+        [
+          361.0400000034645,
+          361.5319999976903
+        ]
+      ],
+      "kept": [
+        [
+          355.192,
+          361.0400000034645
+        ],
+        [
+          361.5319999976903,
+          361.892
+        ]
+      ]
+    },
+    {
+      "start": 368.992,
+      "end": 370.442,
+      "title": "Изменение номера телефона",
+      "cuts": [],
+      "kept": [
+        [
+          368.992,
+          370.442
+        ]
+      ]
+    },
+    {
+      "start": 382.992,
+      "end": 387.492,
+      "title": "Статусы собеседника",
+      "cuts": [
+        [
+          385.18500000346455,
+          385.8299999976903
+        ]
+      ],
+      "kept": [
+        [
+          382.992,
+          385.18500000346455
+        ],
+        [
+          385.8299999976903,
+          387.492
+        ]
+      ]
+    },
+    {
+      "start": 395.992,
+      "end": 397.192,
+      "title": "Статусы собеседника",
+      "cuts": [],
+      "kept": [
+        [
+          395.992,
+          397.192
+        ]
+      ]
+    },
+    {
+      "start": 407.492,
+      "end": 411.792,
+      "title": "Статусы собеседника",
+      "cuts": [
+        [
+          409.4233330034645,
+          410.17999999769035
+        ]
+      ],
+      "kept": [
+        [
+          407.492,
+          409.4233330034645
+        ],
+        [
+          410.17999999769035,
+          411.792
+        ]
+      ]
+    },
+    {
+      "start": 430.492,
+      "end": 436.392,
+      "title": "Статусы собеседника",
+      "cuts": [
+        [
+          434.03248189318924,
+          436.0319999976903
+        ]
+      ],
+      "kept": [
+        [
+          430.492,
+          434.03248189318924
+        ],
+        [
+          436.0319999976903,
+          436.392
+        ]
+      ]
+    },
+    {
+      "start": 461.992,
+      "end": 463.592,
+      "title": "Сохранение после перезапуска",
+      "cuts": [
+        [
+          462.53200000346453,
+          463.2319999976903
+        ]
+      ],
+      "kept": [
+        [
+          461.992,
+          462.53200000346453
+        ],
+        [
+          463.2319999976903,
+          463.592
+        ]
+      ]
+    },
+    {
+      "start": 478.692,
+      "end": 480.292,
+      "title": "Сохранение после перезапуска",
+      "cuts": [
+        [
+          479.2320000034645,
+          479.9319999976903
+        ]
+      ],
+      "kept": [
+        [
+          478.692,
+          479.2320000034645
+        ],
+        [
+          479.9319999976903,
+          480.292
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "04  Профиль и новая переписка",
+      "start": 0.0,
+      "end": 5.533333333333333
+    },
+    {
+      "title": "Создание чата и сообщения",
+      "start": 5.533333333333333,
+      "end": 19.6
+    },
+    {
+      "title": "Дата, время и галочки",
+      "start": 19.6,
+      "end": 28.7
+    },
+    {
+      "title": "Сообщение за собеседника",
+      "start": 28.7,
+      "end": 39.233333333333334
+    },
+    {
+      "title": "Редактирование и две галочки",
+      "start": 39.233333333333334,
+      "end": 47.2
+    },
+    {
+      "title": "Диалог и профиль",
+      "start": 47.2,
+      "end": 60.96666666666667
+    },
+    {
+      "title": "Изменение номера телефона",
+      "start": 60.96666666666667,
+      "end": 68.6
+    },
+    {
+      "title": "Статусы собеседника",
+      "start": 68.6,
+      "end": 81.1
+    },
+    {
+      "title": "Сохранение после перезапуска",
+      "start": 81.1,
+      "end": 82.9
+    }
+  ],
+  "output_frames": 2487,
+  "source_sha256": "e0942ba0de1c87b32d84d2754273bae8201ab860d6da6fa3bded1cf21369623d",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 82.9
+}

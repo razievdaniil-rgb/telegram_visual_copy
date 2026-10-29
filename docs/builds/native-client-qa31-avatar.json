@@ -1,0 +1,19 @@
+{
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "qa_run": 40795917058,
+  "qa_head": "446efb5e597cc8ddf73bd47d78913063cf4071a0",
+  "scenario": "qa-avatar",
+  "scenario_passed": true,
+  "screenshots_reviewed": 12,
+  "peer_avatar_before": "orange",
+  "uploaded_avatar": "blue/white synthetic photo",
+  "owner_avatar_in_settings": true,
+  "settings_tab": "gear",
+  "peer_and_owner_persisted_after_restart": true,
+  "artifact_id": 12864601025,
+  "artifact_zip_sha256": "eff6135b384301b32a1d6bd4b1151496cca7f8270e15f65d7f13b9bfa6c7e07a",
+  "movie_v1_review_frames": 72,
+  "physical_device_tested": false,
+  "movie_v2_changed_range_frames_reviewed": 13,
+  "other_four_sections_unchanged_from_reviewed_v1": true
+}

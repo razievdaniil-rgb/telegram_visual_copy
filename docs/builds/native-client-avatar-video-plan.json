@@ -1,0 +1,85 @@
+{
+  "source": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\recording.mp4",
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "app_source_file": "artifacts/client-gear/qa31-avatar/app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 50.7,
+      "end": 51.4,
+      "title": "03  Замена аватара собеседника"
+    },
+    {
+      "start": 62.15,
+      "end": 72.1,
+      "title": "Скрытый редактор профиля"
+    },
+    {
+      "start": 81.0,
+      "end": 98.3,
+      "title": "Выбор фотографии и сохранение"
+    },
+    {
+      "start": 135.0,
+      "end": 139.4,
+      "title": "Свой аватар"
+    },
+    {
+      "start": 147.8,
+      "end": 162.15,
+      "title": "Фото в настройках, вкладка с шестерёнкой"
+    },
+    {
+      "start": 181.8,
+      "end": 183.8,
+      "title": "Аватар после перезапуска"
+    }
+  ],
+  "target_seconds": 33,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 1.7219970417022807,
+    "valid_ticks": 3,
+    "maximum_tick_deviation_seconds": 0.20999999999999375,
+    "creation_time": "2026-10-29T00:52:14.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-29T00:52:00+00:00",
+        "frame": 75,
+        "pts": 31.566667,
+        "clock_mask_error": 0.00034674063800277393,
+        "offset_from_request": -43.864669958297725,
+        "plausible_creation_time": false,
+        "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\avatar-before-chats.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:53:00+00:00",
+        "frame": 155,
+        "pts": 46.05,
+        "clock_mask_error": 0.00029720626114523483,
+        "offset_from_request": 1.6519970417022733,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\avatar-before-profile.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:54:00+00:00",
+        "frame": 943,
+        "pts": 105.77,
+        "clock_mask_error": 0.00039627501486031304,
+        "offset_from_request": 1.9319970417022745,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\uploaded-avatar-after-restart.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:55:00+00:00",
+        "frame": 1656,
+        "pts": 165.98,
+        "clock_mask_error": 0.00019813750743015652,
+        "offset_from_request": 1.7219970417022807,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\owner-avatar-tab-after-restart.png"
+      }
+    ]
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "source": "artifacts\\client-gear\\qa31-full\\qa-presentation\\recording.mp4",
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "app_source_file": "artifacts/client-gear/qa31-full/app-source-sha.txt",
+  "ranges": [
+    {
+      "start": 147.492,
+      "end": 151.192,
+      "title": "04  Профиль и новая переписка"
+    },
+    {
+      "start": 173.992,
+      "end": 176.642,
+      "title": "04  Профиль и новая переписка"
+    },
+    {
+      "start": 200.192,
+      "end": 209.292,
+      "title": "Создание чата и сообщения"
+    },
+    {
+      "start": 212.192,
+      "end": 215.892,
+      "title": "Создание чата и сообщения"
+    },
+    {
+      "start": 218.492,
+      "end": 220.742,
+      "title": "Создание чата и сообщения"
+    },
+    {
+      "start": 223.692,
+      "end": 227.542,
+      "title": "Дата, время и галочки"
+    },
+    {
+      "start": 234.192,
+      "end": 236.492,
+      "title": "Дата, время и галочки"
+    },
+    {
+      "start": 241.492,
+      "end": 241.742,
+      "title": "Дата, время и галочки"
+    },
+    {
+      "start": 250.492,
+      "end": 252.492,
+      "title": "Дата, время и галочки"
+    },
+    {
+      "start": 264.592,
+      "end": 265.292,
+      "title": "Дата, время и галочки"
+    },
+    {
+      "start": 274.992,
+      "end": 286.242,
+      "title": "Сообщение за собеседника"
+    },
+    {
+      "start": 295.192,
+      "end": 303.542,
+      "title": "Редактирование и две галочки"
+    },
+    {
+      "start": 318.592,
+      "end": 335.892,
+      "title": "Диалог и профиль"
+    },
+    {
+      "start": 355.192,
+      "end": 361.892,
+      "title": "Изменение номера телефона"
+    },
+    {
+      "start": 368.992,
+      "end": 370.442,
+      "title": "Изменение номера телефона"
+    },
+    {
+      "start": 382.992,
+      "end": 387.492,
+      "title": "Статусы собеседника"
+    },
+    {
+      "start": 395.992,
+      "end": 397.192,
+      "title": "Статусы собеседника"
+    },
+    {
+      "start": 407.492,
+      "end": 411.792,
+      "title": "Статусы собеседника"
+    },
+    {
+      "start": 430.492,
+      "end": 436.392,
+      "title": "Статусы собеседника"
+    },
+    {
+      "start": 461.992,
+      "end": 463.592,
+      "title": "Сохранение после перезапуска"
+    },
+    {
+      "start": 478.692,
+      "end": 480.292,
+      "title": "Сохранение после перезапуска"
+    }
+  ],
+  "target_seconds": 80,
+  "clip": true,
+  "timeline_alignment": {
+    "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+    "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+    "offset_from_request_seconds": 1.5075181102752566,
+    "valid_ticks": 8,
+    "maximum_tick_deviation_seconds": 0.1624999999999872,
+    "creation_time": "2026-10-29T00:56:00.000000Z",
+    "matches": [
+      {
+        "minute_utc": "2026-10-29T00:57:00+00:00",
+        "frame": 110,
+        "pts": 59.29,
+        "clock_mask_error": 0.00014860313057261742,
+        "offset_from_request": 1.3450181102752694,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-01-chats.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:58:00+00:00",
+        "frame": 1058,
+        "pts": 119.156667,
+        "clock_mask_error": 0.0006439468991480087,
+        "offset_from_request": 1.4783511102752698,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-05-public-edit.png"
+      },
+      {
+        "minute_utc": "2026-10-29T00:59:00+00:00",
+        "frame": 1939,
+        "pts": 179.18,
+        "clock_mask_error": 0.0007925500297206261,
+        "offset_from_request": 1.4550181102752617,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-08-avatar-crop.png"
+      },
+      {
+        "minute_utc": "2026-10-29T01:00:00+00:00",
+        "frame": 2643,
+        "pts": 239.265,
+        "clock_mask_error": 4.953437685753913e-05,
+        "offset_from_request": 1.3700181102752822,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-09-manual-date.png"
+      },
+      {
+        "minute_utc": "2026-10-29T01:01:00+00:00",
+        "frame": 3768,
+        "pts": 299.098333,
+        "clock_mask_error": 9.906875371507826e-05,
+        "offset_from_request": 1.5366851102752435,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-12-receipt-edit.png"
+      },
+      {
+        "minute_utc": "2026-10-29T01:02:00+00:00",
+        "frame": 4845,
+        "pts": 359.036667,
+        "clock_mask_error": 9.906875371507826e-05,
+        "offset_from_request": 1.598351110275246,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-15-recently.png"
+      },
+      {
+        "minute_utc": "2026-10-29T01:03:00+00:00",
+        "frame": 5860,
+        "pts": 419.043333,
+        "clock_mask_error": 0.0032197344957400438,
+        "offset_from_request": 1.5916851102752503,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-16-typing.png"
+      },
+      {
+        "minute_utc": "2026-10-29T01:04:00+00:00",
+        "frame": 8043,
+        "pts": 479.03,
+        "clock_mask_error": 0.00039627501486031304,
+        "offset_from_request": 1.6050181102752958,
+        "plausible_creation_time": true,
+        "screenshot": "artifacts\\client-gear\\qa31-full\\qa-presentation\\maestro\\2026-10-29_005608\\qa-presentation\\takeScreenshot\\artifacts\\native-demo\\film-19-public-edit-persisted.png"
+      }
+    ]
+  },
+  "protect": [
+    [
+      430.49248188972473,
+      433.49248188972473
+    ]
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "duration_seconds": 179.7,
+  "frames": 5391,
+  "fps": 30,
+  "bytes": 6595018,
+  "sha256": "d7f90b46a9ae9a3084153de9ff1d57998ecd056607f864971ed299abe0898a3a",
+  "full_decode_passed": true,
+  "action_speed": 1,
+  "interpolation": false,
+  "chapters": [
+    {
+      "title": "01  Главное меню и настройки",
+      "start": 0.0,
+      "end": 14.0
+    },
+    {
+      "title": "02  Оригинальный фон",
+      "start": 14.0,
+      "end": 14.933333333333334
+    },
+    {
+      "title": "Обои в штатных настройках",
+      "start": 14.933333333333334,
+      "end": 23.766666666666666
+    },
+    {
+      "title": "Применение нового фона",
+      "start": 23.766666666666666,
+      "end": 27.53333333333333
+    },
+    {
+      "title": "Отправка и редактирование",
+      "start": 27.53333333333333,
+      "end": 48.1
+    },
+    {
+      "title": "Фон после перезапуска",
+      "start": 48.1,
+      "end": 49.53333333333333
+    },
+    {
+      "title": "Сброс обоев",
+      "start": 49.53333333333333,
+      "end": 56.93333333333333
+    },
+    {
+      "title": "Стандартный фон восстановлен",
+      "start": 56.93333333333333,
+      "end": 57.86666666666667
+    },
+    {
+      "title": "03  Замена аватара собеседника",
+      "start": 57.86666666666667,
+      "end": 58.56666666666667
+    },
+    {
+      "title": "Скрытый редактор профиля",
+      "start": 58.56666666666667,
+      "end": 66.76666666666667
+    },
+    {
+      "title": "Выбор фотографии и сохранение",
+      "start": 66.76666666666667,
+      "end": 81.7
+    },
+    {
+      "title": "Свой аватар",
+      "start": 81.7,
+      "end": 85.03333333333333
+    },
+    {
+      "title": "Фото в настройках, вкладка с шестерёнкой",
+      "start": 85.03333333333333,
+      "end": 95.9
+    },
+    {
+      "title": "Аватар после перезапуска",
+      "start": 95.9,
+      "end": 96.8
+    },
+    {
+      "title": "04  Профиль и новая переписка",
+      "start": 96.8,
+      "end": 102.33333333333333
+    },
+    {
+      "title": "Создание чата и сообщения",
+      "start": 102.33333333333333,
+      "end": 116.4
+    },
+    {
+      "title": "Дата, время и галочки",
+      "start": 116.4,
+      "end": 125.5
+    },
+    {
+      "title": "Сообщение за собеседника",
+      "start": 125.5,
+      "end": 136.03333333333333
+    },
+    {
+      "title": "Редактирование и две галочки",
+      "start": 136.03333333333333,
+      "end": 144.0
+    },
+    {
+      "title": "Диалог и профиль",
+      "start": 144.0,
+      "end": 157.76666666666665
+    },
+    {
+      "title": "Изменение номера телефона",
+      "start": 157.76666666666665,
+      "end": 165.39999999999998
+    },
+    {
+      "title": "Статусы собеседника",
+      "start": 165.39999999999998,
+      "end": 177.89999999999998
+    },
+    {
+      "title": "Сохранение после перезапуска",
+      "start": 177.89999999999998,
+      "end": 179.7
+    }
+  ],
+  "clips": [
+    {
+      "movie": "artifacts\\client-gear\\video-menu-v1.mp4",
+      "edit": "artifacts\\client-gear\\video-menu-v1.edit.json",
+      "sha256": "1da95e22c571d6adb6e24380cc8790311bb8eae99e55acb0f6e6cb7a0c608d07",
+      "raw_sha256": "63be375fdc0c9bb21fb9a3fd86cef6f30b36d1c9b5553993f1bba16bbfb3d07a"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-wallpaper-v2.mp4",
+      "edit": "artifacts\\client-gear\\video-wallpaper-v2.edit.json",
+      "sha256": "ea3ed57a19be7db5ed7acb6ac746b8c9e2268c4d06f4e6dea5b19bea6e1086f5",
+      "raw_sha256": "e605090a15c16ac7a3ee7aaa0e24ecfd2f225b369094e95143e8fafcaaffcdec"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-avatar-v2.mp4",
+      "edit": "artifacts\\client-gear\\video-avatar-v2.edit.json",
+      "sha256": "8afb738f66f2ad1d556b23395952a2208cf5b3f33f71e61cb3c318f716279cc1",
+      "raw_sha256": "cd91885a9a4d1c08db97a842fb61dafcfb24d2a90a0790476a80c3dd6a476d1d"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-body-v3.mp4",
+      "edit": "artifacts\\client-gear\\video-body-v3.edit.json",
+      "sha256": "d1af01e3be378fa34a2d269a47c6ab27cdd4b9834056b3c47cf88fee1d8ec0c6",
+      "raw_sha256": "e0942ba0de1c87b32d84d2754273bae8201ab860d6da6fa3bded1cf21369623d"
+    }
+  ],
+  "faststart_verified": true,
+  "width": 720,
+  "height": 1622,
+  "profile": "H.264 Main",
+  "physical_iphone_tested": false,
+  "qa_runs": [
+    40792297773,
+    40795917058
+  ],
+  "visual_review": {
+    "native_screenshots": 57,
+    "menu_cut_frames": 24,
+    "wallpaper_v2_cut_frames": 57,
+    "avatar_v1_cut_frames": 72,
+    "avatar_v2_changed_frames": 13,
+    "body_v2_cut_frames": 72,
+    "body_v3_source_frame_selection_unchanged": true,
+    "final_joins_and_grouped_labels": 20
+  },
+  "limitations": [
+    "Device IPA requires signing; physical installation and runtime unverified",
+    "Global photo wallpaper and personal-chat wallpaper UI not independently tested",
+    "Independent pixel comparison with App Store Telegram not completed"
+  ]
+}

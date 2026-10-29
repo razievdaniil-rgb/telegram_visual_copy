@@ -114,9 +114,12 @@ jobs:
           if [ '${{ matrix.scenario }}' != fresh ]; then
             python3 native/scripts/seed_demo.py "$CONTAINER"
           fi
-          if [ '${{ matrix.scenario }}' = avatar ] || [ '${{ matrix.scenario }}' = presentation ] || [ '${{ matrix.scenario }}' = handoff ]; then
-            xcrun simctl addmedia "$DEVICE" native/fixtures/upload-avatar.png
-          fi
+      - name: Prepare Photos for a standalone media scenario
+        if: (matrix.scenario == 'avatar' || matrix.scenario == 'presentation' || matrix.scenario == 'handoff') && steps.install.outcome == 'success'
+        timeout-minutes: 9
+        run: |
+          python3 native/scripts/record_scenario.py native/qa-photos-setup.yaml --timeout 180
+          python3 native/scripts/import_demo_photo.py
       - name: Probe the exact compiled native wallpaper decoder
         if: matrix.scenario == 'wallpaper' && inputs.probe_decoder
         continue-on-error: true
@@ -193,12 +196,10 @@ jobs:
       - name: Add the avatar fixture after the simulator has warmed up
         id: release_photo
         if: ${{ !cancelled() && matrix.scenario == 'release' && steps.wallpaper_capture.outcome == 'success' }}
-        timeout-minutes: 3
+        timeout-minutes: 9
         run: |
-          python3 - <<'PY'
-          import os, subprocess
-          subprocess.run(['xcrun', 'simctl', 'addmedia', os.environ['DEVICE'], 'native/fixtures/upload-avatar.png'], timeout=90, check=True)
-          PY
+          python3 native/scripts/record_scenario.py native/qa-photos-setup.yaml --timeout 180
+          python3 native/scripts/import_demo_photo.py
       - name: Verify release wallpaper detail and persisted palette
         if: matrix.scenario == 'release' && steps.wallpaper_capture.outcome == 'success'
         run: python3 native/scripts/verify_wallpaper_frames.py artifacts/native-demo/qa-wallpaper

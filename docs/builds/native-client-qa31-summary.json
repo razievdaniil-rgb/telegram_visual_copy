@@ -1,0 +1,28 @@
+{
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "qa_run": 40795917058,
+  "qa_head": "446efb5e597cc8ddf73bd47d78913063cf4071a0",
+  "artifact_id": 12865126211,
+  "artifact_zip_sha256": "58ed8656d773d15b564d3f86e8c587030f4fe2600c7d03aab09cef0b81eb6736",
+  "workflow_conclusion": "success",
+  "avatar_commands": 85,
+  "presentation_commands": 172,
+  "photos_setup_passed": true,
+  "avatar_passed": true,
+  "presentation_passed": true,
+  "presentation_screenshots_reviewed": 22,
+  "avatar_screenshots_reviewed": 12,
+  "checks": [
+    "peer and owner avatar replacement and persistence",
+    "send/copy/select/public edit without selection tooltip",
+    "create virtual profile and chat",
+    "both message sides",
+    "manual date/time and sent/read receipt edit",
+    "profile phone edit reflected publicly",
+    "recently/typing presence with native animation",
+    "messages retained after restart",
+    "public edit also retained in document-backed editor"
+  ],
+  "collected_crashes": [],
+  "physical_device_tested": false
+}

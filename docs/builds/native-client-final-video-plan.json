@@ -1,0 +1,21 @@
+{
+  "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+  "clips": [
+    {
+      "movie": "artifacts\\client-gear\\video-menu-v1.mp4",
+      "edit": "artifacts\\client-gear\\video-menu-v1.edit.json"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-wallpaper-v2.mp4",
+      "edit": "artifacts\\client-gear\\video-wallpaper-v2.edit.json"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-avatar-v2.mp4",
+      "edit": "artifacts\\client-gear\\video-avatar-v2.edit.json"
+    },
+    {
+      "movie": "artifacts\\client-gear\\video-body-v3.mp4",
+      "edit": "artifacts\\client-gear\\video-body-v3.edit.json"
+    }
+  ]
+}

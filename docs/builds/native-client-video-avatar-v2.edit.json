@@ -1,0 +1,301 @@
+{
+  "plan": {
+    "source": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\recording.mp4",
+    "app_source_sha": "363617534c57261ed3c39ea803626f69971f6be2",
+    "app_source_file": "artifacts/client-gear/qa31-avatar/app-source-sha.txt",
+    "ranges": [
+      {
+        "start": 50.7,
+        "end": 51.4,
+        "title": "03  Замена аватара собеседника"
+      },
+      {
+        "start": 62.15,
+        "end": 72.1,
+        "title": "Скрытый редактор профиля"
+      },
+      {
+        "start": 81.0,
+        "end": 98.3,
+        "title": "Выбор фотографии и сохранение"
+      },
+      {
+        "start": 135.0,
+        "end": 139.4,
+        "title": "Свой аватар"
+      },
+      {
+        "start": 147.8,
+        "end": 162.15,
+        "title": "Фото в настройках, вкладка с шестерёнкой"
+      },
+      {
+        "start": 181.8,
+        "end": 183.8,
+        "title": "Аватар после перезапуска"
+      }
+    ],
+    "target_seconds": 33,
+    "clip": true,
+    "timeline_alignment": {
+      "method": "First native black status-clock glyph match at its UTC minute boundary; checked against creation_time",
+      "assumption": "Dedicated QA Simulator uses the same UTC clock as Maestro; screenshot clock values manually reviewed",
+      "offset_from_request_seconds": 1.7219970417022807,
+      "valid_ticks": 3,
+      "maximum_tick_deviation_seconds": 0.20999999999999375,
+      "creation_time": "2026-10-29T00:52:14.000000Z",
+      "matches": [
+        {
+          "minute_utc": "2026-10-29T00:52:00+00:00",
+          "frame": 75,
+          "pts": 31.566667,
+          "clock_mask_error": 0.00034674063800277393,
+          "offset_from_request": -43.864669958297725,
+          "plausible_creation_time": false,
+          "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\avatar-before-chats.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:53:00+00:00",
+          "frame": 155,
+          "pts": 46.05,
+          "clock_mask_error": 0.00029720626114523483,
+          "offset_from_request": 1.6519970417022733,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\avatar-before-profile.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:54:00+00:00",
+          "frame": 943,
+          "pts": 105.77,
+          "clock_mask_error": 0.00039627501486031304,
+          "offset_from_request": 1.9319970417022745,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\uploaded-avatar-after-restart.png"
+        },
+        {
+          "minute_utc": "2026-10-29T00:55:00+00:00",
+          "frame": 1656,
+          "pts": 165.98,
+          "clock_mask_error": 0.00019813750743015652,
+          "offset_from_request": 1.7219970417022807,
+          "plausible_creation_time": true,
+          "screenshot": "artifacts\\client-gear\\qa31-avatar\\qa-avatar\\maestro\\2026-10-29_005219\\qa-avatar\\takeScreenshot\\artifacts\\native-demo\\owner-avatar-tab-after-restart.png"
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "start": 50.7,
+      "end": 51.4,
+      "title": "03  Замена аватара собеседника",
+      "cuts": [],
+      "kept": [
+        [
+          50.7,
+          51.4
+        ]
+      ]
+    },
+    {
+      "start": 62.15,
+      "end": 72.1,
+      "title": "Скрытый редактор профиля",
+      "cuts": [
+        [
+          66.1900000034645,
+          67.21833299769031
+        ],
+        [
+          71.02666700346451,
+          71.73999999769032
+        ]
+      ],
+      "kept": [
+        [
+          62.15,
+          66.1900000034645
+        ],
+        [
+          67.21833299769031,
+          71.02666700346451
+        ],
+        [
+          71.73999999769032,
+          72.1
+        ]
+      ]
+    },
+    {
+      "start": 81.0,
+      "end": 98.3,
+      "title": "Выбор фотографии и сохранение",
+      "cuts": [
+        [
+          83.63000000346452,
+          84.73499999769032
+        ],
+        [
+          89.1100000034645,
+          89.93333299769033
+        ],
+        [
+          94.94500000346451,
+          95.36666699769032
+        ]
+      ],
+      "kept": [
+        [
+          81.0,
+          83.63000000346452
+        ],
+        [
+          84.73499999769032,
+          89.1100000034645
+        ],
+        [
+          89.93333299769033,
+          94.94500000346451
+        ],
+        [
+          95.36666699769032,
+          98.3
+        ]
+      ]
+    },
+    {
+      "start": 135.0,
+      "end": 139.4,
+      "title": "Свой аватар",
+      "cuts": [
+        [
+          136.40000000346453,
+          136.83499999769032
+        ],
+        [
+          138.4150000034645,
+          139.03999999769033
+        ]
+      ],
+      "kept": [
+        [
+          135.0,
+          136.40000000346453
+        ],
+        [
+          136.83499999769032,
+          138.4150000034645
+        ],
+        [
+          139.03999999769033,
+          139.4
+        ]
+      ]
+    },
+    {
+      "start": 147.8,
+      "end": 162.15,
+      "title": "Фото в настройках, вкладка с шестерёнкой",
+      "cuts": [
+        [
+          152.2916670034645,
+          153.07333299769033
+        ],
+        [
+          155.0100000034645,
+          155.52166699769035
+        ],
+        [
+          157.40333300346452,
+          159.04499999769033
+        ],
+        [
+          161.11500000346453,
+          161.65333299769034
+        ]
+      ],
+      "kept": [
+        [
+          147.8,
+          152.2916670034645
+        ],
+        [
+          153.07333299769033,
+          155.0100000034645
+        ],
+        [
+          155.52166699769035,
+          157.40333300346452
+        ],
+        [
+          159.04499999769033,
+          161.11500000346453
+        ],
+        [
+          161.65333299769034,
+          162.15
+        ]
+      ]
+    },
+    {
+      "start": 181.8,
+      "end": 183.8,
+      "title": "Аватар после перезапуска",
+      "cuts": [
+        [
+          182.34000000346452,
+          183.43999999769034
+        ]
+      ],
+      "kept": [
+        [
+          181.8,
+          182.34000000346452
+        ],
+        [
+          183.43999999769034,
+          183.8
+        ]
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "title": "03  Замена аватара собеседника",
+      "start": 0.0,
+      "end": 0.7
+    },
+    {
+      "title": "Скрытый редактор профиля",
+      "start": 0.7,
+      "end": 8.9
+    },
+    {
+      "title": "Выбор фотографии и сохранение",
+      "start": 8.9,
+      "end": 23.833333333333332
+    },
+    {
+      "title": "Свой аватар",
+      "start": 23.833333333333332,
+      "end": 27.166666666666668
+    },
+    {
+      "title": "Фото в настройках, вкладка с шестерёнкой",
+      "start": 27.166666666666668,
+      "end": 38.03333333333333
+    },
+    {
+      "title": "Аватар после перезапуска",
+      "start": 38.03333333333333,
+      "end": 38.93333333333333
+    }
+  ],
+  "output_frames": 1168,
+  "source_sha256": "cd91885a9a4d1c08db97a842fb61dafcfb24d2a90a0790476a80c3dd6a476d1d",
+  "fps": 30,
+  "speed": 1,
+  "interpolation": false,
+  "shortened_only_quiet_pauses": true,
+  "duration_seconds": 38.93333333333333
+}
