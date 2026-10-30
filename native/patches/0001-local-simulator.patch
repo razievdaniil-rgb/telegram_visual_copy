@@ -751,7 +751,7 @@ index ede90e0..529a438 100644
      switch wallpaper {
          case let .wallpaper(wallpaper, _):
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
-index 1ceb46b..b2742e9 100644
+index 1ceb46b..b83e588 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
 @@ -354,6 +354,12 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
@@ -831,15 +831,60 @@ index 1ceb46b..b2742e9 100644
              performAppGroupUpgrades(appGroupPath: appGroupUrl.path, rootPath: rootPath)
          }
          
-@@ -760,6 +789,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -737,6 +766,9 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         
+         let writeAbilityTestFile = TempBox.shared.tempFile(fileName: "test.bin")
+         var writeAbilityTestSuccess = true
++        // A phone's stage record showed the start ending here with nothing to say why.
++        // Separate the two ways this fails, so the record names one of them.
++        var writeAbilityTestDetail = "ok"
+         if let testFile = ManagedFile(queue: nil, path: writeAbilityTestFile.path, mode: .readwrite) {
+             let bufferSize = 128 * 1024
+             let randomBuffer = malloc(bufferSize)!
+@@ -750,6 +782,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+                 writtenBytes += actualBytes
+                 if actualBytes != bufferSize {
+                     writeAbilityTestSuccess = false
++                    writeAbilityTestDetail = "short-write \(writtenBytes) errno \(errno)"
+                     break
+                 }
+             }
+@@ -757,16 +790,26 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             TempBox.shared.dispose(writeAbilityTestFile)
+         } else {
+             writeAbilityTestSuccess = false
++            writeAbilityTestDetail = "open-failed errno \(errno) at \(writeAbilityTestFile.path)"
+         }
+-        
++
+         if !writeAbilityTestSuccess {
+-            let alertController = UIAlertController(title: nil, message: "The device does not have sufficient free space.", preferredStyle: .alert)
+-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+-                preconditionFailure()
+-            }))
+-            self.mainWindow?.presentNative(alertController)
+-            
+-            return true
++            SimulatorLaunchTrace.shared.mark("write-test-failed: \(writeAbilityTestDetail)")
++            // The alert below is presented on a window that is not visible yet, so on a
++            // phone this branch is indistinguishable from a blank screen: a phone's stage
++            // record ended exactly here. The local build carries on instead -- a start that
++            // then fails somewhere else is still reported by the record, while stopping
++            // here reports nothing at all. The check stays a hard stop for the real client,
++            // where the alert is reachable and the storage really may be unusable.
++            if !TelegramSimulator.enabled {
++                let alertController = UIAlertController(title: nil, message: "The device does not have sufficient free space.", preferredStyle: .alert)
++                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
++                    preconditionFailure()
++                }))
++                self.mainWindow?.presentNative(alertController)
++
++                return true
++            }
          }
          
-         if !writeAbilityTestSuccess {
-+            SimulatorLaunchTrace.shared.mark("stopped-write-test-failed")
-             let alertController = UIAlertController(title: nil, message: "The device does not have sufficient free space.", preferredStyle: .alert)
-             alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
-                 preconditionFailure()
-@@ -783,6 +813,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         let legacyLogs: [String] = [
+@@ -783,6 +826,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          let logsPath = rootPath + "/logs/app-logs"
          let _ = try? FileManager.default.createDirectory(atPath: logsPath, withIntermediateDirectories: true, attributes: nil)
          Logger.setSharedLogger(Logger(rootPath: rootPath, basePath: logsPath))
@@ -847,7 +892,7 @@ index 1ceb46b..b2742e9 100644
  
          setManagedAudioSessionLogger({ s in
              Logger.shared.log("ManagedAudioSession", s)
-@@ -829,7 +860,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -829,7 +873,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              UNUserNotificationCenter.current().delegate = self
          }
          
@@ -856,7 +901,7 @@ index 1ceb46b..b2742e9 100644
          GlobalExperimentalSettings.enableFeed = false
          
          var hasActiveCalls: Signal<Bool, NoError> = .single(false)
-@@ -847,7 +878,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -847,7 +891,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              |> distinctUntilChanged
          )
          
@@ -865,7 +910,7 @@ index 1ceb46b..b2742e9 100644
              var parsedUrl = URL(string: url)
              if let parsed = parsedUrl {
                  if parsed.scheme == nil || parsed.scheme!.isEmpty {
-@@ -1002,7 +1033,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1002,7 +1046,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          }, getAvailableAlternateIcons: {
              if #available(iOS 10.3, *) {
                  var icons = [
@@ -874,7 +919,7 @@ index 1ceb46b..b2742e9 100644
                      PresentationAppIcon(name: "New2", imageName: "New2"),
                      PresentationAppIcon(name: "New1", imageName: "New1"),
                      PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
-@@ -1066,6 +1097,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1066,6 +1110,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              try resetWalletLocalSecrets()
          })
          self.accountManager = accountManager
@@ -882,7 +927,7 @@ index 1ceb46b..b2742e9 100644
  
          telegramUIDeclareEncodables()
          initializeAccountManagement()
-@@ -1105,12 +1137,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1105,12 +1150,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              return true
          }
  
@@ -902,7 +947,7 @@ index 1ceb46b..b2742e9 100644
  
          self.accountManagerState = extractAccountManagerState(records: accountManager._internalAccountRecordsSync())
          let _ = (accountManager.accountRecords()
-@@ -1125,12 +1159,17 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1125,12 +1172,17 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              }
          }
          
@@ -921,7 +966,7 @@ index 1ceb46b..b2742e9 100644
              self.mainWindow?.hostView.containerView.backgroundColor =  initialPresentationDataAndSettings.presentationData.theme.chatList.backgroundColor
              
              let legacyBasePath = appGroupUrl.path
-@@ -1182,6 +1221,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1182,6 +1234,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                  mainWindow.presentInGlobalOverlay(contextController)
              }
              
@@ -929,7 +974,7 @@ index 1ceb46b..b2742e9 100644
              presentationDataPromise.set(sharedContext.presentationData)
              #if targetEnvironment(simulator)
              if CommandLine.arguments.contains("--context-menu-morph-gallery") {
-@@ -1402,6 +1442,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1402,6 +1455,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              }
              
              Logger.shared.log("App \(self.episodeId)", "received context \(String(describing: context)) account \(String(describing: context?.context.account.id)) network \(String(describing: network))")
@@ -937,7 +982,7 @@ index 1ceb46b..b2742e9 100644
              
              let firstTime = self.contextValue == nil
              if let contextValue = self.contextValue {
-@@ -1426,6 +1467,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1426,6 +1480,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
  
                      self.mainWindow.debugAction = nil
                      self.mainWindow.viewController = context.rootController
@@ -945,7 +990,7 @@ index 1ceb46b..b2742e9 100644
                      
                      if firstTime {
                          let layer = context.rootController.view.layer
-@@ -1818,6 +1860,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1818,6 +1873,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
  
          self.mainWindow?.updateDeviceMetrics()
          self.window?.makeKeyAndVisible()
