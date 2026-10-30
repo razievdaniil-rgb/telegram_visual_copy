@@ -21,6 +21,7 @@ jobs:
           path: artifacts/native-ci-upstream
           sparse-checkout-cone-mode: false
           sparse-checkout: |
+            /Telegram/BUILD
             /build-system/Make/Make.py
             /submodules/Svg/LegacyImpl/Sources/nanosvg.c
             /submodules/Svg/LegacyImpl/Sources/nanosvg.h
