@@ -1,5 +1,6 @@
 {
-  "attempt": 12,
+  "attempt": 13,
   "target": "build-unsigned-device",
-  "purpose": "Final unified client app: original gear and wallpaper controls, exact original TGV and prepared vector cache via the upstream TelegramEngine API"
+  "configuration": "release_arm64",
+  "purpose": "Optimized device IPA for the physical iPhone: the former debug_arm64 package starts far too slowly on a phone to clear the iOS launch watchdog, which the Simulator never applies. Adds persistent launch-stage instrumentation and an on-screen stage report in place of the blank window."
 }
