@@ -751,7 +751,7 @@ index ede90e0..529a438 100644
      switch wallpaper {
          case let .wallpaper(wallpaper, _):
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
-index 1ceb46b..54eb8bd 100644
+index 1ceb46b..b2742e9 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
 @@ -354,6 +354,12 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
@@ -794,7 +794,52 @@ index 1ceb46b..54eb8bd 100644
              isICloudEnabled: buildConfig.isICloudEnabled,
              // Only the main app passes a factory: extensions stay on MtProtoKit. Whether the Rust
              // engine runs is decided per account by resolveNetworkEngine (Debug Settings switch,
-@@ -783,6 +791,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -697,6 +705,9 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         )
+         
+         guard let appGroupUrl = maybeAppGroupUrl else {
++            // Both early exits below present an alert on a window that is not visible yet,
++            // so on a phone they are indistinguishable from a blank screen. Record them.
++            SimulatorLaunchTrace.shared.mark("stopped-no-container")
+             self.mainWindow?.presentNative(UIAlertController(title: nil, message: "Error 2", preferredStyle: .alert))
+             return true
+         }
+@@ -726,7 +737,25 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         } else {
+             rootPath = rootPathForBasePath(appGroupUrl.path)
+         }
+-        if !isUITest {
++        if TelegramSimulator.enabled {
++            // The container here is the application's own home directory, not an App Group
++            // container iOS has already populated. Two upstream assumptions break on it:
++            //
++            // 1. performAppGroupUpgrades creates rootPath on a background queue, while this
++            //    thread goes straight on to write the device key into it and to run the
++            //    write-ability test inside it. On a first start the directory does not exist
++            //    yet, the test fails and didFinishLaunching returns early through an alert
++            //    that cannot be shown because the window is not visible, which leaves the
++            //    window's plain background on screen. Create it here, before either.
++            // 2. That same function deletes every directory beside rootPath that is not
++            //    "telegram-data" or "Library". In an App Group container there is nothing
++            //    else; in the app's own home directory that is Documents and tmp. Skip it.
++            let _ = try? FileManager.default.createDirectory(atPath: rootPath, withIntermediateDirectories: true, attributes: nil)
++            var excludedFromBackup = URLResourceValues()
++            excludedFromBackup.isExcludedFromBackup = true
++            var rootURL = URL(fileURLWithPath: rootPath)
++            let _ = try? rootURL.setResourceValues(excludedFromBackup)
++        } else if !isUITest {
+             performAppGroupUpgrades(appGroupPath: appGroupUrl.path, rootPath: rootPath)
+         }
+         
+@@ -760,6 +789,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         }
+         
+         if !writeAbilityTestSuccess {
++            SimulatorLaunchTrace.shared.mark("stopped-write-test-failed")
+             let alertController = UIAlertController(title: nil, message: "The device does not have sufficient free space.", preferredStyle: .alert)
+             alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                 preconditionFailure()
+@@ -783,6 +813,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          let logsPath = rootPath + "/logs/app-logs"
          let _ = try? FileManager.default.createDirectory(atPath: logsPath, withIntermediateDirectories: true, attributes: nil)
          Logger.setSharedLogger(Logger(rootPath: rootPath, basePath: logsPath))
@@ -802,7 +847,7 @@ index 1ceb46b..54eb8bd 100644
  
          setManagedAudioSessionLogger({ s in
              Logger.shared.log("ManagedAudioSession", s)
-@@ -829,7 +838,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -829,7 +860,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              UNUserNotificationCenter.current().delegate = self
          }
          
@@ -811,7 +856,7 @@ index 1ceb46b..54eb8bd 100644
          GlobalExperimentalSettings.enableFeed = false
          
          var hasActiveCalls: Signal<Bool, NoError> = .single(false)
-@@ -847,7 +856,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -847,7 +878,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              |> distinctUntilChanged
          )
          
@@ -820,7 +865,7 @@ index 1ceb46b..54eb8bd 100644
              var parsedUrl = URL(string: url)
              if let parsed = parsedUrl {
                  if parsed.scheme == nil || parsed.scheme!.isEmpty {
-@@ -1002,7 +1011,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1002,7 +1033,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          }, getAvailableAlternateIcons: {
              if #available(iOS 10.3, *) {
                  var icons = [
@@ -829,7 +874,7 @@ index 1ceb46b..54eb8bd 100644
                      PresentationAppIcon(name: "New2", imageName: "New2"),
                      PresentationAppIcon(name: "New1", imageName: "New1"),
                      PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
-@@ -1066,6 +1075,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1066,6 +1097,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              try resetWalletLocalSecrets()
          })
          self.accountManager = accountManager
@@ -837,7 +882,7 @@ index 1ceb46b..54eb8bd 100644
  
          telegramUIDeclareEncodables()
          initializeAccountManagement()
-@@ -1105,12 +1115,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1105,12 +1137,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              return true
          }
  
@@ -857,7 +902,7 @@ index 1ceb46b..54eb8bd 100644
  
          self.accountManagerState = extractAccountManagerState(records: accountManager._internalAccountRecordsSync())
          let _ = (accountManager.accountRecords()
-@@ -1125,12 +1137,17 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1125,12 +1159,17 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              }
          }
          
@@ -876,7 +921,7 @@ index 1ceb46b..54eb8bd 100644
              self.mainWindow?.hostView.containerView.backgroundColor =  initialPresentationDataAndSettings.presentationData.theme.chatList.backgroundColor
              
              let legacyBasePath = appGroupUrl.path
-@@ -1182,6 +1199,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1182,6 +1221,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                  mainWindow.presentInGlobalOverlay(contextController)
              }
              
@@ -884,7 +929,7 @@ index 1ceb46b..54eb8bd 100644
              presentationDataPromise.set(sharedContext.presentationData)
              #if targetEnvironment(simulator)
              if CommandLine.arguments.contains("--context-menu-morph-gallery") {
-@@ -1402,6 +1420,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1402,6 +1442,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              }
              
              Logger.shared.log("App \(self.episodeId)", "received context \(String(describing: context)) account \(String(describing: context?.context.account.id)) network \(String(describing: network))")
@@ -892,7 +937,7 @@ index 1ceb46b..54eb8bd 100644
              
              let firstTime = self.contextValue == nil
              if let contextValue = self.contextValue {
-@@ -1426,6 +1445,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1426,6 +1467,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
  
                      self.mainWindow.debugAction = nil
                      self.mainWindow.viewController = context.rootController
@@ -900,7 +945,7 @@ index 1ceb46b..54eb8bd 100644
                      
                      if firstTime {
                          let layer = context.rootController.view.layer
-@@ -1818,6 +1838,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1818,6 +1860,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
  
          self.mainWindow?.updateDeviceMetrics()
          self.window?.makeKeyAndVisible()

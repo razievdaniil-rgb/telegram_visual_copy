@@ -1,6 +1,6 @@
 {
-  "attempt": 14,
+  "attempt": 15,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "Final optimized device IPA with the launch-stage record carried through context.isReady: root controller, root controllers, the chat list's main and stories readiness, the tab bar's and the selected tab's readiness. Attempt 13 proved release_arm64 builds but predates those stages."
+  "purpose": "Fix the first start on a clean container, which the stage record from a phone localized: rootPath is created before the device key and the write-ability test use it, instead of on a background queue, and the App Group cleanup that would delete Documents and tmp from the app's own home directory is skipped. Both early exits are recorded."
 }
