@@ -78,7 +78,7 @@ index fb87496..67c306e 100644
          
          self.edgeEffectView = EdgeEffectView()
 diff --git a/submodules/ChatListUI/Sources/ChatListController.swift b/submodules/ChatListUI/Sources/ChatListController.swift
-index 5bdff8a..b92f51c 100644
+index 5bdff8a..cdef9ab 100644
 --- a/submodules/ChatListUI/Sources/ChatListController.swift
 +++ b/submodules/ChatListUI/Sources/ChatListController.swift
 @@ -199,6 +199,11 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
@@ -122,7 +122,23 @@ index 5bdff8a..b92f51c 100644
              switch subject {
              case .archive:
                  StoryContainerScreen.openArchivedStories(context: self.context, parentController: self, avatarNode: itemNode.avatarNode, sharedProgressDisposable: self.sharedOpenStoryProgressDisposable)
-@@ -2301,6 +2308,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -2085,7 +2092,14 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+         }
+         
+         if case .chatList(.root) = self.location {
+-            self.ready.set(combineLatest([self.mainReady.get(), self.storiesReady.get()])
++            self.ready.set(combineLatest([
++                self.mainReady.get() |> afterNext { value in
++                    if value { SimulatorLaunchTrace.shared.mark("chatlist-main-ready") }
++                },
++                self.storiesReady.get() |> afterNext { value in
++                    if value { SimulatorLaunchTrace.shared.mark("chatlist-stories-ready") }
++                }
++            ])
+             |> map { values -> Bool in
+                 return !values.contains(where: { !$0 })
+             }
+@@ -2301,6 +2315,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
      
      private weak var storyTooltip: TooltipScreen?
      fileprivate func maybeDisplayStoryTooltip() {
@@ -130,7 +146,7 @@ index 5bdff8a..b92f51c 100644
          let content = self.updateHeaderContent()
          if content.secondaryContent != nil {
              return
-@@ -2970,6 +2978,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -2970,6 +2985,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
      
      private weak var storyCameraTooltip: TooltipScreen?
      fileprivate func openStoryCamera(fromList: Bool, gesturePullOffset: CGFloat? = nil, sourceView: UIView? = nil) {
@@ -138,7 +154,7 @@ index 5bdff8a..b92f51c 100644
          guard !self.context.isFrozen else {
              let controller = self.context.sharedContext.makeAccountFreezeInfoScreen(context: self.context)
              self.push(controller)
-@@ -4375,7 +4384,12 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -4375,7 +4391,12 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
          self.openStories(peerId: peerId, completion: { _ in })
      }
      
@@ -151,7 +167,7 @@ index 5bdff8a..b92f51c 100644
          if let navigationBarView = self.chatListDisplayNode.navigationBarView.view as? ChatListNavigationBar.View {
              if navigationBarView.storiesUnlocked {
                  self.shouldFixStorySubscriptionOrder = true
-@@ -6647,6 +6661,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
+@@ -6647,6 +6668,7 @@ public class ChatListControllerImpl: TelegramBaseController, ChatListController
          return self.storyCameraTransitionInCoordinator != nil
      }
      func storyCameraPanGestureChanged(transitionFraction: CGFloat) {
@@ -159,7 +175,7 @@ index 5bdff8a..b92f51c 100644
          guard let rootController = self.context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface else {
              return
          }
-@@ -7288,7 +7303,7 @@ private final class ChatListLocationContext {
+@@ -7288,7 +7310,7 @@ private final class ChatListLocationContext {
                  } else {
                      self.rightButton = NavigationBarComponent.Button(id: "compose",
                          content: .icon(imageName: "Chat List/ComposeIcon"),
@@ -900,10 +916,33 @@ index 1ceb46b..54eb8bd 100644
          for context in connectionOptions.urlContexts {
              let url = context.url
 diff --git a/submodules/TelegramUI/Sources/ApplicationContext.swift b/submodules/TelegramUI/Sources/ApplicationContext.swift
-index fe34b99..a8030b6 100644
+index fe34b99..657bffd 100644
 --- a/submodules/TelegramUI/Sources/ApplicationContext.swift
 +++ b/submodules/TelegramUI/Sources/ApplicationContext.swift
-@@ -599,7 +599,7 @@ final class AuthorizedApplicationContext {
+@@ -254,9 +254,21 @@ final class AuthorizedApplicationContext {
+         if self.rootController.rootTabController == nil {
+             self.rootController.addRootControllers(showCallsTab: self.showCallsTab, showNewsTab: self.showNewsTab)
+         }
++        SimulatorLaunchTrace.shared.mark("root-controllers")
+         if let tabsController = self.rootController.viewControllers.first as? TabBarController, !tabsController.controllers.isEmpty, tabsController.selectedIndex >= 0 {
+             let controller = tabsController.controllers[tabsController.selectedIndex]
+-            let combinedReady = combineLatest(tabsController.ready.get(), controller.ready.get())
++            // The window stays at its own plain background until both of these report
++            // ready, so record them separately: it is the one gap a stage record would
++            // otherwise leave between receiving the context and showing the interface.
++            let tabsReady = tabsController.ready.get()
++            |> afterNext { value in
++                if value { SimulatorLaunchTrace.shared.mark("tabs-ready") }
++            }
++            let contentReady = controller.ready.get()
++            |> afterNext { value in
++                if value { SimulatorLaunchTrace.shared.mark("tab-content-ready") }
++            }
++            let combinedReady = combineLatest(tabsReady, contentReady)
+             |> map { $0 && $1 }
+             |> filter { $0 }
+             |> take(1)
+@@ -599,7 +611,7 @@ final class AuthorizedApplicationContext {
              }
          }))
          
@@ -945,7 +984,7 @@ index 5bf77c1..5e7c90f 100644
                              let _ = ApplicationSpecificNotice.incrementChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
                              tip = .textSelection
 diff --git a/submodules/TelegramUI/Sources/TelegramRootController.swift b/submodules/TelegramUI/Sources/TelegramRootController.swift
-index 22ecc71..d287d86 100644
+index 22ecc71..b9b2429 100644
 --- a/submodules/TelegramUI/Sources/TelegramRootController.swift
 +++ b/submodules/TelegramUI/Sources/TelegramRootController.swift
 @@ -71,7 +71,47 @@ private class DetailsChatPlaceholderNode: ASDisplayNode, NavigationDetailsPlaceh
@@ -996,10 +1035,11 @@ index 22ecc71..d287d86 100644
      private let context: AccountContext
      
      public var rootTabController: TabBarController?
-@@ -101,11 +141,20 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -101,11 +141,21 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
      public var minimizedContainerUpdated: (MinimizedContainer?) -> Void = { _ in }
          
      public init(context: AccountContext) {
++        SimulatorLaunchTrace.shared.mark("root-controller")
 +        SimulatorWallpaperBootstrap.seed(context: context)
          self.context = context
          
@@ -1017,7 +1057,7 @@ index 22ecc71..d287d86 100644
          
          self.presentationDataDisposable = (context.sharedContext.presentationData
          |> deliverOnMainQueue).startStrict(next: { [weak self] presentationData in
-@@ -144,6 +193,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
+@@ -144,6 +194,7 @@ public final class TelegramRootController: NavigationController, TelegramRootCon
      }
      
      deinit {
