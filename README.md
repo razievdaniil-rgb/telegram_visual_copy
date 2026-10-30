@@ -1,5 +1,7 @@
 # Нативный Telegram iOS
 
+**30 октября:** получено сообщение о белом экране при запуске на физическом iPhone. Причина пока не установлена; прежняя проверка Simulator не подтверждает запуск на телефоне. [Контекст и передача в Claude](docs/CLAUDE_HANDOFF_IPHONE_WHITE_SCREEN.md).
+
 Активный проект основан на исходниках Telegram iOS 13.1.1. [Единая клиентская сборка iPhone build 12](docs/IPHONE_CLIENT_BUILD.md), исходники `3636175`.
 
 [**Видео 2:59,7**](https://raw.githubusercontent.com/razievdaniil-rgb/telegram_visual_copy/main/docs/videos/Telegram-native-client-demo.mp4) · [Главы и проверка](docs/FEATURE_VIDEO.md) · [Инструкция установки](native/INSTALL_WINDOWS.md).
