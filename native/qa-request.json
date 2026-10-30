@@ -1,8 +1,8 @@
 {
-  "attempt": 31,
-  "app_run_id": "40787740414",
+  "attempt": 32,
+  "app_run_id": "41094310543",
   "scenarios": [
-    "delivery-tail"
+    "fresh"
   ],
-  "purpose": "Finish avatar and editor chapters on the same compiled Simulator22/source363; initialize Photos before bounded fixture import. Menu and wallpaper already passed QA30. No application rebuild."
+  "purpose": "Reproduce the clean first start on the pre-fix optimized simulator build 24. This scenario was never run on build 12, and the stage record from a phone points at exactly it. No application rebuild. A failure here confirms the diagnosis outside the device; a pass means the simulator wins the race the phone loses, which is also worth knowing."
 }
