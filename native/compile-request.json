@@ -1,5 +1,5 @@
 {
-  "attempt": 23,
+  "attempt": 24,
   "configuration": "release_sim_arm64",
-  "purpose": "Optimized simulator build matching the device IPA of attempt 14, for the fresh empty-container run that was never performed on build 12 and for a functional regression pass over the optimized configuration."
+  "purpose": "Retry after attempt 23 hit the step's own 60-minute limit: the optimized simulator build needs more, as the 83-minute device release build showed. Needed for the fresh empty-container run that was never performed on build 12 and for a functional regression pass over the optimized configuration."
 }
