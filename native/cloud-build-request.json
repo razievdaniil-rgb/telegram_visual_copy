@@ -1,6 +1,6 @@
 {
-  "attempt": 13,
+  "attempt": 14,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "Optimized device IPA for the physical iPhone: the former debug_arm64 package starts far too slowly on a phone to clear the iOS launch watchdog, which the Simulator never applies. Adds persistent launch-stage instrumentation and an on-screen stage report in place of the blank window."
+  "purpose": "Final optimized device IPA with the launch-stage record carried through context.isReady: root controller, root controllers, the chat list's main and stories readiness, the tab bar's and the selected tab's readiness. Attempt 13 proved release_arm64 builds but predates those stages."
 }
