@@ -1,4 +1,5 @@
 {
-  "attempt": 22,
-  "purpose": "Final unified client app: original gear and wallpaper controls, exact original TGV and prepared vector cache via the upstream TelegramEngine API"
+  "attempt": 23,
+  "configuration": "release_sim_arm64",
+  "purpose": "Optimized simulator build matching the device IPA of attempt 14, for the fresh empty-container run that was never performed on build 12 and for a functional regression pass over the optimized configuration."
 }
