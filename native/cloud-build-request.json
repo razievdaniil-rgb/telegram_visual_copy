@@ -1,6 +1,6 @@
 {
-  "attempt": 16,
+  "attempt": 17,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "The write-ability check is where a phone's stage record ends, and it reported nothing about why. It now records which of the two ways it failed, with errno, and the local build carries on instead of returning into an alert that a not-yet-visible window cannot show. Keeps attempt 15's container fix."
+  "purpose": "The device log names the cause: Sandbox deny(1) file-write-create on <data container>/telegram-data, so the stage record reports open-failed errno 2 and the account database cannot be opened, which traps in Postbox. The local container moves out of the container root into Library/Application Support, which is writable."
 }

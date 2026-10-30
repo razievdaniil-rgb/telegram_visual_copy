@@ -6,8 +6,11 @@ final class SimulatorUIConfigurationTests: XCTestCase {
     func testLocalContainerDoesNotRequireAppGroups() {
         let shared = URL(fileURLWithPath: "/shared/group", isDirectory: true)
         let home = "/private/test-home"
-        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: nil, localMode: true, homeDirectory: home)?.path, home)
-        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: shared, localMode: true, homeDirectory: home)?.path, home)
+        // Not the data container's root: the sandbox refuses a new directory there.
+        let local = home + "/" + SimulatorUIConfiguration.localContainerComponent
+        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: nil, localMode: true, homeDirectory: home)?.path, local)
+        XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: shared, localMode: true, homeDirectory: home)?.path, local)
+        XCTAssertTrue(local.hasPrefix(home + "/Library/"))
         XCTAssertEqual(SimulatorUIConfiguration.applicationContainer(appGroupURL: shared, localMode: false, homeDirectory: home), shared)
         XCTAssertNil(SimulatorUIConfiguration.applicationContainer(appGroupURL: nil, localMode: false, homeDirectory: home))
     }
