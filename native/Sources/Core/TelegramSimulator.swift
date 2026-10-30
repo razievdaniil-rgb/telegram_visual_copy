@@ -53,6 +53,7 @@ public enum TelegramSimulator {
         return TelegramUser(id: peerId(profile.id), accessHash: .personal(0), firstName: profile.firstName, lastName: profile.lastName, username: profile.username.isEmpty ? nil : profile.username, phone: profile.phone, photo: photo, botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: true, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
     }
     public static func prepareAccount(_ manager: AccountManager<TelegramAccountManagerTypes>) -> Signal<Void, NoError> {
+        SimulatorLaunchTrace.shared.mark("prepare-account")
         return manager.transaction { transaction -> Void in
             transaction.updateSharedData(SharedDataKeys.localizationSettings, { current in
                 // Telegram normally downloads Russian after login; this app is offline.
@@ -65,14 +66,18 @@ public enum TelegramSimulator {
                 transaction.setCurrentId(transaction.createRecord([]))
             }
             transaction.removeAuth()
+        } |> afterNext { _ in
+            SimulatorLaunchTrace.shared.mark("account-record")
         }
     }
     public static func initialize(transaction: Transaction) {
+        SimulatorLaunchTrace.shared.mark("account-state")
         let document = TelegramSimulatorWorkspace.shared.snapshot()
         transaction.setState(AuthorizedAccountState(isTestingEnvironment: false, masterDatacenterId: 2, peerId: ownerPeerId, state: AuthorizedAccountState.State(pts: 0, qts: 0, date: 1, seq: 0), invalidatedChannels: []))
         transaction.updatePeersInternal([profile(document.owner)], update: { _, next in next })
     }
     public static func project(account: Account, outgoingInfo: [String: OutgoingMessageInfoAttribute] = [:]) -> Signal<Void, NoError> {
+        SimulatorLaunchTrace.shared.mark("projection")
         SimulatorWallpapers.seedResources(account: account)
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
         let document = indexed.document
@@ -169,6 +174,7 @@ public enum TelegramSimulator {
             }
         } |> afterNext { _ in
             if configureMenu { UserDefaults.standard.set(true, forKey: menuDefaultsKey) }
+            SimulatorLaunchTrace.shared.mark("projection-done")
         }
     }
     public static func send(account: Account, peerId: PeerId, messages: [EnqueueMessage]) -> Signal<[MessageId?], NoError> {

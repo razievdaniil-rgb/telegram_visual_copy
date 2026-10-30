@@ -1,5 +1,22 @@
+diff --git a/Telegram/BUILD b/Telegram/BUILD
+index 1ac8279..005ffc3 100644
+--- a/Telegram/BUILD
++++ b/Telegram/BUILD
+@@ -1818,8 +1818,11 @@ plist_fragment(
+         <integer>1</integer>
+         <integer>2</integer>
+     </array>
++    <!-- Local simulator: the only way to read a launch trace or a document backup off
++         a phone without a Mac. The exposed folder is Documents; the simulator document
++         itself stays in Application Support. -->
+     <key>UIFileSharingEnabled</key>
+-    <false/>
++    <true/>
+     <key>UILaunchStoryboardName</key>
+     <string>LaunchScreen</string>
+     <key>UIRequiresPersistentWiFi</key>
 diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
-index 4c3a641..8c8fc6e 100644
+index 4c3a641..8db8ab1 100644
 --- a/build-system/Make/Make.py
 +++ b/build-system/Make/Make.py
 @@ -480,6 +480,9 @@ def resolve_configuration(base_path, bazel_command_line: BazelCommandLine, argum
@@ -12,13 +29,19 @@ index 4c3a641..8c8fc6e 100644
      if codesigning_data.aps_environment is None:
          print('Could not find a valid aps-environment entitlement in the provided provisioning profiles')
          sys.exit(1)
-@@ -631,6 +634,13 @@ def build(bazel, arguments):
+@@ -631,6 +634,19 @@ def build(bazel, arguments):
      )
  
      bazel_command_line.set_configuration(arguments.configuration)
 +    if arguments.localUnsignedBuild:
 +        bazel_command_line.set_disable_provisioning_profiles()
 +        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions', '--features=disable_legacy_signing', '--jobs=2']
++        # The dSYM bundles are not part of the IPA and dsymutil over an optimized
++        # device binary costs minutes and tens of gigabytes on a disposable runner.
++        bazel_command_line.configuration_args = [
++            argument for argument in bazel_command_line.configuration_args
++            if argument not in ('--apple_generate_dsym', '--output_groups=+dsyms')
++        ]
 +    if arguments.simulatorLocalMode:
 +        bazel_command_line.common_build_args += ['--//Telegram:disableExtensions', '--jobs=2']
 +        if arguments.configuration in ('debug_sim_arm64', 'release_sim_arm64'):
@@ -26,7 +49,7 @@ index 4c3a641..8c8fc6e 100644
      if arguments.embedWatchApp:
          if arguments.configuration in ('debug_arm64', 'release_arm64'):
              if arguments.watchApiId is None or arguments.watchApiHash is None:
-@@ -1017,6 +1027,10 @@ if __name__ == '__main__':
+@@ -1017,6 +1033,10 @@ if __name__ == '__main__':
      )
  
      buildParser = subparsers.add_parser('build', help='Build the app')
@@ -712,19 +735,41 @@ index ede90e0..529a438 100644
      switch wallpaper {
          case let .wallpaper(wallpaper, _):
 diff --git a/submodules/TelegramUI/Sources/AppDelegate.swift b/submodules/TelegramUI/Sources/AppDelegate.swift
-index 1ceb46b..074a164 100644
+index 1ceb46b..54eb8bd 100644
 --- a/submodules/TelegramUI/Sources/AppDelegate.swift
 +++ b/submodules/TelegramUI/Sources/AppDelegate.swift
-@@ -573,7 +573,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -354,6 +354,12 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         precondition(!testIsLaunched)
+         testIsLaunched = true
+         CrashReportCollector.shared.start()
++        // An installed local build starts without a debugger, so the launch watchdog
++        // applies and a terminated start leaves no report of its own. Record the stages.
++        SimulatorLaunchTrace.shared.begin(
++            version: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown",
++            build: (Bundle.main.infoDictionary?["CFBundleVersion"] as? String) ?? "unknown"
++        )
+         
+         let _ = voipTokenPromise.get().start(next: { token in
+             self.voipDeviceToken.set(.single(token))
+@@ -450,6 +456,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         }
+         self.window = window
+         self.nativeWindow = window
++        SimulatorLaunchTrace.shared.mark("window")
+         
+         hostView.containerView.layer.addSublayer(MetalEngine.shared.rootLayer)
+         // On the first start after an update, compile the pipelines that would otherwise stall their first use.
+@@ -573,7 +580,8 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
              BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
          })
 -        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
 +        let maybeAppGroupUrl = SimulatorUIConfiguration.applicationContainer(appGroupURL: FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName), localMode: TelegramSimulator.enabled)
++        SimulatorLaunchTrace.shared.mark("container")
          
          let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
          self.buildConfig = buildConfig
-@@ -688,7 +688,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -688,7 +696,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              autolockDeadine: autolockDeadine,
              encryptionProvider: OpenSSLEncryptionProvider(),
              deviceModelName: nil,
@@ -733,7 +778,15 @@ index 1ceb46b..074a164 100644
              isICloudEnabled: buildConfig.isICloudEnabled,
              // Only the main app passes a factory: extensions stay on MtProtoKit. Whether the Rust
              // engine runs is decided per account by resolveNetworkEngine (Debug Settings switch,
-@@ -829,7 +829,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -783,6 +791,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+         let logsPath = rootPath + "/logs/app-logs"
+         let _ = try? FileManager.default.createDirectory(atPath: logsPath, withIntermediateDirectories: true, attributes: nil)
+         Logger.setSharedLogger(Logger(rootPath: rootPath, basePath: logsPath))
++        SimulatorLaunchTrace.shared.mark("storage")
+ 
+         setManagedAudioSessionLogger({ s in
+             Logger.shared.log("ManagedAudioSession", s)
+@@ -829,7 +838,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              UNUserNotificationCenter.current().delegate = self
          }
          
@@ -742,7 +795,7 @@ index 1ceb46b..074a164 100644
          GlobalExperimentalSettings.enableFeed = false
          
          var hasActiveCalls: Signal<Bool, NoError> = .single(false)
-@@ -847,7 +847,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -847,7 +856,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              |> distinctUntilChanged
          )
          
@@ -751,7 +804,7 @@ index 1ceb46b..074a164 100644
              var parsedUrl = URL(string: url)
              if let parsed = parsedUrl {
                  if parsed.scheme == nil || parsed.scheme!.isEmpty {
-@@ -1002,7 +1002,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1002,7 +1011,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
          }, getAvailableAlternateIcons: {
              if #available(iOS 10.3, *) {
                  var icons = [
@@ -760,7 +813,15 @@ index 1ceb46b..074a164 100644
                      PresentationAppIcon(name: "New2", imageName: "New2"),
                      PresentationAppIcon(name: "New1", imageName: "New1"),
                      PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
-@@ -1105,12 +1105,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1066,6 +1075,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             try resetWalletLocalSecrets()
+         })
+         self.accountManager = accountManager
++        SimulatorLaunchTrace.shared.mark("account-manager")
+ 
+         telegramUIDeclareEncodables()
+         initializeAccountManagement()
+@@ -1105,12 +1115,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              return true
          }
  
@@ -780,7 +841,7 @@ index 1ceb46b..074a164 100644
  
          self.accountManagerState = extractAccountManagerState(records: accountManager._internalAccountRecordsSync())
          let _ = (accountManager.accountRecords()
-@@ -1125,7 +1127,11 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+@@ -1125,12 +1137,17 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
              }
          }
          
@@ -793,6 +854,51 @@ index 1ceb46b..074a164 100644
          |> map { initialPresentationDataAndSettings -> (AccountManager, InitialPresentationDataAndSettings) in
              return (accountManager, initialPresentationDataAndSettings)
          }
+         |> deliverOnMainQueue
+         |> mapToSignal { [self] accountManager, initialPresentationDataAndSettings -> Signal<(SharedApplicationContext, LoggingSettings), NoError> in
++            SimulatorLaunchTrace.shared.mark("presentation-data")
+             self.mainWindow?.hostView.containerView.backgroundColor =  initialPresentationDataAndSettings.presentationData.theme.chatList.backgroundColor
+             
+             let legacyBasePath = appGroupUrl.path
+@@ -1182,6 +1199,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+                 mainWindow.presentInGlobalOverlay(contextController)
+             }
+             
++            SimulatorLaunchTrace.shared.mark("shared-context")
+             presentationDataPromise.set(sharedContext.presentationData)
+             #if targetEnvironment(simulator)
+             if CommandLine.arguments.contains("--context-menu-morph-gallery") {
+@@ -1402,6 +1420,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+             }
+             
+             Logger.shared.log("App \(self.episodeId)", "received context \(String(describing: context)) account \(String(describing: context?.context.account.id)) network \(String(describing: network))")
++            SimulatorLaunchTrace.shared.mark(context == nil ? "context-absent" : "context")
+             
+             let firstTime = self.contextValue == nil
+             if let contextValue = self.contextValue {
+@@ -1426,6 +1445,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+ 
+                     self.mainWindow.debugAction = nil
+                     self.mainWindow.viewController = context.rootController
++                    SimulatorLaunchTrace.shared.finish()
+                     
+                     if firstTime {
+                         let layer = context.rootController.view.layer
+@@ -1818,6 +1838,14 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
+ 
+         self.mainWindow?.updateDeviceMetrics()
+         self.window?.makeKeyAndVisible()
++        SimulatorLaunchTrace.shared.mark("window-visible")
++        // The window's own background is plain white until the root controller arrives.
++        // Report the stages there instead of leaving a blank screen with no information.
++        if let containerView = self.mainWindow?.hostView.containerView {
++            SimulatorLaunchDiagnostics.watch(container: containerView, isInterfaceVisible: { [weak self] in
++                return self?.mainWindow?.viewController != nil
++            })
++        }
+ 
+         for context in connectionOptions.urlContexts {
+             let url = context.url
 diff --git a/submodules/TelegramUI/Sources/ApplicationContext.swift b/submodules/TelegramUI/Sources/ApplicationContext.swift
 index fe34b99..a8030b6 100644
 --- a/submodules/TelegramUI/Sources/ApplicationContext.swift

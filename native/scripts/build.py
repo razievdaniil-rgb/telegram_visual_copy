@@ -30,7 +30,11 @@ def command_for(args):
         else:
             command += ["--xcodeManagedCodesigning"]
     else:
-        variant = "debug_sim_arm64" if simulator else ("debug_arm64" if unsigned else "release_arm64")
+        # An installed build runs without a debugger, so the iOS launch watchdog applies.
+        # debug_arm64 compiles nearly every submodule at -Onone and keeps the whole symbol
+        # table, which is only usable with Xcode attached; a phone needs the optimized
+        # variant. Signing is orthogonal: --localUnsignedBuild still skips it.
+        variant = "debug_sim_arm64" if simulator else ("debug_arm64" if unsigned and args.unoptimized else "release_arm64")
         command += ["build", "--configurationPath=" + str(configuration), "--codesigningInformationPath=" + str(signing.resolve()), "--buildNumber=" + str(args.build_number), "--configuration=" + variant, "--simulatorLocalMode", "--outputBuildArtifactsPath=" + str(args.output.resolve())]
         if unsigned:
             command += ["--localUnsignedBuild"]
@@ -46,6 +50,8 @@ def main():
     parser.add_argument("--cache", type=Path, default=Path.home() / "telegram-bazel-cache")
     parser.add_argument("--output", type=Path, default=ROOT / "artifacts/native-build")
     parser.add_argument("--build-number", type=int, default=1)
+    parser.add_argument("--unoptimized", action="store_true",
+                        help="build-unsigned-device only: -Onone debug_arm64 for use with a debugger attached; such a build is too slow to start on a phone")
     parser.add_argument("--print-command", action="store_true", help="Inspect the command on any OS; do not execute it")
     args = parser.parse_args()
     try:
