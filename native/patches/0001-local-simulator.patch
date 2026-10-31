@@ -1086,7 +1086,7 @@ index 1ceb46b..b83e588 100644
          for context in connectionOptions.urlContexts {
              let url = context.url
 diff --git a/submodules/TelegramUI/Sources/ApplicationContext.swift b/submodules/TelegramUI/Sources/ApplicationContext.swift
-index fe34b99..657bffd 100644
+index fe34b99..c048281 100644
 --- a/submodules/TelegramUI/Sources/ApplicationContext.swift
 +++ b/submodules/TelegramUI/Sources/ApplicationContext.swift
 @@ -254,9 +254,21 @@ final class AuthorizedApplicationContext {
@@ -1121,6 +1121,27 @@ index fe34b99..657bffd 100644
              let permissionsPosition = ValuePromise(0, ignoreRepeated: true)
              self.permissionsDisposable.set((combineLatest(queue: .mainQueue(), requiredPermissions(context: context), permissionUISplitTest(postbox: context.account.postbox), permissionsPosition.get(), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .notifications)!), context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .cellularData)!))
              |> deliverOnMainQueue).start(next: { [weak self] required, splitTest, position, contactsPermissionWarningNotice, notificationsPermissionWarningNotice, cellularDataPermissionWarningNotice in
+@@ -778,7 +790,19 @@ final class AuthorizedApplicationContext {
+             }
+         })
+        
+-        let importableContacts = self.context.sharedContext.contactDataManager?.importable() ?? .single([:])
++        // The address book is never imported here: there is no server to import it to, and
++        // the local build deliberately does not ask for that permission. The manager then
++        // answers nothing at all rather than answering "none", which leaves
++        // `deviceContactPhoneNumbers` without a value -- and the chat history view combines
++        // that promise, so it never produces its first update and the chat never opens.
++        // Granting the permission by hand was what made chats open, which is the same bug
++        // read from the other side.
++        let importableContacts: Signal<[DeviceContactNormalizedPhoneNumber: ImportableDeviceContactData], NoError>
++        if TelegramSimulator.enabled {
++            importableContacts = .single([:])
++        } else {
++            importableContacts = self.context.sharedContext.contactDataManager?.importable() ?? .single([:])
++        }
+         let optionalImportableContacts = self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.contactsSettings))
+         |> mapToSignal { preferences -> Signal<[DeviceContactNormalizedPhoneNumber: ImportableDeviceContactData], NoError> in
+             let settings: ContactsSettings = preferences?.get(ContactsSettings.self) ?? .defaultSettings
 diff --git a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift b/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
 index f5823d1..219b89f 100644
 --- a/submodules/TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift
