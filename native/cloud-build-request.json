@@ -1,6 +1,6 @@
 {
-  "attempt": 17,
+  "attempt": 18,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "The device log names the cause: Sandbox deny(1) file-write-create on <data container>/telegram-data, so the stage record reports open-failed errno 2 and the account database cannot be opened, which traps in Postbox. The local container moves out of the container root into Library/Application Support, which is writable."
+  "purpose": "Build 17 started on a real iPhone and QA filed five defects against it. Three are fixed here: a peer whose fields were all cleared is now absent-where-absent instead of empty-string, which is the shape the original profile card crashed on; replies carry the original ReplyMessageAttribute through the document; and the profile editor's birthday and avatar join the name and bio in completing locally instead of waiting on a network request that never answers. The two remaining defects are upstream behaviour and are deliberately untouched."
 }
