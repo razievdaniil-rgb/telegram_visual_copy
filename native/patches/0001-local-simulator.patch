@@ -543,6 +543,70 @@ index 6ae1b60..348cf7e 100644
              didSet {
                  if self.currentIsUpdatingValue != oldValue {
                      self.isUpdatingValue.set(self.currentIsUpdatingValue)
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift b/submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift
+index 7953893..dbc890a 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift
+@@ -6,6 +6,12 @@ import MtProtoKit
+ 
+ 
+ func _internal_updateAccountPeerName(account: Account, firstName: String, lastName: String) -> Signal<Void, NoError> {
++    // The local app has no server, and Network.request is .never() here. The original
++    // settings editor keeps a modal spinner up until this signal completes, so write the
++    // name into the simulator document and complete instead of waiting forever.
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.updateProfile(account: account, peerId: account.peerId, firstName: firstName, lastName: lastName)
++    }
+     let accountPeerId = account.peerId
+     return account.network.request(Api.functions.account.updateProfile(flags: (1 << 0) | (1 << 1), firstName: firstName, lastName: lastName, about: nil))
+         |> map { result -> Api.User? in
+@@ -29,6 +35,10 @@ public enum UpdateAboutError {
+ 
+ 
+ func _internal_updateAbout(account: Account, about: String?) -> Signal<Void, UpdateAboutError> {
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.updateProfile(account: account, peerId: account.peerId, bio: about ?? "")
++        |> castError(UpdateAboutError.self)
++    }
+     return account.network.request(Api.functions.account.updateProfile(flags: about == nil ? 0 : (1 << 2), firstName: nil, lastName: nil, about: about))
+     |> mapError { _ -> UpdateAboutError in
+         return .generic
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift b/submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
+index 41a2f7e..7e25da5 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
+@@ -10,6 +10,12 @@ public enum UpdateContactNameError {
+ }
+ 
+ func _internal_updateContactName(account: Account, peerId: PeerId, firstName: String, lastName: String) -> Signal<Void, UpdateContactNameError> {
++    // Renaming a virtual contact is a document edit here, not a contacts.addContact call;
++    // the original editor would otherwise hold its spinner until a reply that never comes.
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.updateProfile(account: account, peerId: peerId, firstName: firstName, lastName: lastName)
++        |> castError(UpdateContactNameError.self)
++    }
+     return account.postbox.transaction { transaction -> Signal<Void, UpdateContactNameError> in
+         if let peer = transaction.getPeer(peerId) as? TelegramUser, let inputUser = apiInputUser(peer) {
+             return account.network.request(Api.functions.contacts.addContact(flags: 0, id: inputUser, firstName: firstName, lastName: lastName, phone: "", note: nil))
+@@ -33,6 +39,18 @@ public enum UpdateContactNoteError {
+ }
+ 
+ func _internal_updateContactNote(account: Account, peerId: PeerId, text: String, entities: [MessageTextEntity]) -> Signal<Never, UpdateContactNoteError> {
++    // The local document has no note field. Write it where the original reads it from, so
++    // the editor closes; unlike the other fields it is not kept across a restart.
++    if TelegramSimulator.enabled {
++        return account.postbox.transaction { transaction -> Void in
++            transaction.updatePeerCachedData(peerIds: Set([peerId]), update: { _, cachedData in
++                let cachedData = cachedData as? CachedUserData ?? CachedUserData()
++                return cachedData.withUpdatedNote(!text.isEmpty ? CachedUserData.Note(text: text, entities: entities) : nil)
++            })
++        }
++        |> castError(UpdateContactNoteError.self)
++        |> ignoreValues
++    }
+     return account.postbox.transaction { transaction -> Signal<Void, UpdateContactNoteError> in
+         if let peer = transaction.getPeer(peerId) as? TelegramUser, let inputUser = apiInputUser(peer) {
+             return account.network.request(Api.functions.contacts.updateContactNote(id: inputUser, note: .textWithEntities(.init(text: text, entities: apiEntitiesFromMessageTextEntities(entities, associatedPeers: SimpleDictionary())))))
 diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
 index 25aa698..7052671 100644
 --- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift

@@ -13,10 +13,13 @@
 | Ввод текста и клавиатура | `submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode` | Поле оригинальное; `enqueueMessages` записывает локальное сообщение вместо сетевой очереди |
 | Статус и «печатает» | `submodules/TelegramUI/Components/ChatTitleView`, `TelegramCore/Sources/Account/Account.swift` | Нативные потоки activity получают ручной статус, обновляются при сохранении документа |
 | Профиль и настройки | `submodules/TelegramUI/Components/PeerInfo/PeerInfoScreen` | Оригинальные представления получают `TelegramUser`, `CachedUserData`, локальные avatar resources |
+| Правка профиля | `TelegramEngine/AccountData/UpdateAccountPeerName.swift`, `TelegramEngine/Contacts/UpdateContactName.swift` | Имя, фамилия и «О себе» пишутся в документ и проецируются: оригинальный экран сохраняет свой модальный индикатор, но тот закрывается, а не ждёт отключённый сервер. Ограничения полей, которые онлайн накладывает сервер, применяются до записи |
 | Аккаунт и хранилище | `submodules/TelegramCore/Sources/Account/Account.swift`, Postbox | Локальное `AuthorizedAccountState`, без настоящего SMS-входа; JSON → транзакционная проекция Postbox |
 | Отправка/изменение/удаление | `PendingMessages/EnqueueMessage.swift`, `RequestEditMessage.swift`, `TelegramEngine/Messages/DeleteMessagesInteractively.swift`, `TelegramUI/Sources/Chat/ChatControllerLoadDisplayNode.swift` | Локальный документ и проекция; публичное редактирование перехватывается также перед PendingUpdateMessageManager. Correlation ID исходящего сохраняется для штатной анимации отправки и очистки поля |
 | Сетевой транспорт | `submodules/TelegramCore/Sources/Network/Network.swift` | Основная сессия приостановлена, network access выключен, worker не создаётся, запросы не отправляются; нужны проверки трафика на реальном запуске |
 | Сборка | `build-system/Make/Make.py` | Флаг локального режима отключает расширения, для симулятора — provisioning; APNs-профиль не требуется |
+
+`SimulatorFieldRules` — единственное место с ограничениями полей: длина и допустимые символы имени, фамилии, username, телефона, «О себе» и текста сообщения, плюс предел счётчика непрочитанных. Скрытый редактор применяет их при вводе и называет поле при сохранении; публичные экраны не меняются, но запись в документ проходит те же ограничения. `SimulatorDocument.validated()` намеренно оставлен прежним, чтобы документ, созданный до этих правил, продолжал открываться.
 
 Новые файлы копируются в `TelegramCore/Sources/LocalSimulator` и `TelegramUI/Sources/LocalSimulator`. Оба upstream BUILD используют glob `Sources/**/*.swift`; отдельного нового iOS-target или Expo-модуля не добавлено.
 

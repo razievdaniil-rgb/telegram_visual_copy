@@ -30,6 +30,8 @@ jobs:
             /submodules/TelegramCore/Sources/Network/Network.swift
             /submodules/TelegramCore/Sources/PendingMessages/EnqueueMessage.swift
             /submodules/TelegramCore/Sources/PendingMessages/RequestEditMessage.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
             /submodules/TelegramCore/Sources/Wallpapers.swift

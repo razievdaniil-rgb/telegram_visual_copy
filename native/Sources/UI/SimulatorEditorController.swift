@@ -165,7 +165,17 @@ final class SimulatorEditorController: UITableViewController, UIDocumentPickerDe
 
 private typealias SimulatorSave = (@escaping (inout SimulatorDocument) throws -> Void, @escaping () -> Void) -> Void
 
+private extension UIViewController {
+    // The service editor has no server to reject input, so it says what to change itself.
+    func presentFieldNotice(_ message: String) {
+        let alert = UIAlertController(title: "Проверьте поля", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+}
+
 private final class SimulatorProfileForm: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    private static let kinds: [SimulatorFieldRules.Field] = [.firstName, .lastName, .username, .phone, .bio]
     private var profile: SimulatorProfile
     private let onSave: (SimulatorProfile) -> Void
     private var fields: [UITextField] = []
@@ -174,18 +184,41 @@ private final class SimulatorProfileForm: UITableViewController, UIImagePickerCo
         super.init(style: .insetGrouped); title = "Профиль"
         let values = [profile.firstName, profile.lastName, profile.username, profile.phone, profile.bio]
         for (index, label) in ["Имя", "Фамилия", "Username", "Произвольный телефон", "О себе"].enumerated() {
-            let field = UITextField(); field.placeholder = label; field.text = values[index]
+            let field = UITextField(); field.placeholder = label
+            // A document written before these rules existed opens trimmed, not rejected.
+            field.text = SimulatorFieldRules.sanitize(values[index], for: Self.kinds[index])
             field.autocorrectionType = .no; field.accessibilityLabel = label
             field.accessibilityIdentifier = "simulator.profile.field.\(index)"
+            switch Self.kinds[index] {
+            case .username: field.keyboardType = .asciiCapable; field.autocapitalizationType = .none
+            case .phone: field.keyboardType = .phonePad
+            default: break
+            }
+            field.addTarget(self, action: #selector(didEdit(_:)), for: .editingChanged)
             fields.append(field)
         }
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Сохранить", style: .done, target: self, action: #selector(commit))
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    @objc private func didEdit(_ field: UITextField) {
+        guard let index = fields.firstIndex(of: field) else { return }
+        let sanitized = SimulatorFieldRules.sanitize(field.text ?? "", for: Self.kinds[index])
+        guard sanitized != field.text else { return }
+        // Leave the caret where the typing left it instead of jumping to the end.
+        let tail = field.selectedTextRange.map { field.offset(from: $0.end, to: field.endOfDocument) } ?? 0
+        field.text = sanitized
+        if let position = field.position(from: field.endOfDocument, offset: -min(tail, sanitized.count)) {
+            field.selectedTextRange = field.textRange(from: position, to: position)
+        }
+    }
     @objc private func commit() {
         view.endEditing(true)
-        profile.firstName = fields[0].text ?? ""; profile.lastName = fields[1].text ?? ""
-        profile.username = fields[2].text ?? ""; profile.phone = fields[3].text ?? ""; profile.bio = fields[4].text ?? ""
+        func value(_ index: Int) -> String { (fields[index].text ?? "").trimmingCharacters(in: .whitespacesAndNewlines) }
+        var updated = profile
+        updated.firstName = value(0); updated.lastName = value(1)
+        updated.username = value(2); updated.phone = value(3); updated.bio = value(4)
+        if let reason = SimulatorFieldRules.validate(updated) { presentFieldNotice(reason); return }
+        profile = updated
         onSave(profile)
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 7 }
@@ -268,8 +301,15 @@ private final class SimulatorChatEditor: UITableViewController {
             alert.addTextField { $0.keyboardType = .numberPad; $0.text = String(self.chat?.unread ?? 0) }
             alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
             alert.addAction(UIAlertAction(title: "Сохранить", style: .default) { [weak self, weak alert] _ in
-                guard let self = self, let count = Int(alert?.textFields?.first?.text ?? ""), count >= 0 else { return }
-                self.save({ document in if let i = document.chats.firstIndex(where: { $0.id == self.chatId }) { document.chats[i].unread = count } }, { [weak self] in self?.tableView.reloadData() })
+                guard let self = self else { return }
+                let entered = (alert?.textFields?.first?.text ?? "").trimmingCharacters(in: .whitespaces)
+                guard let count = Int(entered) else { self.presentFieldNotice("Непрочитанные: введите число."); return }
+                let incoming = self.messages.filter { $0.direction == .incoming }.count
+                let clamped = SimulatorFieldRules.clampUnread(count, incomingMessages: incoming)
+                self.save({ document in if let i = document.chats.firstIndex(where: { $0.id == self.chatId }) { document.chats[i].unread = clamped } }, { [weak self] in
+                    self?.tableView.reloadData()
+                    if clamped != count { self?.presentFieldNotice("Непрочитанных не может быть больше, чем входящих сообщений в чате: \(incoming). Сохранено \(clamped).") }
+                })
             })
             present(alert, animated: true)
         }
@@ -292,7 +332,7 @@ private final class SimulatorChatEditor: UITableViewController {
     }
 }
 
-private final class SimulatorMessageForm: UITableViewController {
+private final class SimulatorMessageForm: UITableViewController, UITextViewDelegate {
     private var message: SimulatorMessage
     private let onSave: (SimulatorMessage) -> Void
     private let text = UITextView()
@@ -304,7 +344,9 @@ private final class SimulatorMessageForm: UITableViewController {
     init(message: SimulatorMessage, onSave: @escaping (SimulatorMessage) -> Void) {
         self.message = message; self.onSave = onSave
         super.init(style: .insetGrouped); title = "Сообщение"
-        text.text = message.text; text.font = .systemFont(ofSize: 17); text.accessibilityLabel = "Текст сообщения"
+        text.text = SimulatorFieldRules.sanitize(message.text, for: .messageText)
+        text.font = .systemFont(ofSize: 17); text.accessibilityLabel = "Текст сообщения"
+        text.delegate = self
         direction.selectedSegmentIndex = message.direction == .incoming ? 0 : 1
         receipt.selectedSegmentIndex = message.receipt == .sent ? 0 : 1
         direction.accessibilityIdentifier = "simulator.message.direction"
@@ -320,8 +362,18 @@ private final class SimulatorMessageForm: UITableViewController {
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     @objc private func didChangeDate() { dateChanged = true }
+    func textViewDidChange(_ textView: UITextView) {
+        let sanitized = SimulatorFieldRules.sanitize(textView.text ?? "", for: .messageText)
+        guard sanitized != textView.text else { return }
+        let selection = textView.selectedRange
+        textView.text = sanitized
+        textView.selectedRange = NSRange(location: min(selection.location, (sanitized as NSString).length), length: 0)
+    }
     @objc private func commit() {
-        view.endEditing(true); message.text = text.text
+        view.endEditing(true)
+        let value = text.text ?? ""
+        if let reason = SimulatorFieldRules.validate(messageText: value) { presentFieldNotice(reason); return }
+        message.text = value
         message.direction = direction.selectedSegmentIndex == 0 ? .incoming : .outgoing
         message.receipt = receipt.selectedSegmentIndex == 0 ? .sent : .read
         // Do not erase the original seconds when changing unrelated fields.

@@ -224,6 +224,43 @@ public enum TelegramSimulator {
         }
         return project(account: account)
     }
+    // The original profile editors hand their fields to account.updateProfile /
+    // contacts.addContact and keep a modal spinner up until the server answers. Network
+    // requests are .never() in this app, so that spinner would never be dismissed: apply
+    // the change to the document instead and let the same completion path run.
+    public static func updateProfile(account: Account, peerId: PeerId, firstName: String? = nil, lastName: String? = nil, bio: String? = nil) -> Signal<Void, NoError> {
+        do {
+            try TelegramSimulatorWorkspace.shared.change { document in
+                func apply(_ profile: inout SimulatorProfile) {
+                    // The original editors have no client-side limits: online it is the
+                    // server that trims a name and rejects an empty one. There is no server
+                    // here, so the same limits are applied before the document is written,
+                    // leaving that screen exactly as upstream draws it.
+                    var updated = profile
+                    if let firstName = firstName { updated.firstName = limited(firstName, .firstName) }
+                    if let lastName = lastName { updated.lastName = limited(lastName, .lastName) }
+                    if let bio = bio { updated.bio = limited(bio, .bio) }
+                    guard !(updated.firstName.isEmpty && updated.lastName.isEmpty) else { return }
+                    profile = updated
+                }
+                if peerId == ownerPeerId {
+                    apply(&document.owner)
+                } else if let index = document.profiles.firstIndex(where: { self.peerId($0.id) == peerId }) {
+                    apply(&document.profiles[index])
+                } else {
+                    throw SimulatorDataError.invalid("Профиль недоступен для правки")
+                }
+            }
+        } catch {
+            TelegramSimulatorWorkspace.shared.report(error)
+            // Completing closes the original spinner; the unchanged profile stays on screen.
+            return .complete()
+        }
+        return project(account: account)
+    }
+    private static func limited(_ value: String, _ field: SimulatorFieldRules.Field) -> String {
+        return SimulatorFieldRules.sanitize(value, for: field).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
     public static func receipt(for id: MessageId) -> Bool? {
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
         let document = indexed.document
