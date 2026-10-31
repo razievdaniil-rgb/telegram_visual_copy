@@ -33,6 +33,7 @@ jobs:
             /submodules/TelegramCore/Sources/TelegramEngine/AccountData/UpdateAccountPeerName.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Peers/Birthdays.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Peers/PeerPhotoUpdater.swift

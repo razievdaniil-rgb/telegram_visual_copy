@@ -358,6 +358,23 @@ public enum TelegramSimulator {
         guard let chat = document.chats.first(where: { peerId($0.profileId) == id.peerId }) else { return nil }
         return document.messages.first(where: { $0.chatId == chat.id && indexed.timeline[$0.id] == id.id }).map { $0.receipt == .read }
     }
+    // The context menu keeps a grey placeholder in place of the read time until the
+    // server answers `getOutboxReadDate`, and that answer never comes here. The document
+    // records whether a message was read but not when, so the moment it carries is its
+    // own: an answer the original screen can draw, instead of one it waits for forever.
+    public static func messageReadStats(id: MessageId) -> Signal<MessageReadStats?, NoError> {
+        let empty = MessageReadStats(reactionCount: 0, peers: [], readTimestamps: [:])
+        let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
+        let document = indexed.document
+        guard let chat = document.chats.first(where: { peerId($0.profileId) == id.peerId }),
+              let person = document.profiles.first(where: { $0.id == chat.profileId }),
+              let message = document.messages.first(where: { $0.chatId == chat.id && indexed.timeline[$0.id] == id.id }),
+              message.direction == .outgoing, message.receipt == .read,
+              let date = SimulatorDocument.date(message.sentAt)
+        else { return .single(empty) }
+        let peer = EnginePeer(profile(person))
+        return .single(MessageReadStats(reactionCount: 0, peers: [peer], readTimestamps: [peer.id: Int32(date.timeIntervalSince1970)]))
+    }
     public static func isTyping(peerId: PeerId) -> Bool {
         return TelegramSimulatorWorkspace.shared.snapshot().chats.contains { self.peerId($0.profileId) == peerId && $0.presence == .typing }
     }

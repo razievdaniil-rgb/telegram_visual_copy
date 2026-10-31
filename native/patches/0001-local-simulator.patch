@@ -604,6 +604,22 @@ index 25aa698..7052671 100644
      return account.postbox.transaction { transaction -> [EphemeralDeleteMessageRequest] in
          var ephemeralRequests: [EphemeralDeleteMessageRequest] = []
          for messageId in messageIds where messageId.namespace == Namespaces.Message.EphemeralLocal || messageId.namespace == Namespaces.Message.WelcomeMessageCloud {
+diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift
+index 3df39c0..1485f89 100644
+--- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift
++++ b/submodules/TelegramCore/Sources/TelegramEngine/Messages/MessageReadStats.swift
+@@ -15,6 +15,11 @@ public final class MessageReadStats {
+ }
+ 
+ func _internal_messageReadStats(account: Account, id: MessageId) -> Signal<MessageReadStats?, NoError> {
++    // Without this the menu row holds its placeholder for good: the read time is
++    // requested from the server, and requests do not complete in this build.
++    if TelegramSimulator.enabled {
++        return TelegramSimulator.messageReadStats(id: id)
++    }
+     return account.postbox.transaction { transaction -> Peer? in
+         return transaction.getPeer(id.peerId)
+     }
 diff --git a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift b/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
 index fe15eed..b27e9e1 100644
 --- a/submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift

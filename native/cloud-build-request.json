@@ -1,6 +1,6 @@
 {
-  "attempt": 21,
+  "attempt": 22,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "A chat would not open at all unless the phone had granted access to the address book, which QA found by granting it. The local build deliberately never asks for that permission, so the device contact manager answered nothing rather than answering none, deviceContactPhoneNumbers stayed without a value, and the chat history view -- which combines that promise -- never produced its first update, leaving the screen short of ready. It is fed an empty address book directly now: nothing here imports contacts. Also carries the stories notice saying what it is rather than where it is."
+  "purpose": "The last open item from the QA report: the read-time row in a message's context menu kept a grey placeholder where the time belongs, because the original asks the server for getOutboxReadDate and requests never complete here. The document records that a message was read but not when, so the row is answered with the message's own moment -- something the original row can draw, instead of something it waits for forever."
 }
