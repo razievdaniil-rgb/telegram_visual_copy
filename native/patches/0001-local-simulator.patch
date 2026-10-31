@@ -142,7 +142,7 @@ index 5bdff8a..cdef9ab 100644
      }
      
 +    private func simulatorStoriesUnavailable() {
-+        self.present(textAlertController(context: self.context, title: "Истории", text: "Эта функция недоступна в симуляторе", actions: [TextAlertAction(type: .defaultAction, title: self.presentationData.strings.Common_OK, action: {})]), in: .window(.root))
++        self.present(textAlertController(context: self.context, title: "Истории", text: "Нет историй", actions: [TextAlertAction(type: .defaultAction, title: self.presentationData.strings.Common_OK, action: {})]), in: .window(.root))
 +    }
 +
      public func openStories(peerId: EnginePeer.Id, completion: @escaping (StoryContainerScreen) -> Void = { _ in }) {
