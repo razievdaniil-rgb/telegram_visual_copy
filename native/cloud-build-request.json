@@ -1,6 +1,6 @@
 {
-  "attempt": 19,
+  "attempt": 20,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "The clean client build. Build 17 started on a physical iPhone, so the startup instrumentation that existed to diagnose a blank screen is switched off: no stage record, no screen of stages over an empty window, and UIFileSharingEnabled is back to the upstream false, which removes the Telegram/BUILD hunk from the patch entirely. Nothing else changes -- every fix shipped in build 18 is still here."
+  "purpose": "Stories stop being automatic. A circle appeared for every contact that existed, in two places that each decided it for themselves; both now ask one stored switch, SimulatorProfile.story, which the hidden editor sets per person -- the account's own profile included, since they share the form. Absent means no story, so a document written before this reads as none, and with none anywhere the original hides the strip by itself."
 }

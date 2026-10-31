@@ -17,7 +17,11 @@ public struct SimulatorProfile: Codable, Equatable {
     // Set from Telegram's own profile editor. Absent in documents written before it worked,
     // and omitted on write when absent, so the version-1 web decoder still sees its own keys.
     public var birthday: String?
-    enum CodingKeys: String, CodingKey { case id, firstName, lastName, username, phone, bio, avatar, color, birthday }
+    // Whether this person has a story to show. A circle used to appear for every contact,
+    // which is not a state a contact can be in by default, so absent means no story and
+    // the key is omitted on write, as birthday is.
+    public var story: Bool?
+    enum CodingKeys: String, CodingKey { case id, firstName, lastName, username, phone, bio, avatar, color, birthday, story }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -29,16 +33,19 @@ public struct SimulatorProfile: Codable, Equatable {
         try container.encode(bio, forKey: .bio)
         try container.encode(color, forKey: .color)
         try container.encodeIfPresent(birthday, forKey: .birthday)
+        try container.encodeIfPresent(story, forKey: .story)
         // The version-1 web decoder requires an explicit null, not an omitted key.
         if let avatar = avatar { try container.encode(avatar, forKey: .avatar) }
         else { try container.encodeNil(forKey: .avatar) }
     }
 
-    public init(id: String = UUID().uuidString, firstName: String = "", lastName: String = "", username: String = "", phone: String = "", bio: String = "", avatar: String? = nil, color: String = "#5F9BE5", birthday: String? = nil) {
+    public init(id: String = UUID().uuidString, firstName: String = "", lastName: String = "", username: String = "", phone: String = "", bio: String = "", avatar: String? = nil, color: String = "#5F9BE5", birthday: String? = nil, story: Bool? = nil) {
         self.id = id; self.firstName = firstName; self.lastName = lastName
         self.username = username; self.phone = phone; self.bio = bio
         self.avatar = avatar; self.color = color; self.birthday = birthday
+        self.story = story
     }
+    public var hasStory: Bool { story == true }
     public var displayName: String {
         let value = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespacesAndNewlines)
         return value.isEmpty ? "Без имени" : value

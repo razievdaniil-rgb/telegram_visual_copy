@@ -38,16 +38,45 @@ final class SimulatorModelTests: XCTestCase {
         let object = try XCTUnwrap(JSONSerialization.jsonObject(with: example().encoded()) as? [String: Any])
         let owner = try XCTUnwrap(object["self"] as? [String: Any])
         XCTAssertFalse(owner.keys.contains("birthday"))
+        XCTAssertFalse(owner.keys.contains("story"))
+        let profiles = try XCTUnwrap(object["profiles"] as? [[String: Any]])
+        XCTAssertTrue(profiles.allSatisfy { !$0.keys.contains("story") })
         let messages = try XCTUnwrap(object["messages"] as? [[String: Any]])
         XCTAssertTrue(messages.allSatisfy { !$0.keys.contains("replyToId") })
 
         var document = example()
         document.owner.birthday = "07.03.1990"
+        document.owner.story = true
+        document.profiles[0].story = true
         document.messages[1].replyToId = "one"
         let decoded = try SimulatorDocument.decode(document.encoded())
         XCTAssertEqual(decoded, document)
         XCTAssertEqual(decoded.messages[1].replyToId, "one")
         XCTAssertEqual(decoded.owner.birthday, "07.03.1990")
+        XCTAssertTrue(decoded.owner.hasStory)
+        XCTAssertTrue(decoded.profiles[0].hasStory)
+    }
+
+    func testAContactHasNoStoryUntilOneIsSetAndTheSwitchSurvivesRestart() throws {
+        // The circle used to appear for every contact that existed. A document written
+        // before this field must therefore read as "no story", not as the old behaviour.
+        XCTAssertFalse(SimulatorProfile().hasStory)
+        XCTAssertFalse(example().profiles[0].hasStory)
+        let legacy = String(decoding: try example().encoded(), as: UTF8.self)
+        XCTAssertFalse(legacy.contains("\"story\""))
+        XCTAssertFalse(try SimulatorDocument.decode(Data(legacy.utf8)).profiles[0].hasStory)
+
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appendingPathComponent("document.json")
+        let repository = try SimulatorRepository(url: url)
+        try repository.change { $0 = example() }
+        try repository.change { $0.profiles[0].story = true; $0.owner.story = true }
+        let restored = try SimulatorRepository(url: url).snapshot()
+        XCTAssertTrue(restored.profiles[0].hasStory)
+        XCTAssertTrue(restored.owner.hasStory)
+        try repository.change { $0.profiles[0].story = nil }
+        XCTAssertFalse(try SimulatorRepository(url: url).snapshot().profiles[0].hasStory)
     }
     func testBirthdayParsingMatchesTheOriginalDayMonthOptionalYear() {
         XCTAssertEqual(SimulatorDocument.birthdayString(day: 7, month: 3, year: 1990), "07.03.1990")

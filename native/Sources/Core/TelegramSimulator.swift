@@ -18,15 +18,28 @@ public enum TelegramSimulator {
     public static func peerId(_ id: String) -> PeerId {
         return PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(SimulatorDocument.numericId(id)))
     }
+    // Both places that draw a story circle ask this, so one switch moves both.
+    public static func hasStory(_ peerId: PeerId) -> Bool {
+        let document = TelegramSimulatorWorkspace.shared.snapshot()
+        if peerId == ownerPeerId { return document.owner.hasStory }
+        return document.profiles.contains { self.peerId($0.id) == peerId && $0.hasStory }
+    }
     // Feed the original header component, without a Telegram service or story media.
     // These circles preview local virtual profiles; opening/publishing is guarded in UI.
+    //
+    // A story is something a person either has or does not, so it is a stored field rather
+    // than a consequence of existing: a contact is listed here only while their own switch
+    // is on. With no story anywhere the original hides the whole strip by itself, which is
+    // what it does online when nobody has posted.
     public static func storySubscriptions(isHidden: Bool) -> Signal<EngineStorySubscriptions, NoError> {
         return TelegramSimulatorWorkspace.shared.changed.get() |> map { _ in
             let document = TelegramSimulatorWorkspace.shared.snapshot()
             func item(_ person: SimulatorProfile, count: Int) -> EngineStorySubscriptions.Item {
                 return EngineStorySubscriptions.Item(peer: EnginePeer(profile(person)), hasUnseen: count > 0, hasUnseenCloseFriends: false, hasLiveItems: false, hasPending: false, storyCount: count, unseenCount: count, lastTimestamp: 1)
             }
-            return EngineStorySubscriptions(accountItem: isHidden ? nil : item(document.owner, count: 0), items: isHidden ? [] : document.profiles.map { item($0, count: 1) }, hasMoreToken: nil)
+            let owner = item(document.owner, count: document.owner.hasStory ? 1 : 0)
+            let others = document.profiles.filter { $0.hasStory }.map { item($0, count: 1) }
+            return EngineStorySubscriptions(accountItem: isHidden ? nil : owner, items: isHidden ? [] : others, hasMoreToken: nil)
         }
     }
     private static let menuDefaultsKey = "TelegramSimulator.menuDefaults.v1"

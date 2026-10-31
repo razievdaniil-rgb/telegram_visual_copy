@@ -179,9 +179,14 @@ private final class SimulatorProfileForm: UITableViewController, UIImagePickerCo
     private var profile: SimulatorProfile
     private let onSave: (SimulatorProfile) -> Void
     private var fields: [UITextField] = []
+    // Whether this person's circle appears above the chat list. Off for everyone by default:
+    // having a story is a state a person is put into, not one they are in for existing.
+    private let storySwitch = UISwitch()
     init(profile: SimulatorProfile, onSave: @escaping (SimulatorProfile) -> Void) {
         self.profile = profile; self.onSave = onSave
         super.init(style: .insetGrouped); title = "Профиль"
+        storySwitch.isOn = profile.hasStory
+        storySwitch.accessibilityIdentifier = "simulator.profile.story"
         let values = [profile.firstName, profile.lastName, profile.username, profile.phone, profile.bio]
         for (index, label) in ["Имя", "Фамилия", "Username", "Произвольный телефон", "О себе"].enumerated() {
             let field = UITextField(); field.placeholder = label
@@ -217,12 +222,22 @@ private final class SimulatorProfileForm: UITableViewController, UIImagePickerCo
         var updated = profile
         updated.firstName = value(0); updated.lastName = value(1)
         updated.username = value(2); updated.phone = value(3); updated.bio = value(4)
+        updated.story = storySwitch.isOn ? true : nil
         if let reason = SimulatorFieldRules.validate(updated) { presentFieldNotice(reason); return }
         profile = updated
         onSave(profile)
     }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 7 }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { 8 }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 7 {
+            let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+            cell.textLabel?.text = "История"
+            cell.detailTextLabel?.text = "Кружок над списком чатов"
+            cell.detailTextLabel?.textColor = .secondaryLabel
+            cell.accessoryView = storySwitch
+            cell.selectionStyle = .none
+            return cell
+        }
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         if indexPath.row < fields.count {
             let field = fields[indexPath.row]; field.translatesAutoresizingMaskIntoConstraints = false

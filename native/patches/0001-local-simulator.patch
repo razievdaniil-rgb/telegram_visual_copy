@@ -312,9 +312,9 @@ index e41738b..cb229f3 100644
              enablePreview = false
          }
          
-+        let hasLocalStoryPreview = TelegramSimulator.enabled && (peer.map { candidate in
-+            TelegramSimulatorWorkspace.shared.snapshot().profiles.contains { TelegramSimulator.peerId($0.id) == candidate.id }
-+        } ?? false)
++        // The ring on the row follows the same stored switch as the circle above the list:
++        // a contact has a story only while their own switch is on, never for existing.
++        let hasLocalStoryPreview = TelegramSimulator.enabled && (peer.map { TelegramSimulator.hasStory($0.id) } ?? false)
 +        let localStoryPreview: AvatarNode.StoryStats? = hasLocalStoryPreview ? AvatarNode.StoryStats(totalCount: 1, unseenCount: 1, hasUnseenCloseFriendsItems: false, hasLiveItems: false) : nil
          self.avatarNode.setStoryStats(storyStats: storyState.flatMap { storyState in
              return AvatarNode.StoryStats(
