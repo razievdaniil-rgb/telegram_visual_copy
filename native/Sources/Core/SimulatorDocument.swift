@@ -14,7 +14,10 @@ public struct SimulatorProfile: Codable, Equatable {
     public var bio: String
     public var avatar: String?
     public var color: String
-    enum CodingKeys: String, CodingKey { case id, firstName, lastName, username, phone, bio, avatar, color }
+    // Set from Telegram's own profile editor. Absent in documents written before it worked,
+    // and omitted on write when absent, so the version-1 web decoder still sees its own keys.
+    public var birthday: String?
+    enum CodingKeys: String, CodingKey { case id, firstName, lastName, username, phone, bio, avatar, color, birthday }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -25,15 +28,16 @@ public struct SimulatorProfile: Codable, Equatable {
         try container.encode(phone, forKey: .phone)
         try container.encode(bio, forKey: .bio)
         try container.encode(color, forKey: .color)
+        try container.encodeIfPresent(birthday, forKey: .birthday)
         // The version-1 web decoder requires an explicit null, not an omitted key.
         if let avatar = avatar { try container.encode(avatar, forKey: .avatar) }
         else { try container.encodeNil(forKey: .avatar) }
     }
 
-    public init(id: String = UUID().uuidString, firstName: String = "", lastName: String = "", username: String = "", phone: String = "", bio: String = "", avatar: String? = nil, color: String = "#5F9BE5") {
+    public init(id: String = UUID().uuidString, firstName: String = "", lastName: String = "", username: String = "", phone: String = "", bio: String = "", avatar: String? = nil, color: String = "#5F9BE5", birthday: String? = nil) {
         self.id = id; self.firstName = firstName; self.lastName = lastName
         self.username = username; self.phone = phone; self.bio = bio
-        self.avatar = avatar; self.color = color
+        self.avatar = avatar; self.color = color; self.birthday = birthday
     }
     public var displayName: String {
         let value = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespacesAndNewlines)
@@ -62,10 +66,14 @@ public struct SimulatorMessage: Codable, Equatable {
     public var sentAt: String
     public var receipt: SimulatorReceipt
     public var edited: Bool
+    // The message this one answers, by document ID. Optional on both sides of the format:
+    // omitted when absent, so documents written before replies worked still round-trip.
+    public var replyToId: String?
 
-    public init(id: String = UUID().uuidString, chatId: String, text: String, direction: SimulatorDirection = .outgoing, sentAt: String = SimulatorDocument.timestamp(Date()), receipt: SimulatorReceipt = .read, edited: Bool = false) {
+    public init(id: String = UUID().uuidString, chatId: String, text: String, direction: SimulatorDirection = .outgoing, sentAt: String = SimulatorDocument.timestamp(Date()), receipt: SimulatorReceipt = .read, edited: Bool = false, replyToId: String? = nil) {
         self.id = id; self.chatId = chatId; self.text = text; self.direction = direction
         self.sentAt = sentAt; self.receipt = receipt; self.edited = edited
+        self.replyToId = replyToId
     }
 }
 
@@ -90,6 +98,19 @@ public struct SimulatorDocument: Codable, Equatable {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter.string(from: date)
+    }
+    // Telegram's own birthday row carries a day, a month and an optional year.
+    public static func birthday(_ value: String) -> (day: Int32, month: Int32, year: Int32?)? {
+        let parts = value.split(separator: ".", omittingEmptySubsequences: false).map(String.init)
+        guard parts.count == 2 || parts.count == 3, let day = Int32(parts[0]), let month = Int32(parts[1]) else { return nil }
+        guard (1 ... 31).contains(day), (1 ... 12).contains(month) else { return nil }
+        if parts.count == 2 { return (day, month, nil) }
+        guard let year = Int32(parts[2]), (1900 ... 2100).contains(year) else { return nil }
+        return (day, month, year)
+    }
+    public static func birthdayString(day: Int32, month: Int32, year: Int32?) -> String {
+        let base = String(format: "%02d.%02d", day, month)
+        return year.map { "\(base).\($0)" } ?? base
     }
     public static func date(_ value: String) -> Date? {
         let formatter = ISO8601DateFormatter()

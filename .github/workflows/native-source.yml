@@ -34,6 +34,8 @@ jobs:
             /submodules/TelegramCore/Sources/TelegramEngine/Contacts/UpdateContactName.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/DeleteMessagesInteractively.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Messages/TelegramEngineMessages.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Peers/Birthdays.swift
+            /submodules/TelegramCore/Sources/TelegramEngine/Peers/PeerPhotoUpdater.swift
             /submodules/TelegramCore/Sources/Wallpapers.swift
             /submodules/TelegramCore/Sources/TelegramEngine/Themes/ChatThemes.swift
             /submodules/TelegramUI/Sources/AppDelegate.swift

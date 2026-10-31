@@ -32,6 +32,36 @@ final class SimulatorModelTests: XCTestCase {
         XCTAssertTrue(owner["avatar"] is NSNull)
         XCTAssertEqual(try SimulatorDocument.decode(SimulatorDocument().encoded()), SimulatorDocument())
     }
+    func testNewOptionalFieldsStayOutOfDocumentsThatDoNotUseThem() throws {
+        // The version-1 web client knows neither key. Omitting them keeps its round-trip
+        // byte-identical, while a document that carries them still decodes here.
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: example().encoded()) as? [String: Any])
+        let owner = try XCTUnwrap(object["self"] as? [String: Any])
+        XCTAssertFalse(owner.keys.contains("birthday"))
+        let messages = try XCTUnwrap(object["messages"] as? [[String: Any]])
+        XCTAssertTrue(messages.allSatisfy { !$0.keys.contains("replyToId") })
+
+        var document = example()
+        document.owner.birthday = "07.03.1990"
+        document.messages[1].replyToId = "one"
+        let decoded = try SimulatorDocument.decode(document.encoded())
+        XCTAssertEqual(decoded, document)
+        XCTAssertEqual(decoded.messages[1].replyToId, "one")
+        XCTAssertEqual(decoded.owner.birthday, "07.03.1990")
+    }
+    func testBirthdayParsingMatchesTheOriginalDayMonthOptionalYear() {
+        XCTAssertEqual(SimulatorDocument.birthdayString(day: 7, month: 3, year: 1990), "07.03.1990")
+        XCTAssertEqual(SimulatorDocument.birthdayString(day: 31, month: 12, year: nil), "31.12")
+        let full = try! XCTUnwrap(SimulatorDocument.birthday("07.03.1990"))
+        XCTAssertEqual(full.day, 7); XCTAssertEqual(full.month, 3); XCTAssertEqual(full.year, 1990)
+        let short = try! XCTUnwrap(SimulatorDocument.birthday("31.12"))
+        XCTAssertEqual(short.day, 31); XCTAssertEqual(short.month, 12); XCTAssertNil(short.year)
+        XCTAssertNil(SimulatorDocument.birthday("32.01.1990"))
+        XCTAssertNil(SimulatorDocument.birthday("07.13"))
+        XCTAssertNil(SimulatorDocument.birthday("07.03.1700"))
+        XCTAssertNil(SimulatorDocument.birthday("вчера"))
+        XCTAssertNil(SimulatorDocument.birthday(""))
+    }
     func testInvalidReferencesEnumsAndNativeTimestampAreRejected() throws {
         var document = example(); document.profiles = []
         XCTAssertThrowsError(try document.encoded())

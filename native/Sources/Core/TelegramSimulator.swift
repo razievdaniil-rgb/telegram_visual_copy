@@ -50,7 +50,12 @@ public enum TelegramSimulator {
             let resource = LocalFileMediaResource(fileId: SimulatorDocument.numericId(avatar), size: Int64(data.count))
             photo = [TelegramMediaImageRepresentation(dimensions: PixelDimensions(width: 640, height: 640), resource: resource, progressiveSizes: [], immediateThumbnailData: nil)]
         }
-        return TelegramUser(id: peerId(profile.id), accessHash: .personal(0), firstName: profile.firstName, lastName: profile.lastName, username: profile.username.isEmpty ? nil : profile.username, phone: profile.phone, photo: photo, botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: true, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
+        // Telegram's API never sends an empty string for a field a user has not filled in:
+        // it omits it, and every original screen is written against that. A present-but-empty
+        // name or phone is a shape the profile card never receives online, and it made the
+        // card crash on a device. Absent is absent here too.
+        func stated(_ value: String) -> String? { value.isEmpty ? nil : value }
+        return TelegramUser(id: peerId(profile.id), accessHash: .personal(0), firstName: stated(profile.firstName), lastName: stated(profile.lastName), username: stated(profile.username), phone: stated(profile.phone), photo: photo, botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: true, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
     }
     public static func prepareAccount(_ manager: AccountManager<TelegramAccountManagerTypes>) -> Signal<Void, NoError> {
         SimulatorLaunchTrace.shared.mark("prepare-account")
@@ -128,7 +133,16 @@ public enum TelegramSimulator {
                 transaction.updatePeerCachedData(peerIds: Set([peerId(person.id)]), update: { _, current in
                     // Original ChatHistoryView waits for BusinessIntro to become known.
                     // Local profiles have no business intro; never wait for a server response.
-                    (current as? CachedUserData ?? CachedUserData()).withUpdatedAbout(person.bio).withUpdatedBusinessIntro(nil)
+                    // An unfilled "about" is absent, not empty, for the same reason as the name.
+                    var cached = (current as? CachedUserData ?? CachedUserData())
+                        .withUpdatedAbout(person.bio.isEmpty ? nil : person.bio)
+                        .withUpdatedBusinessIntro(nil)
+                    if let stored = person.birthday, let parts = SimulatorDocument.birthday(stored) {
+                        cached = cached.withUpdatedBirthday(TelegramBirthday(day: parts.day, month: parts.month, year: parts.year))
+                    } else {
+                        cached = cached.withUpdatedBirthday(nil)
+                    }
+                    return cached
                 })
             }
             for chat in document.chats {
@@ -146,6 +160,14 @@ public enum TelegramSimulator {
                     guard let localId = timelineIds[message.id], let date = SimulatorDocument.date(message.sentAt) else { return nil }
                     let messageId = MessageId(peerId: id, namespace: Namespaces.Message.Cloud, id: localId)
                     var attributes: [MessageAttribute] = message.edited ? [EditedMessageAttribute(date: Int32(date.timeIntervalSince1970), isHidden: false)] : []
+                    // The original bubble draws its reply block from this attribute and finds
+                    // the quoted message through Postbox's associated messages, both of which
+                    // live in this same peer. A reply to a removed message simply loses it.
+                    if let replyToId = message.replyToId, replyToId != message.id,
+                       let replyLocalId = timelineIds[replyToId],
+                       messages.contains(where: { $0.id == replyToId }) {
+                        attributes.append(ReplyMessageAttribute(messageId: MessageId(peerId: id, namespace: Namespaces.Message.Cloud, id: replyLocalId), threadMessageId: nil, quote: nil, isQuote: false, innerSubject: nil))
+                    }
                     if message.direction == .outgoing {
                         // The original history transition waits for this correlation ID
                         // before animating the new bubble and clearing the composer.
@@ -184,8 +206,15 @@ public enum TelegramSimulator {
             try TelegramSimulatorWorkspace.shared.change { document in
                 guard let chat = document.chats.first(where: { self.peerId($0.profileId) == peerId }) else { throw SimulatorDataError.invalid("Создайте личный чат в редакторе") }
                 for message in messages {
-                    guard case let .message(text, _, _, media, _, _, _, _, correlationId, _) = message, media == nil, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw SimulatorDataError.invalid("Симулятор поддерживает только текстовые сообщения") }
-                    let local = SimulatorMessage(chatId: chat.id, text: text, receipt: .sent)
+                    guard case let .message(text, _, _, media, _, replyTo, _, _, correlationId, _) = message, media == nil, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw SimulatorDataError.invalid("Симулятор поддерживает только текстовые сообщения") }
+                    // The composer answers by Postbox ID; the document keeps its own IDs, so
+                    // translate it back through the same timeline the projection assigns.
+                    var replyToId: String?
+                    if let replyTo = replyTo {
+                        let timeline = document.timelineIds()
+                        replyToId = document.messages.first(where: { $0.chatId == chat.id && timeline[$0.id] == replyTo.messageId.id })?.id
+                    }
+                    let local = SimulatorMessage(chatId: chat.id, text: text, receipt: .sent, replyToId: replyToId)
                     document.messages.append(local); added.append(local)
                     outgoingInfo[local.id] = OutgoingMessageInfoAttribute(uniqueId: SimulatorDocument.numericId(local.id), flags: [], acknowledged: true, correlationId: correlationId, bubbleUpEmojiOrStickersets: [], partialReference: nil)
                 }
@@ -260,6 +289,47 @@ public enum TelegramSimulator {
     }
     private static func limited(_ value: String, _ field: SimulatorFieldRules.Field) -> String {
         return SimulatorFieldRules.sanitize(value, for: field).trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    public static func updateBirthday(account: Account, birthday: TelegramBirthday?) -> Signal<Never, NoError> {
+        do {
+            try TelegramSimulatorWorkspace.shared.change { document in
+                document.owner.birthday = birthday.map { SimulatorDocument.birthdayString(day: $0.day, month: $0.month, year: $0.year) }
+            }
+        } catch {
+            TelegramSimulatorWorkspace.shared.report(error)
+            return .complete()
+        }
+        return project(account: account) |> ignoreValues
+    }
+    // The avatar editor writes the cropped image into the media box and then expects an
+    // upload. Read it back from there instead and keep it in the document, so the picture
+    // survives a restart like every other local field.
+    public static func updateAvatar(account: Account, resource: MediaResource?) -> Signal<UpdatePeerPhotoStatus, UploadPeerPhotoError> {
+        guard let resource = resource else { return storeAvatar(account: account, dataURL: nil) }
+        return account.postbox.mediaBox.resourceData(resource)
+        |> filter { $0.complete }
+        |> take(1)
+        |> castError(UploadPeerPhotoError.self)
+        |> mapToSignal { data -> Signal<UpdatePeerPhotoStatus, UploadPeerPhotoError> in
+            guard let bytes = try? Data(contentsOf: URL(fileURLWithPath: data.path)), !bytes.isEmpty else {
+                return .fail(.generic)
+            }
+            let isPNG = bytes.count > 8 && bytes.prefix(4).elementsEqual([0x89, 0x50, 0x4E, 0x47])
+            let mime = isPNG ? "image/png" : "image/jpeg"
+            return storeAvatar(account: account, dataURL: "data:\(mime);base64,\(bytes.base64EncodedString())")
+        }
+    }
+    private static func storeAvatar(account: Account, dataURL: String?) -> Signal<UpdatePeerPhotoStatus, UploadPeerPhotoError> {
+        do {
+            try TelegramSimulatorWorkspace.shared.change { document in document.owner.avatar = dataURL }
+        } catch {
+            TelegramSimulatorWorkspace.shared.report(error)
+            return .fail(.generic)
+        }
+        let representations = profile(TelegramSimulatorWorkspace.shared.snapshot().owner).photo
+        return project(account: account)
+        |> castError(UploadPeerPhotoError.self)
+        |> map { _ in UpdatePeerPhotoStatus.complete(representations) }
     }
     public static func receipt(for id: MessageId) -> Bool? {
         let indexed = TelegramSimulatorWorkspace.shared.indexedSnapshot()
