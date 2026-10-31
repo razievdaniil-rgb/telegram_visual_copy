@@ -6,6 +6,14 @@ import SwiftSignalKit
 // The switch is fixed at build time; there is no online/login mode in this target.
 public enum TelegramSimulator {
     public static let enabled: Bool = true
+
+    // Startup instrumentation: the stage record and the screen that replaces a blank
+    // window when the interface never appears. Both exist for diagnosing a start that
+    // fails on a device, and both are deviations from the original — the screen is not
+    // Telegram's, and reading the record off a phone needs `UIFileSharingEnabled`.
+    // Build 17 started on a physical iPhone, so the client build keeps neither.
+    // Turning this on again also means restoring the `Telegram/BUILD` plist change.
+    public static let launchDiagnostics: Bool = false
     public static var ownerPeerId: PeerId { peerId("self") }
     public static func peerId(_ id: String) -> PeerId {
         return PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(SimulatorDocument.numericId(id)))

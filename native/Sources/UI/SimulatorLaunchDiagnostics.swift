@@ -26,7 +26,7 @@ final class SimulatorLaunchDiagnostics {
 
     // Retained by its own scheduled work until the interface appears.
     static func watch(container: UIView, isInterfaceVisible: @escaping () -> Bool) {
-        guard TelegramSimulator.enabled else { return }
+        guard TelegramSimulator.enabled, TelegramSimulator.launchDiagnostics else { return }
         let diagnostics = SimulatorLaunchDiagnostics(container: container, isInterfaceVisible: isInterfaceVisible)
         Queue.mainQueue().after(SimulatorLaunchDiagnostics.appearanceDelay, {
             diagnostics.refresh()

@@ -1,6 +1,6 @@
 {
-  "attempt": 18,
+  "attempt": 19,
   "target": "build-unsigned-device",
   "configuration": "release_arm64",
-  "purpose": "Build 17 started on a real iPhone and QA filed five defects against it. Three are fixed here: a peer whose fields were all cleared is now absent-where-absent instead of empty-string, which is the shape the original profile card crashed on; replies carry the original ReplyMessageAttribute through the document; and the profile editor's birthday and avatar join the name and bio in completing locally instead of waiting on a network request that never answers. The two remaining defects are upstream behaviour and are deliberately untouched."
+  "purpose": "The clean client build. Build 17 started on a physical iPhone, so the startup instrumentation that existed to diagnose a blank screen is switched off: no stage record, no screen of stages over an empty window, and UIFileSharingEnabled is back to the upstream false, which removes the Telegram/BUILD hunk from the patch entirely. Nothing else changes -- every fix shipped in build 18 is still here."
 }

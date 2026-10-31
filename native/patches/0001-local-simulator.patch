@@ -1,20 +1,3 @@
-diff --git a/Telegram/BUILD b/Telegram/BUILD
-index 1ac8279..005ffc3 100644
---- a/Telegram/BUILD
-+++ b/Telegram/BUILD
-@@ -1818,8 +1818,11 @@ plist_fragment(
-         <integer>1</integer>
-         <integer>2</integer>
-     </array>
-+    <!-- Local simulator: the only way to read a launch trace or a document backup off
-+         a phone without a Mac. The exposed folder is Documents; the simulator document
-+         itself stays in Application Support. -->
-     <key>UIFileSharingEnabled</key>
--    <false/>
-+    <true/>
-     <key>UILaunchStoryboardName</key>
-     <string>LaunchScreen</string>
-     <key>UIRequiresPersistentWiFi</key>
 diff --git a/build-system/Make/Make.py b/build-system/Make/Make.py
 index 4c3a641..8db8ab1 100644
 --- a/build-system/Make/Make.py

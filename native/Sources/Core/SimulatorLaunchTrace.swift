@@ -10,10 +10,13 @@ import Foundation
 // termination can be observed there at all.
 //
 // Every stage is written through before the next one runs, so the file names the
-// last stage a terminated start reached. It is kept under Documents, which
-// `UIFileSharingEnabled` exposes through Files, so the record can be read off a
-// phone without a Mac. Stage names are fixed strings: no message text, contact,
-// phone number, token or key is recorded.
+// last stage a terminated start reached. It is kept under Documents, so that a
+// build which also sets `UIFileSharingEnabled` lets the record be read off a phone
+// without a Mac. Stage names are fixed strings: no message text, contact, phone
+// number, token or key is recorded.
+//
+// `TelegramSimulator.launchDiagnostics` decides whether any of this runs. The client
+// build leaves it off, so nothing is written and no file is created at all.
 public final class SimulatorLaunchTrace {
     public static let shared = SimulatorLaunchTrace()
 
@@ -35,7 +38,7 @@ public final class SimulatorLaunchTrace {
 
     // Rotates the preceding record before the first stage of this start is written.
     public func begin(version: String, build: String) {
-        guard TelegramSimulator.enabled else { return }
+        guard TelegramSimulator.enabled, TelegramSimulator.launchDiagnostics else { return }
         self.lock.lock()
         defer { self.lock.unlock() }
         guard self.startedAt == nil else { return }
@@ -53,7 +56,7 @@ public final class SimulatorLaunchTrace {
     }
 
     public func mark(_ stage: String) {
-        guard TelegramSimulator.enabled else { return }
+        guard TelegramSimulator.enabled, TelegramSimulator.launchDiagnostics else { return }
         self.lock.lock()
         defer { self.lock.unlock() }
         // Stages that repeat during use (the projection runs again on every edit) must

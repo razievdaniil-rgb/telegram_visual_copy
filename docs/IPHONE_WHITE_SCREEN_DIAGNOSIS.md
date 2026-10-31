@@ -148,10 +148,12 @@ variant = "debug_sim_arm64" if simulator else ("debug_arm64" if unsigned else "r
 
 Исправление сопровождается записью этапов, чтобы следующий запуск на телефоне давал факты, а не ещё одну догадку.
 
+Эта диагностика выключена в чистой клиентской сборке: запуск на iPhone подтверждён, и оба отступления от оригинала сняты. Выключатель — `TelegramSimulator.launchDiagnostics`; код сохранён, hunk для plist из патча удалён.
+
 - `native/Sources/Core/SimulatorLaunchTrace.swift` — записывает каждый этап до перехода к следующему, поэтому файл содержит последний достигнутый этап и после завершения процесса системой. Файл: `Documents/TelegramSimulator/launch-trace.txt`, предыдущий запуск — `launch-trace-previous.txt`. Этапы: `window`, `container`, `storage`, `account-manager`, `prepare-account`, `account-record`, `presentation-data`, `shared-context`, `account-state`, `projection`, `projection-done`, `context`, `root-controller`, `root-controllers`, `chatlist-main-ready`, `chatlist-stories-ready`, `tabs-ready`, `tab-content-ready`, `window-visible`, `interface-visible`. Последний этап — признак завершённого запуска; его отсутствие в предыдущей записи и есть диагностируемый случай.
 
   Разметка доведена до самого `isReady` именно потому, что по уточнению пользователя отказ находится за `context`: `root-controller` — построен `TelegramRootController`, `root-controllers` — вкладки созданы, далее четыре отдельных признака готовности, которых ждёт `AuthorizedApplicationContext.isReady`. Какой из них не наступил, и будет ответом.
-- `UIFileSharingEnabled` включён, чтобы журнал можно было забрать с телефона через «Файлы → На iPhone → Telegram» без Mac. Открывается только папка `Documents`; документ редактора лежит в `Library/Application Support` и в неё не попадает.
+- `UIFileSharingEnabled` был включён, чтобы журнал можно было забрать с телефона через «Файлы → На iPhone → Telegram» без Mac. Открывалась только папка `Documents`; документ редактора лежит в `Library/Application Support` и в неё не попадал.
 - `native/Sources/UI/SimulatorLaunchDiagnostics.swift` — если интерфейс не появился за 8 с, показывает этапы поверх пустого окна и убирает себя, как только корневой контроллер установлен. При исправном запуске не появляется.
 
 Записываются только фиксированные имена этапов и миллисекунды: ни текстов переписок, ни имён, ни номеров, ни токенов и ключей.
